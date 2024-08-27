@@ -4956,4 +4956,68 @@ const getDirectoryContents = (req, res) => {
   });
 };
 
-module.exports = { getDirectoryContents, selectPhone, getPhoneBookEntries, getAlldataevaluationnonmanager, getAlldataevaluationnoncadre, enregistrementevalcadrenonmanager, enregistrementnoncadre, getimg, fetchBirthdays, getEmails, fetchevaldata, validerEvaluation, enregistrementvalide, getdatabyid, getgataeva, fetchfix, fetchpbxdata, enregistrement, getAlldataevaluation, recupesups, recupesis, recupesrvgs, recuperhs, recupemks, recupehsses, recupecias, recupenbrassdir, recupenbraf, recupstd, Makafichiercia, directorytree, UploadImages, recupnpakadin, recupspider, recupstta, recupguilmann, recupakadin, profils, getallcomment, sendComment, selectPoste, selectDep, profil, UploadImageannuaire, deleteannuaire, updateannuaire, recupeannuaire, addannuaire, namecia, updatedcia, recupecia, UploadImagecia, Enregitrermedia, Makafichierassistdir, Makafichierdaf, Makafichierrh, Makafichiersupply, Makafichierdsi, Ressmktc, makafichierhsse, nomassistdir, makamediaentrep, makamediacollab, confirmersuppression, valider, autoriser, autoriseradmin, autorisersuperadmin, deletedir, validermodifications, getAlluserliste, getdirsoc, ajouterdirsoc, UploadImagedirsoc, nomdethssee, nomdethse, nomtour, supprarticle, manovaarticle, confsupprimerad, confsupprimercia, updatedataad, confsupprimeraf, updatedataaf, confsupprimerrh, updatedatarh, confsupprimersupply, updatedatasupply, confsupprimermark, updatedatamark, confsupprimerhsse, updatedatahsse, updatedataservg, confsupprimerservg, suppridselected, updatedatas, supprimerPersonnes, updatedata, confsupprimer, modifperso, envoyermess, makamessjiaby, fetchAll, ajouterad, ajoutercia, recupead, UploadImagead, recupeaf, ajouteraf, UploadImageaf, recuperh, ajouterrh, UploadImagerh, recupesupply, ajoutersupply, UploadImagesupply, recupesi, UploadImagesi, ajoutersi, recupemark, UploadImagemark, ajoutermark, recupehsse, ajouterhsse, UploadImagehsse, recupeservig, UploadImageserviceg, ajouterservig, getVideos, getImage, getdir, ajouterdir, insrciptionIntra, login, UploadImage, Enregitrermediact, makamedia, makafichier, ajoutercontact, getcontact, deleteuser, modif, nomsg, ajouterPersonne, modifmedia, afficherPersonne, supprimerPersonne, UploadImage2, nomsg, nomrsg, ajouterPersonnes, nomvert, nomdhsse, nommark, nomdsi, nomsupply, nomsdrh, nomdaf, nomdhssev, nommarkv, nomdsiv, nomsupplyv, nomdrhv, nomdafv, contintinvs, deleteMedia, getAlldataevaluation1 };
+
+
+const getGecosEntries = async (req, res) => {
+
+
+  const client = ldap.createClient({
+    url: 'ldap://172.16.1.19:389',
+    timeout: 30000,
+    connectTimeout: 30000
+  });
+
+  client.on('error', (err) => {
+    console.error('Erreur du client LDAP:', err);
+    res.status(500).send({ error: 'Impossible de se connecter au serveur LDAP' });
+  });
+
+  client.bind('administrateur@npakadin.mg', 'P4$$w0rdNPAroot753951/*-+', (err) => {
+    if (err) {
+      console.error('Erreur de liaison (bind):', err);
+      res.status(500).send({ error: 'Échec de la liaison (bind)' });
+      return;
+    }
+
+    const opts = {
+      filter: `(mail=${req.body.loggedInUser})`, // Insère dynamiquement l'email de l'utilisateur connecté
+      scope: 'sub',
+      attributes: ['gecos'] // Spécifiez les attributs à récupérer (ici 'gecos')
+    };
+
+    client.search('DC=npakadin,DC=mg', opts, (err, ldapRes) => {
+      if (err) {
+        console.error('Erreur de recherche:', err);
+        res.status(500).send({ error: 'Échec de la recherche' });
+        return;
+      }
+
+      let gecosValue = null;
+
+      ldapRes.on('searchEntry', (entry) => {
+        gecosValue = entry.attributes.find(attr => attr.type === 'gecos')?.values[0] || 'Non défini';
+      });
+
+      ldapRes.on('error', (err) => {
+        console.error('Erreur lors de la recherche:', err.message);
+        res.status(500).send({ error: err.message });
+      });
+
+      ldapRes.on('end', (result) => {
+        client.unbind();
+
+        if (gecosValue) {
+          res.status(200).send({ success: true, gecos: gecosValue });
+        } else {
+          res.status(404).send({ error: 'Utilisateur non trouvé ou attribut gecos non défini' });
+        }
+      });
+    });
+  });
+};
+
+
+
+
+
+module.exports = { getGecosEntries, getDirectoryContents, selectPhone, getPhoneBookEntries, getAlldataevaluationnonmanager, getAlldataevaluationnoncadre, enregistrementevalcadrenonmanager, enregistrementnoncadre, getimg, fetchBirthdays, getEmails, fetchevaldata, validerEvaluation, enregistrementvalide, getdatabyid, getgataeva, fetchfix, fetchpbxdata, enregistrement, getAlldataevaluation, recupesups, recupesis, recupesrvgs, recuperhs, recupemks, recupehsses, recupecias, recupenbrassdir, recupenbraf, recupstd, Makafichiercia, directorytree, UploadImages, recupnpakadin, recupspider, recupstta, recupguilmann, recupakadin, profils, getallcomment, sendComment, selectPoste, selectDep, profil, UploadImageannuaire, deleteannuaire, updateannuaire, recupeannuaire, addannuaire, namecia, updatedcia, recupecia, UploadImagecia, Enregitrermedia, Makafichierassistdir, Makafichierdaf, Makafichierrh, Makafichiersupply, Makafichierdsi, Ressmktc, makafichierhsse, nomassistdir, makamediaentrep, makamediacollab, confirmersuppression, valider, autoriser, autoriseradmin, autorisersuperadmin, deletedir, validermodifications, getAlluserliste, getdirsoc, ajouterdirsoc, UploadImagedirsoc, nomdethssee, nomdethse, nomtour, supprarticle, manovaarticle, confsupprimerad, confsupprimercia, updatedataad, confsupprimeraf, updatedataaf, confsupprimerrh, updatedatarh, confsupprimersupply, updatedatasupply, confsupprimermark, updatedatamark, confsupprimerhsse, updatedatahsse, updatedataservg, confsupprimerservg, suppridselected, updatedatas, supprimerPersonnes, updatedata, confsupprimer, modifperso, envoyermess, makamessjiaby, fetchAll, ajouterad, ajoutercia, recupead, UploadImagead, recupeaf, ajouteraf, UploadImageaf, recuperh, ajouterrh, UploadImagerh, recupesupply, ajoutersupply, UploadImagesupply, recupesi, UploadImagesi, ajoutersi, recupemark, UploadImagemark, ajoutermark, recupehsse, ajouterhsse, UploadImagehsse, recupeservig, UploadImageserviceg, ajouterservig, getVideos, getImage, getdir, ajouterdir, insrciptionIntra, login, UploadImage, Enregitrermediact, makamedia, makafichier, ajoutercontact, getcontact, deleteuser, modif, nomsg, ajouterPersonne, modifmedia, afficherPersonne, supprimerPersonne, UploadImage2, nomsg, nomrsg, ajouterPersonnes, nomvert, nomdhsse, nommark, nomdsi, nomsupply, nomsdrh, nomdaf, nomdhssev, nommarkv, nomdsiv, nomsupplyv, nomdrhv, nomdafv, contintinvs, deleteMedia, getAlldataevaluation1 };

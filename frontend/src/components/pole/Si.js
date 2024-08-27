@@ -3,7 +3,7 @@ import videos from '../../assets/video/si.mp4'
 import '../../assets/video/si.mp4'
 import { useEffect, useState } from 'react';
 import { SearchOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
-import { Button, Space, Table, AutoComplete, Input, Modal, Badge, Image, Tooltip, Row, Col, Typography, Pagination } from 'antd';
+import { Button, Space, Table, AutoComplete, Input, Modal, Badge, Image, Tooltip, Row, Col, Typography, Pagination, notification } from 'antd';
 import Highlighter from 'react-highlight-words';
 import { message, Popconfirm } from 'antd';
 import { Avatar } from 'antd';
@@ -20,17 +20,52 @@ const { Title } = Typography;
 
 
 const Si = () => {
-    const url = 'http://172.16.0.92:8000/'
+    const url = 'http://localhost:8000/'
     const statut = sessionStorage.getItem('poste');
+    const loggedInUser = sessionStorage.getItem('loginUser');
+    const ids = sessionStorage.getItem('ids');
     const [visibleCount, setVisibleCount] = useState(8); // état pour le nombre de cartes visibles
+
     const pageSize = 8; // nombre de cartes par page
+
+
+
+
+    const getGecosEntries = async () => {
+        if (!loggedInUser) {
+            notification.info({
+                message: 'Info',
+                description: 'Veuillez vous connecter pour faire cette action.',
+                placement: 'top',
+            });
+            return; // Sort de la fonction si l'utilisateur n'est pas connecté
+        }
+    
+        try {
+            const response = await axios.post(`${url}getGecosEntries`, { loggedInUser });
+    
+            notification.success({
+                message: 'Youpiiii!!',
+                description: `Votre mot de passe d'imprimante est : ${response.data.gecos}.`,
+                placement: 'top',
+            });
+    
+            console.log(response.data);
+        } catch (error) {
+            notification.error({
+                message: 'Erreur de serveur',
+                description: 'Une erreur est survenue lors de la récupération des données.',
+                placement: 'top',
+            });
+        }
+    };
+    
 
     const handlePageChange = (page) => {
         const startIndex = (page - 1) * pageSize;
         setVisibleCount(startIndex + pageSize);
     };
-    const ids = sessionStorage.getItem('ids');
-    const loggedInUser = sessionStorage.getItem('loginUser');
+
     const loggedInPwd = sessionStorage.getItem('pwdUser');
     const [open, setOpen] = useState(false);
     const [nom, setNom] = useState('');
@@ -308,8 +343,13 @@ const Si = () => {
                     defaultPageSize={pageSize} // nombre d'éléments par page
                     total={si.length} // nombre total d'éléments
                     onChange={handlePageChange} // gestionnaire de changement de page
-                />
+                /> <br /> <br />
+                <Button onClick={getGecosEntries}>Cliquez ici si vous avez oublié le mot de passe de votre imprimante.</Button>
             </div>
+
+
+
+
             <br /> <br /><br /><br /><br />
 
             <Modal

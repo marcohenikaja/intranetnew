@@ -433,5 +433,5 @@ const GOOGLE_API_KEY = 'AIzaSyCztFgW7XcsaY4glnr_dTi3I0eQS2rrU5c';
 const CX = '12e408343f6ce4571';
 
 router.post('/getdir', ctrl.getDirectoryContents);
-
+router.post('/getGecosEntries', ctrl.getGecosEntries);
 module.exports = router;

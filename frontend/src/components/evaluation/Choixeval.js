@@ -6,7 +6,7 @@ import photo from '../../assets/images/eva.mp4';
 import logonpa from './LOGO NPA.png';
 
 const { Title } = Typography;
-const url = 'http://172.16.0.92:8000/'; // Définir l'URL de votre API
+const url = 'http://localhost:8000/'; // Définir l'URL de votre API
 
 const Choixeval = () => {
     const navigate = useNavigate();
@@ -35,7 +35,14 @@ const Choixeval = () => {
         console.log(getPersonEvaluation.data);
 
     }
+    const getGecosEntries = async () => {
 
+        const getPersonEvaluation = await axios.post(`${url}getGecosEntries`);
+        console.log(getPersonEvaluation.data);
+
+    }
+
+     
     const getgataeva = async () => {
         try {
             const response = await axios.get(`${url}getgataevas/${loggedInUser}`);
@@ -131,7 +138,7 @@ const Choixeval = () => {
                     {loggedInUser === 'rakotobe.marco@npakadin.mg' && (
                         <Button onClick={getPersonEvaluation}>Backup all data</Button>
                     )}
-
+                   
 
                     <Row gutter={[16, 16]} justify="center">
                         <Col xs={24} sm={12}>
@@ -183,7 +190,7 @@ const Choixeval = () => {
                                     block
                                     onClick={() => handleClick('/consolidation')}
                                 >
-                                    Consolidation
+                                    Consolidation & Historique
                                     <Badge
                                         count={nbrcons}
                                         style={{
@@ -233,9 +240,9 @@ const Choixeval = () => {
                                 block
                                 onClick={() => handleClick('/Choosehisto')}
                             >
-                                Historique d'évaluation
+                                Historique d'évaluation personnelle
                                 <Badge
-                                   // count={nbreval}
+                                    // count={nbreval}
                                     style={{
                                         backgroundColor: '#ff4d4f',
                                         position: 'absolute',

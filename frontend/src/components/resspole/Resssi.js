@@ -35,7 +35,7 @@ const { Title } = Typography;
 
 
 const Resssi = () => {
-    const url = 'http://172.16.0.92:8000/'
+    const url = 'http://localhost:8000/'
 
     const theme = useTheme();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
@@ -60,6 +60,9 @@ const Resssi = () => {
     const [deps, setDeps] = useState("");
     const tester = useRef();
     const [selectedPole, setSelectedPole] = useState("");
+
+
+
 
 
     useEffect(() => {
