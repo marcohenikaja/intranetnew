@@ -1,0 +1,85 @@
+/* animations.css */
+/* app.css */
+
+/* Styles pour la modal d'anniversaire */
+.birthdayModal .ant-modal-content {
+  background-color: #fff;
+  border-radius: 10px;
+  text-align: center;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.birthdayModal .ant-modal-header {
+  border-bottom: none;
+  background-color: #1890ff;
+  color: white;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+
+.birthdayModal .ant-modal-title {
+  font-size: 24px;
+  color: white;
+  font-weight: bold;
+}
+
+.birthdayModal .ant-modal-body {
+  padding: 20px;
+}
+
+.birthdayModal .birthdayMessage {
+  font-size: 18px;
+  color: #333;
+  margin-top: 20px;
+}
+
+.birthdayModal .birthdayMessage p {
+  margin: 10px 0;
+  padding: 10px;
+  background: #f0f8ff;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.birthdayModal .ant-modal-footer {
+  border-top: none;
+}
+
+.birthdayModal .ant-btn-primary {
+  background-color: #1890ff;
+  border-color: #1890ff;
+  border-radius: 5px;
+  font-size: 16px;
+  padding: 10px 20px;
+}
+
+.birthdayModal .ant-btn-primary:hover {
+  background-color: #40a9ff;
+  border-color: #40a9ff;
+}
+
+@keyframes moveElement {
+    from {
+      transform: translateY(-100vh) rotate(0);
+      opacity: 1;
+    }
+    to {
+      transform: translateY(100vh) rotate(720deg);
+      opacity: 0;
+    }
+  }
+  
+  .birthdayModal .emoji {
+    position: absolute;
+    top: 0;
+    font-size: 20px;
+    animation: moveElement 5s linear infinite;
+    opacity: 0;
+  }
+  
+  .birthdayModal {
+    position: relative;
+    overflow: hidden;
+  }
+  

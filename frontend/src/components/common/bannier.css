@@ -1,0 +1,29 @@
+/* Bannier.css */
+
+.full-width-banner {
+  width: 100%;
+  background-color: #3498db;
+  color: #fff;
+  padding: 50px;
+  box-sizing: border-box; /* Assurez-vous que la boîte prend en compte la bordure et le rembourrage */
+}
+
+.container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.content {
+  flex: 1;
+}
+
+.image-container {
+  flex: 1;
+  text-align: center;
+}
+
+.image-container img {
+  max-width: 100%;
+  height: auto; /* Ajustez la hauteur en conséquence */
+}

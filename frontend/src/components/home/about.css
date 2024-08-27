@@ -1,0 +1,21 @@
+.worksBlock {
+    position: relative;
+  }
+  
+  .video-container {
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .text-overlay {
+    position: absolute;
+    top: 30%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    color: #009918;
+    z-index: 1;
+  }
+  
+  /* Ajoutez du style supplémentaire si nécessaire */
+  
