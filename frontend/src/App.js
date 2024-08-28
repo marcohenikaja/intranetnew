@@ -82,6 +82,9 @@ import { Layout } from 'antd';
 import Cadrepdf from './components/evaluation/pdf/Cadrepdf';
 import Eva from './components/evaluation/Eva';
 import Choix from './components/evaluation/pdf/Choix';
+
+
+import Conge from './components/congerh/Conge';
 const { Header, Content, Footer } = Layout;
 
 function App() {
@@ -193,6 +196,7 @@ function App() {
             {/* cadre pdf */}
             <Route path="/chatbot" element={<Chatbot />} />
 
+            <Route path="/conge" element={<Conge />} />
 
             {/* CHOIXPDF  */}
 
