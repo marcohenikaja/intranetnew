@@ -14,7 +14,7 @@ const corsOptions = {
     ],
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
-    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With','Cache-Control'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Cache-Control'],
 };
 
 
@@ -43,7 +43,7 @@ app.use('/', routes);
 
 
 
-  
+
 
 app.listen(8000, '0.0.0.0', () => {
     console.log('Serveur started port 8000');

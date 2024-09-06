@@ -471,7 +471,7 @@ const ajouteval = async (req, res) => {
         }
 
         // Réponse de succès
-        res.send({ success: true, message: 'Les données ont été mises à jour ou insérées avec succès.' });
+        res.send({ success: true, message: 'Évaluation bien enregistrée.' });
 
     } catch (error) {
         console.error('Erreur lors de la mise à jour des données:', error);
@@ -955,7 +955,7 @@ const ajoutevalnoncadre = async (req, res) => {
         }
 
         // Réponse de succès
-        res.send({ success: true, message: 'Les données ont été mises à jour ou insérées avec succès.' });
+        res.send({ success: true, message: 'Évaluation bien enregistrée.' });
 
     } catch (error) {
         console.error('Erreur lors de la mise à jour des données:', error);
@@ -1432,7 +1432,7 @@ const enregistrementevalcadrenonmanager = async (req, res) => {
         }
 
         // Réponse de succès
-        res.send({ success: true, message: 'Les données ont été mises à jour ou insérées avec succès.' });
+        res.send({ success: true, message: 'Évaluation bien enregistrée.' });
 
     } catch (error) {
         console.error('Erreur lors de la mise à jour des données:', error);

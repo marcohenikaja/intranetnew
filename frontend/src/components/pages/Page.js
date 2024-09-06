@@ -5,7 +5,7 @@ import axios from 'axios';
 
 const { Title } = Typography;
 const { Search } = Input;
-const url = 'http://localhost:8000';
+const url = 'http://172.16.0.92:8000';
 
 function FolderStructure() {
     const [searchTerm, setSearchTerm] = useState('');

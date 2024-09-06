@@ -20,7 +20,7 @@ const { Title } = Typography;
 
 
 const Si = () => {
-    const url = 'http://localhost:8000/'
+    const url = 'http://172.16.0.92:8000/'
     const statut = sessionStorage.getItem('poste');
     const loggedInUser = sessionStorage.getItem('loginUser');
     const ids = sessionStorage.getItem('ids');

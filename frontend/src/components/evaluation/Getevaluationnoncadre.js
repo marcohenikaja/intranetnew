@@ -21,7 +21,7 @@ const { Step } = Steps;
 
 const CheckboxGroup = Checkbox.Group;
 
-const url = 'http://localhost:8000/'
+const url = 'http://172.16.0.92:8000/'
 
 const Getevaluationnoncadre = () => {
     const [current, setCurrent] = useState(0);

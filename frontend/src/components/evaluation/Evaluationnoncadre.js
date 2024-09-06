@@ -22,7 +22,7 @@ const { RangePicker } = DatePicker;
 
 
 
-const url = 'http://localhost:8000/'
+const url = 'http://172.16.0.92:8000/'
 const Evaluationnoncadre = () => {
     const [current, setCurrent] = useState(0);
     const [api, contextHolder] = notification.useNotification();
