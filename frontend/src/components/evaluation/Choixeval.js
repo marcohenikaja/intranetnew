@@ -12,9 +12,9 @@ const Choixeval = () => {
     const navigate = useNavigate();
     const loggedInUser = sessionStorage.getItem('loginUser');
 
-    //const ids = sessionStorage.getItem('ids');
+    const ids = sessionStorage.getItem('ids');
 
-    const ids = 10
+    // const ids = 10
 
     const [nbreval, setNbreval] = useState(0);
     const [evaldata, setEvaldata] = useState([]);

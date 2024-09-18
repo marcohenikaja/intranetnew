@@ -472,6 +472,26 @@ const Consolidation = () => {
 
 
     const [evaldata, setEvaldata] = useState([]);
+    const [selectedType, setSelectedType] = useState(null);
+
+
+
+
+    const handleFilterChange = (value) => {
+        alert(value)
+        setSelectedType(value);
+
+        // Filtrer les données en fonction de la valeur sélectionnée
+        const newData = evaldata.filter(item => item.evaluatorType === value || value === null);
+
+        // Mettre à jour les données filtrées dans l'état
+        setEvaldata(newData);
+    };
+
+
+
+
+
     const [evaldatahisto, setEvaldatahisto] = useState([]);
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
@@ -603,11 +623,11 @@ const Consolidation = () => {
     };
 
 
-    // useEffect(() => {
-    //     getEmails()
-    //     fetchevalData();
-    //     fetchevalDataHisto();
-    // }, []);
+    useEffect(() => {
+        getEmails()
+        fetchevalData();
+        fetchevalDataHisto();
+    }, []);
 
     const fetchevalData = async () => {
         try {
@@ -1169,6 +1189,9 @@ const Consolidation = () => {
                 />
                 <Select style={{ width: 250 }}
                     placeholder="Type d'évaluation"
+                    value={selectedType}
+                    onChange={handleFilterChange}
+                    allowClear
                     options={[
                         {
                             value: 'Evaluation cadre',

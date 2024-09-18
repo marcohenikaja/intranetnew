@@ -1118,7 +1118,19 @@ const Cadrenonmanager = () => {
             else if (PG >= 100) {
                 setClassification("D")
             }
-
+            const numbers = [R1, value6, R3, R4, R5];
+            const nouv = Math.min(...numbers);
+            if (nouv >= 0 && nouv <= 1.9) {
+                setNouvnivs("junior");
+            } else if (nouv >= 2 && nouv <= 3) {
+                setNouvnivs("confirmé");
+            } else if (nouv >= 3.1 && nouv <= 4.5) {
+                setNouvnivs("senior");
+            } else if (nouv >= 4.6 && nouv <= 5) {
+                setNouvnivs("expert");
+            } else {
+                setNouvnivs("invalide"); // Pour traiter les valeurs hors des plages définies
+            }
             next();
         }
 
@@ -2272,6 +2284,7 @@ const Cadrenonmanager = () => {
                                                 label: 'expert',
                                             },
                                         ]}
+                                        disabled
                                     />
                                 </td>
                                 <td style={{ padding: '10px', border: '1px solid #40A9FF', width: '30%' }}><TextArea placeholder="Commentaires" value={com} onChange={(e) => setCom(e.target.value)} autoSize /></td>

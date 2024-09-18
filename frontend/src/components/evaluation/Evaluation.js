@@ -507,7 +507,7 @@ const Evaluation = () => {
     };
 
     const etape1 = (placement) => {
-       
+
         if (nom == '') {
             api.info({
                 message: `Notification`,
@@ -747,6 +747,18 @@ const Evaluation = () => {
                 });
                 return;
             }
+        } else if (name === 'notation') {
+
+            const newValue = parseFloat(value) || 0;
+
+            if (newValue > 5) {
+                notification.info({
+                    message: 'Info',
+                    description: 'La notation ne peut pas dépasser 5',
+                    placement: 'top',
+                });
+                return;
+            }
         }
 
 
@@ -755,7 +767,6 @@ const Evaluation = () => {
 
         setObjectifs(newObjectifs);
     };
-
 
     const etape3 = (placement) => {
         // Vérifier si tous les champs sont remplis dans chaque ligne
@@ -937,6 +948,7 @@ const Evaluation = () => {
 
 
     const etape6 = (placement) => {
+
         if (alp1 === "" || alp2 === "") {
             notification.info({
                 message: "Notification",
@@ -1085,6 +1097,22 @@ const Evaluation = () => {
                 setClassification("D")
             }
 
+            const numbers = [R1, value6, R3, R4, R5];
+            const nouv = Math.min(...numbers);
+            if (nouv >= 0 && nouv <= 1.9) { 
+                setNouvnivs("junior");
+            } else if (nouv >= 2 && nouv <= 3) { 
+                setNouvnivs("confirmé");
+            } else if (nouv >= 3.1 && nouv <= 4.5) { 
+                setNouvnivs("senior");
+            } else if (nouv >= 4.6 && nouv <= 5) { 
+                setNouvnivs("expert");
+            } else {
+                setNouvnivs("invalide"); // Pour traiter les valeurs hors des plages définies
+            }
+            
+
+            
             next();
         }
 
@@ -2431,6 +2459,7 @@ const Evaluation = () => {
                                                 label: 'expert',
                                             },
                                         ]}
+                                        disabled
                                     />
                                 </td>
                                 <td style={{ padding: '10px', border: '1px solid #40A9FF', width: '30%' }}><TextArea placeholder="Commentaires" value={com} onChange={(e) => setCom(e.target.value)} autoSize /></td>
