@@ -1556,7 +1556,7 @@ const Cadrenomanagerpdf = () => {
                                             <View style={{ flexDirection: 'row', backgroundColor: 'white', padding: 0.5 }}>
                                                 <Text style={{ flex: 1, color: '#333', fontWeight: 'bold', fontSize: 8 }}>Nom: {nom}</Text>
                                                 <Text style={{ flex: 1, color: '#333', fontWeight: 'bold', fontSize: 8 }}>Date d'entrée: {formattedDate}</Text>
-                                                <Text style={{ flex: 1, color: '#333', fontWeight: 'bold', fontSize: 8 }}>Nom de l'évaluateur: {nomeval}</Text>
+                                                <Text style={{ flex: 1, color: '#333', fontWeight: 'bold', fontSize: 8 }}>Nom de l'évaluateur: {emailn1}</Text>
                                             </View>
 
                                             <View style={{ flexDirection: 'row', backgroundColor: 'white', padding: 1 }}>

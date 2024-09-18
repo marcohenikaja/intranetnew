@@ -40,17 +40,19 @@ const Si = () => {
             });
             return; // Sort de la fonction si l'utilisateur n'est pas connecté
         }
-    
+
         try {
             const response = await axios.post(`${url}getGecosEntries`, { loggedInUser });
-    
+
             notification.success({
                 message: 'Youpiiii!!',
                 description: `Votre mot de passe d'imprimante est : ${response.data.gecos}.`,
                 placement: 'top',
             });
-    
-            console.log(response.data);
+            setTimeout(() => {
+                sessionStorage.removeItem('loginUser');
+            }, 3000);
+
         } catch (error) {
             notification.error({
                 message: 'Erreur de serveur',
@@ -59,7 +61,7 @@ const Si = () => {
             });
         }
     };
-    
+
 
     const handlePageChange = (page) => {
         const startIndex = (page - 1) * pageSize;

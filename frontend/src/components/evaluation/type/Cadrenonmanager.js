@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Document, Page, Text, View, PDFViewer, Image } from '@react-pdf/renderer';
 import jsPDF from 'jspdf';
 import moment from 'moment';
-import { Button, message, Steps, Checkbox, notification } from 'antd';
+import { Button, message, Steps, Checkbox, notification, Tooltip } from 'antd';
 import { Typography } from 'antd';
 import { Input } from 'antd';
 import 'jspdf-autotable';
@@ -28,10 +28,10 @@ const url = 'http://172.16.0.92:8000/'
 const Cadrenonmanager = () => {
     const [current, setCurrent] = useState(0);
     const [api, contextHolder] = notification.useNotification();
-     const ids = sessionStorage.getItem('ids')
+    const ids = sessionStorage.getItem('ids')
     const [allmail, setAllmail] = useState([])
     const loggedInUser = sessionStorage.getItem('loginUser');
-   
+
     const [searchValue, setSearchValue] = useState('');
 
     const { id, type } = useParams();
@@ -591,14 +591,14 @@ const Cadrenonmanager = () => {
                 placement,
             });
             return;
-        // } else if (nomeval == '') {
-        //     api.info({
-        //         message: `Notification`,
-        //         description:
-        //             "Veuillez remplir le champ nom d'évaluateur.",
-        //         placement,
-        //     });
-        //     return;
+            // } else if (nomeval == '') {
+            //     api.info({
+            //         message: `Notification`,
+            //         description:
+            //             "Veuillez remplir le champ nom d'évaluateur.",
+            //         placement,
+            //     });
+            //     return;
         } else if (posteeval == '') {
             api.info({
                 message: `Notification`,
@@ -607,14 +607,14 @@ const Cadrenonmanager = () => {
                 placement,
             });
             return;
-        // } else if (fonc == '') {
-        //     api.info({
-        //         message: `Notification`,
-        //         description:
-        //             "Veuillez remplir le champ Fonction d'évaluateur.",
-        //         placement,
-        //     });
-        //     return;
+            // } else if (fonc == '') {
+            //     api.info({
+            //         message: `Notification`,
+            //         description:
+            //             "Veuillez remplir le champ Fonction d'évaluateur.",
+            //         placement,
+            //     });
+            //     return;
             // } else if (!emails.includes(email)) {
             //     notification.info({
             //         message: `Notification`,
@@ -755,8 +755,30 @@ const Cadrenonmanager = () => {
 
     const handleInputChange = (index, event) => {
         const { name, value } = event.target;
+
+
         const newObjectifs = [...objectifs];
+
+
+        if (name === 'poids') {
+            const newValue = parseFloat(value) || 0;
+            const currentTotal = objectifs.reduce((total, obj, idx) =>
+                idx === index ? total : total + parseFloat(obj.poids || 0), 0);
+
+            if (currentTotal + newValue > 100) {
+                notification.info({
+                    message: 'Info',
+                    description: 'La somme des poids ne peut pas dépasser 100%',
+                    placement: 'top',
+                });
+                return;
+            }
+        }
+
+
         newObjectifs[index][name] = value;
+
+
         setObjectifs(newObjectifs);
     };
 
@@ -940,6 +962,15 @@ const Cadrenonmanager = () => {
 
 
     const etape6 = (placement) => {
+        if (alp1 === "" || alp2 === "") {
+            notification.info({
+                message: "Notification",
+                description: "Veuillez le champ 'Aptitude liée au poste' ",
+                placement,
+
+            });
+            return;
+        }
         let allChecked = true; // Variable pour suivre l'état de toutes les cases cochées
 
 
@@ -1158,7 +1189,7 @@ const Cadrenonmanager = () => {
         }
 
         else if (concl == null) {
-         
+
             notification.info({
                 message: "Notification",
                 description: "Veuillez choisir votre conclusion.",
@@ -1168,12 +1199,12 @@ const Cadrenonmanager = () => {
             return;
         }
         else if (cmt1 == null || cmt2 == null || cmt3 == null || cmt4 == null || cmt5 == null) {
-          
+
             notification.info({
                 message: "Notification",
                 description: "Veuillez remplir tous les champs commentaires.",
                 placement: 'top',
-             
+
             });
             return;
         }
@@ -1324,7 +1355,7 @@ const Cadrenonmanager = () => {
             { ccd: ccd3, motif: motif3, index: 3 },
             { ccd: ccd4, motif: motif4, index: 4 }
         ];
-    
+
         // Vérification des paires ccd et motif
         for (const { ccd, motif, index } of fields) {
             if (ccd && !motif) {
@@ -1337,7 +1368,7 @@ const Cadrenonmanager = () => {
                 return;
             }
         }
-    
+
         // Vérification si tous les champs ccd sont vides
         const allCcdsEmpty = fields.every(({ ccd }) => !ccd);
         if (allCcdsEmpty) {
@@ -1349,7 +1380,7 @@ const Cadrenonmanager = () => {
             });
             return;
         }
-    
+
         // Passe à l'étape suivante si toutes les validations sont réussies
         next();
     };
@@ -1408,9 +1439,37 @@ const Cadrenonmanager = () => {
     }, [objectifs1]);
 
     const handleInputChange1 = (index, event) => {
+        // const { name, value } = event.target;
+        // const newObjectifs1 = [...objectifs1];
+        // newObjectifs1[index][name] = value;
+        // setObjectifs1(newObjectifs1);
+
+
         const { name, value } = event.target;
+
+
         const newObjectifs1 = [...objectifs1];
+
+
+        if (name === 'poids') {
+            const newValue1 = parseFloat(value) || 0;
+            const currentTotal = objectifs1.reduce((total, obj, idx) =>
+                idx === index ? total : total + parseFloat(obj.poids || 0), 0);
+
+            if (currentTotal + newValue1 > 100) {
+                notification.info({
+                    message: 'Info',
+                    description: 'La somme des poids ne peut pas dépasser 100%',
+                    placement: 'top',
+                });
+                return;
+            }
+        }
+
+
         newObjectifs1[index][name] = value;
+
+
         setObjectifs1(newObjectifs1);
     };
 
@@ -1464,7 +1523,7 @@ const Cadrenonmanager = () => {
                 f1, f2, f3, f4, f5, c1, c2, c3, c4, c5, am1, am2, am3, am4, am5, c21, c22, c23, c24, c25,
                 t1, t2, t3, t4, compac1, compac2, compac3, compac4, apav1, apav2, apav3, apav4, apap1, apap2, apap3, apap4, comm1, comm2, comm3, comm4,
                 ccd1, ccd2, ccd3, ccd4, catcomp1, catcomp2, catcomp3, catcomp4, motif1, motif2, motif3, motif4, pa1, pa2, pa3, pa4, dp1, dp2, dp3, dp4,
-                ct1, ct2, ct3, mt1, mt2, mt3, ml1, ml2, ml3, cpr1, cpr2, cpr3, cg1, cg2, cg3, comcollab, objectifs1, resultat1, somme, todayis, alp1, alp2, emailn1, emailn2, emaildr, emailsg, emaildg, emaildrh, ids,loggedInUser
+                ct1, ct2, ct3, mt1, mt2, mt3, ml1, ml2, ml3, cpr1, cpr2, cpr3, cg1, cg2, cg3, comcollab, objectifs1, resultat1, somme, todayis, alp1, alp2, emailn1, emailn2, emaildr, emailsg, emaildg, emaildrh, ids, loggedInUser
             });
             console.log(enrg.data);
             if (enrg.data.success === false) {
@@ -1577,7 +1636,7 @@ const Cadrenonmanager = () => {
                                     <Input value={posteeval} onChange={(e) => setPoste(e.target.value)} placeholder="Poste" />
                                 </td>
                                 <th style={{ padding: '10px', width: '20%', textAlign: 'center', alignItems: 'center' }}>
-                                   
+
 
                                     <AutoComplete
                                         style={{ width: '100%' }}
@@ -1591,7 +1650,7 @@ const Cadrenonmanager = () => {
                                         <Input
                                             placeholder="e-mail d'évaluateur N+2"
                                             allowClear
-                                           
+
                                         />
                                     </AutoComplete>
 
@@ -1613,8 +1672,8 @@ const Cadrenonmanager = () => {
                                 <td style={{ padding: '10px', width: '20%' }}>
                                     <Select
                                         style={{ width: '100%' }}
-                                        placeholder="Direction"
-                                        value={dir}
+                                        placeholder="Direction" // Placeholder visible lorsque value est null ou undefined
+                                        value={dir === '' ? undefined : dir} // Utilisez undefined pour placeholder
                                         onChange={changedirection}
                                         options={[
                                             { value: 'Services généraux', label: 'Services généraux' },
@@ -1623,14 +1682,15 @@ const Cadrenonmanager = () => {
                                             { value: "Système d'information", label: "Système d'information" },
                                             { value: 'Supply chain', label: 'Supply chain' },
                                             { value: 'Ressources humaines', label: 'Ressources humaines' },
-                                            { value: 'Administratif et Financie', label: 'Administratif et Financie' },
+                                            { value: 'Administratif et Financier', label: 'Administratif et Financier' },
                                             { value: 'Contrôle interne et audit', label: 'Contrôle interne et audit' },
                                             { value: 'Assistance de direction', label: 'Assistance de direction' },
                                         ]}
                                     />
+
                                 </td>
 
-                              
+
 
                                 <th style={{ padding: '10px', width: '20%', textAlign: 'center', alignItems: 'center' }}>
 
@@ -1741,20 +1801,31 @@ const Cadrenonmanager = () => {
                                         />
                                     </td>
                                     <td style={{ padding: '10px', border: '1px solid #40A9FF', width: '10%' }}>
-                                        <Input
-                                            type='number'
-                                            name="poids"
-                                            value={objectif.poids}
-                                            onChange={(event) => handleInputChange(index, event)}
-                                        />
+                                        <Tooltip title="Ici, c'est le poids de votre objectif en %">
+                                            <Input
+                                                type='number'
+                                                name="poids"
+                                                value={objectif.poids}
+                                                onChange={(event) => handleInputChange(index, event)}
+                                            />
+                                        </Tooltip>
                                     </td>
                                     <td style={{ padding: '10px', border: '1px solid #40A9FF', width: '10%' }}>
-                                        <Input
-                                            type='number'
-                                            name="notation"
-                                            value={objectif.notation}
-                                            onChange={(event) => handleInputChange(index, event)}
-                                        />
+                                        <Tooltip title="Ici, c'est la notation de votre objectif sur 5">
+                                            <Input
+                                                type='number'
+                                                name="notation"
+                                                value={objectif.notation}
+                                                onChange={(event) => handleInputChange(index, event)}
+                                                min={1}  // Optionnel, si tu veux également limiter la valeur minimale
+                                                max={5}  // Ceci n'aura d'effet qu'avec les boutons de flèche dans certains navigateurs
+                                                onInput={(event) => {
+                                                    if (event.target.value > 5) {
+                                                        event.target.value = 5;
+                                                    }
+                                                }}
+                                            />
+                                        </Tooltip>
                                     </td>
                                     <td style={{ padding: '10px', border: '1px solid #40A9FF', width: '10%' }}>
                                         {((parseFloat(objectif.poids) * parseFloat(objectif.notation || 0)) / 5).toFixed(2) || 0}
@@ -2007,7 +2078,15 @@ const Cadrenonmanager = () => {
                             </tr>
                             <tr>
                                 <td style={{ padding: '10px', border: '1px solid #40A9FF' }}>Aptitude liée au poste</td>
-                                <td style={{ padding: '10px', border: '1px solid #40A9FF' }}> <TextArea autoSize value={alp1} onChange={(e) => setAlp1(e.target.value)} /></td>
+                                <td style={{ padding: '10px', border: '1px solid #40A9FF' }}> <Tooltip title="Les aptitudes liées au poste sont les compétences spécifiques nécessaires pour bien accomplir les tâches du poste.">
+                                    <TextArea
+                                        placeholder="Aptitude liée au poste"
+                                        autoSize
+                                        value={alp1}
+                                        onChange={(e) => setAlp1(e.target.value)}
+                                    />
+                                </Tooltip>
+                                </td>
                                 <td style={{ padding: '10px', border: '1px solid #40A9FF' }}><Checkbox.Group value={selectedVal14} onChange={onChang14}><Checkbox value="1"></Checkbox></Checkbox.Group></td>
                                 <td style={{ padding: '10px', border: '1px solid #40A9FF' }}><Checkbox.Group value={selectedVal14} onChange={onChang14}><Checkbox value="2"></Checkbox></Checkbox.Group></td>
                                 <td style={{ padding: '10px', border: '1px solid #40A9FF' }}><Checkbox.Group value={selectedVal14} onChange={onChang14}><Checkbox value="3"></Checkbox></Checkbox.Group></td>
@@ -2017,7 +2096,15 @@ const Cadrenonmanager = () => {
 
                             <tr>
                                 <td style={{ padding: '10px', border: '1px solid #40A9FF' }}>Aptitude liée au poste</td>
-                                <td style={{ padding: '10px', border: '1px solid #40A9FF' }}><TextArea autoSize value={alp2} onChange={(e) => setAlp2(e.target.value)} /></td>
+                                <td style={{ padding: '10px', border: '1px solid #40A9FF' }}><Tooltip title="Les aptitudes liées au poste sont les compétences spécifiques nécessaires pour bien accomplir les tâches du poste.">
+                                    <TextArea
+                                        placeholder="Aptitude liée au poste"
+                                        autoSize
+                                        value={alp2}
+                                        onChange={(e) => setAlp2(e.target.value)}
+                                    />
+                                </Tooltip>
+                                </td>
                                 <td style={{ padding: '10px', border: '1px solid #40A9FF' }}><Checkbox.Group value={selectedVal15} onChange={onChang15}><Checkbox value="1"></Checkbox></Checkbox.Group></td>
                                 <td style={{ padding: '10px', border: '1px solid #40A9FF' }}><Checkbox.Group value={selectedVal15} onChange={onChang15}><Checkbox value="2"></Checkbox></Checkbox.Group></td>
                                 <td style={{ padding: '10px', border: '1px solid #40A9FF' }}><Checkbox.Group value={selectedVal15} onChange={onChang15}><Checkbox value="3"></Checkbox></Checkbox.Group></td>
@@ -2131,7 +2218,7 @@ const Cadrenonmanager = () => {
                                         onChange={nivactu}
                                         options={[
                                             { value: 'junior', label: 'junior' },
-                                            { value: 'comfirmé', label: 'comfirmé' },
+                                            { value: 'confirmé', label: 'confirmé' },
                                             { value: 'senior', label: 'senior' },
                                             { value: "expert", label: "expert" },
                                         ]}
@@ -2210,10 +2297,10 @@ const Cadrenonmanager = () => {
             content: (
                 <div>
                     <Title level={2}>PERFORMANCE GLOBALE</Title>
-                    <Title level={5}>A:LOW PERFORMANCE</Title>
+                    <Title level={5}>A:LOW PERFORMER</Title>
                     <Title level={5}>B:AVERAGE PERFORMER</Title>
-                    <Title level={5}>C:HIGH PERFORMANCE</Title>
-                    <Title level={5}>D:BEST PERFORMANCE</Title>
+                    <Title level={5}>C:HIGH PERFORMER</Title>
+                    <Title level={5}>D:BEST PERFORMER</Title>
 
 
 
@@ -2350,55 +2437,55 @@ const Cadrenonmanager = () => {
                                 <td style={{ padding: '10px', border: '1px solid #40A9FF' }}><TextArea value={t1} onChange={(e) => setT1(e.target.value)} autoSize /></td>
                                 <td style={{ padding: '10px', border: '1px solid #40A9FF' }}><TextArea value={compac1} onChange={(e) => setCompac1(e.target.value)} autoSize /></td>
                                 <td style={{ padding: '10px', border: '1px solid #40A9FF' }}>
-                                    <Select style={{ width: 120, }}
+                                    <Select style={{ minWidth: 250, width: 'auto', }}
                                         value={apav1} onChange={(value) => setApav1(value)}
                                         options={[
                                             {
                                                 value: 'NA',
-                                                label: 'NA',
+                                                label: 'NA (Non acquis) ',
                                             },
                                             {
                                                 value: 'EI',
-                                                label: 'EI',
+                                                label: 'EI (Elémentaire insuffisant)',
                                             },
                                             {
                                                 value: 'EA',
-                                                label: 'EA',
+                                                label: 'EA (Elémentaire acquis)',
                                             },
                                             {
                                                 value: 'MA',
-                                                label: 'MA',
+                                                label: 'MA (Mâtrise approfondie)',
                                             },
                                             {
                                                 value: 'EX',
-                                                label: 'EX',
+                                                label: 'EX (Expert)',
                                             },
                                         ]} />
                                 </td>
 
                                 <td style={{ padding: '10px', border: '1px solid #40A9FF' }}>
-                                    <Select style={{ width: 120, }}
+                                    <Select style={{ minWidth: 250, width: 'auto', }}
                                         value={apap1} onChange={(value) => setApap1(value)}
                                         options={[
                                             {
                                                 value: 'NA',
-                                                label: 'NA',
+                                                label: 'NA (Non acquis) ',
                                             },
                                             {
                                                 value: 'EI',
-                                                label: 'EI',
+                                                label: 'EI (Elémentaire insuffisant)',
                                             },
                                             {
                                                 value: 'EA',
-                                                label: 'EA',
+                                                label: 'EA (Elémentaire acquis)',
                                             },
                                             {
                                                 value: 'MA',
-                                                label: 'MA',
+                                                label: 'MA (Mâtrise approfondie)',
                                             },
                                             {
                                                 value: 'EX',
-                                                label: 'EX',
+                                                label: 'EX (Expert)',
                                             },
                                         ]} />
                                 </td>
@@ -2412,55 +2499,55 @@ const Cadrenonmanager = () => {
                                 <td style={{ padding: '10px', border: '1px solid #40A9FF' }}><TextArea value={t2} onChange={(e) => setT2(e.target.value)} autoSize /></td>
                                 <td style={{ padding: '10px', border: '1px solid #40A9FF' }}><TextArea value={compac2} onChange={(e) => setCompac2(e.target.value)} autoSize /></td>
                                 <td style={{ padding: '10px', border: '1px solid #40A9FF' }}>
-                                    <Select style={{ width: 120, }}
+                                    <Select style={{ minWidth: 250, width: 'auto', }}
                                         value={apav2} onChange={(value) => setApav2(value)}
                                         options={[
                                             {
                                                 value: 'NA',
-                                                label: 'NA',
+                                                label: 'NA (Non acquis) ',
                                             },
                                             {
                                                 value: 'EI',
-                                                label: 'EI',
+                                                label: 'EI (Elémentaire insuffisant)',
                                             },
                                             {
                                                 value: 'EA',
-                                                label: 'EA',
+                                                label: 'EA (Elémentaire acquis)',
                                             },
                                             {
                                                 value: 'MA',
-                                                label: 'MA',
+                                                label: 'MA (Mâtrise approfondie)',
                                             },
                                             {
                                                 value: 'EX',
-                                                label: 'EX',
+                                                label: 'EX (Expert)',
                                             },
                                         ]} />
                                 </td>
 
                                 <td style={{ padding: '10px', border: '1px solid #40A9FF' }}>
-                                    <Select style={{ width: 120, }}
+                                    <Select style={{ minWidth: 250, width: 'auto', }}
                                         value={apap2} onChange={(value) => setApap2(value)}
                                         options={[
                                             {
                                                 value: 'NA',
-                                                label: 'NA',
+                                                label: 'NA (Non acquis) ',
                                             },
                                             {
                                                 value: 'EI',
-                                                label: 'EI',
+                                                label: 'EI (Elémentaire insuffisant)',
                                             },
                                             {
                                                 value: 'EA',
-                                                label: 'EA',
+                                                label: 'EA (Elémentaire acquis)',
                                             },
                                             {
                                                 value: 'MA',
-                                                label: 'MA',
+                                                label: 'MA (Mâtrise approfondie)',
                                             },
                                             {
                                                 value: 'EX',
-                                                label: 'EX',
+                                                label: 'EX (Expert)',
                                             },
                                         ]} />
                                 </td>
@@ -2475,55 +2562,55 @@ const Cadrenonmanager = () => {
                                 <td style={{ padding: '10px', border: '1px solid #40A9FF' }}><TextArea value={t3} onChange={(e) => setT3(e.target.value)} autoSize /></td>
                                 <td style={{ padding: '10px', border: '1px solid #40A9FF' }}><TextArea value={compac3} onChange={(e) => setCompac3(e.target.value)} autoSize /></td>
                                 <td style={{ padding: '10px', border: '1px solid #40A9FF' }}>
-                                    <Select style={{ width: 120, }}
+                                    <Select style={{ minWidth: 250, width: 'auto', }}
                                         value={apav3} onChange={(value) => setApav3(value)}
                                         options={[
                                             {
                                                 value: 'NA',
-                                                label: 'NA',
+                                                label: 'NA (Non acquis) ',
                                             },
                                             {
                                                 value: 'EI',
-                                                label: 'EI',
+                                                label: 'EI (Elémentaire insuffisant)',
                                             },
                                             {
                                                 value: 'EA',
-                                                label: 'EA',
+                                                label: 'EA (Elémentaire acquis)',
                                             },
                                             {
                                                 value: 'MA',
-                                                label: 'MA',
+                                                label: 'MA (Mâtrise approfondie)',
                                             },
                                             {
                                                 value: 'EX',
-                                                label: 'EX',
+                                                label: 'EX (Expert)',
                                             },
                                         ]} />
                                 </td>
 
                                 <td style={{ padding: '10px', border: '1px solid #40A9FF' }}>
-                                    <Select style={{ width: 120, }}
+                                    <Select style={{ minWidth: 250, width: 'auto', }}
                                         value={apap3} onChange={(value) => setApap3(value)}
                                         options={[
                                             {
                                                 value: 'NA',
-                                                label: 'NA',
+                                                label: 'NA (Non acquis) ',
                                             },
                                             {
                                                 value: 'EI',
-                                                label: 'EI',
+                                                label: 'EI (Elémentaire insuffisant)',
                                             },
                                             {
                                                 value: 'EA',
-                                                label: 'EA',
+                                                label: 'EA (Elémentaire acquis)',
                                             },
                                             {
                                                 value: 'MA',
-                                                label: 'MA',
+                                                label: 'MA (Mâtrise approfondie)',
                                             },
                                             {
                                                 value: 'EX',
-                                                label: 'EX',
+                                                label: 'EX (Expert)',
                                             },
                                         ]} />
                                 </td>
@@ -2538,55 +2625,55 @@ const Cadrenonmanager = () => {
                                 <td style={{ padding: '10px', border: '1px solid #40A9FF' }}><TextArea value={t4} onChange={(e) => setT4(e.target.value)} autoSize /></td>
                                 <td style={{ padding: '10px', border: '1px solid #40A9FF' }}><TextArea value={compac4} onChange={(e) => setCompac4(e.target.value)} autoSize /></td>
                                 <td style={{ padding: '10px', border: '1px solid #40A9FF' }}>
-                                    <Select style={{ width: 120, }}
+                                    <Select style={{ minWidth: 250, width: 'auto', }}
                                         value={apav4} onChange={(value) => setApav4(value)}
                                         options={[
                                             {
                                                 value: 'NA',
-                                                label: 'NA',
+                                                label: 'NA (Non acquis) ',
                                             },
                                             {
                                                 value: 'EI',
-                                                label: 'EI',
+                                                label: 'EI (Elémentaire insuffisant)',
                                             },
                                             {
                                                 value: 'EA',
-                                                label: 'EA',
+                                                label: 'EA (Elémentaire acquis)',
                                             },
                                             {
                                                 value: 'MA',
-                                                label: 'MA',
+                                                label: 'MA (Mâtrise approfondie)',
                                             },
                                             {
                                                 value: 'EX',
-                                                label: 'EX',
+                                                label: 'EX (Expert)',
                                             },
                                         ]} />
                                 </td>
 
                                 <td style={{ padding: '10px', border: '1px solid #40A9FF' }}>
-                                    <Select style={{ width: 120, }}
+                                    <Select style={{ minWidth: 250, width: 'auto', }}
                                         value={apap4} onChange={(value) => setApap4(value)}
                                         options={[
                                             {
                                                 value: 'NA',
-                                                label: 'NA',
+                                                label: 'NA (Non acquis) ',
                                             },
                                             {
                                                 value: 'EI',
-                                                label: 'EI',
+                                                label: 'EI (Elémentaire insuffisant)',
                                             },
                                             {
                                                 value: 'EA',
-                                                label: 'EA',
+                                                label: 'EA (Elémentaire acquis)',
                                             },
                                             {
                                                 value: 'MA',
-                                                label: 'MA',
+                                                label: 'MA (Mâtrise approfondie)',
                                             },
                                             {
                                                 value: 'EX',
-                                                label: 'EX',
+                                                label: 'EX (Expert)',
                                             },
                                         ]} />
                                 </td>
@@ -2995,12 +3082,22 @@ const Cadrenonmanager = () => {
                                         />
                                     </td>
                                     <td style={{ padding: '10px', border: '1px solid #40A9FF', width: '10%' }}>
-                                        <Input
-                                            type='number'
-                                            name="notation"
-                                            value={objectif.notation}
-                                            onChange={(event) => handleInputChange1(index, event)}
-                                        />
+
+                                        <Tooltip title="Ici, c'est la notation de votre objectif sur 5">
+                                            <Input
+                                                type='number'
+                                                name="notation"
+                                                value={objectif.notation}
+                                                onChange={(event) => handleInputChange1(index, event)}
+                                                min={1}  // Optionnel, si tu veux également limiter la valeur minimale
+                                                max={5}  // Ceci n'aura d'effet qu'avec les boutons de flèche dans certains navigateurs
+                                                onInput={(event) => {
+                                                    if (event.target.value > 5) {
+                                                        event.target.value = 5;
+                                                    }
+                                                }}
+                                            />
+                                        </Tooltip>
                                     </td>
                                     <td style={{ padding: '10px', border: '1px solid #40A9FF', width: '10%' }}>
                                         {((parseFloat(objectif.poids) * parseFloat(objectif.notation || 0)) / 5).toFixed(2) || 0}

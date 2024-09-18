@@ -1649,7 +1649,7 @@ const recupesupply = async (req, res) => {
   try {
     const Service = await Annuaire.findAll({
       where: {
-        dep: 'SUPPLY CHAIN',
+        dep: 'DSC',
         soc: 'NP AKADIN Services'
       },
       order: [['ordre', 'ASC']] // Tri des résultats par ordre croissant de la colonne 'ordre'
@@ -1857,7 +1857,7 @@ const recupesups = async (req, res) => {
   try {
     const count = await Annuaire.count({
       where: {
-        dep: 'SUPPLY CHAIN',
+        dep: 'DSC',
         soc: 'NP AKADIN Services'
       }
     });

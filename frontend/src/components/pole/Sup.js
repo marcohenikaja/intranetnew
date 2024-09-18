@@ -4,7 +4,7 @@ import '../../assets/video/si.mp4'
 import imgassdir from '../../assets/pole/Pole-5 Supply.png'
 import { useEffect, useState } from 'react';
 import { SearchOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
-import { Button, Space, Table, AutoComplete, Input, Modal, Badge, Image, Tooltip, Row, Col, Typography ,Pagination} from 'antd';
+import { Button, Space, Table, AutoComplete, Input, Modal, Badge, Image, Tooltip, Row, Col, Typography, Pagination } from 'antd';
 import Highlighter from 'react-highlight-words';
 import { message, Popconfirm } from 'antd';
 import { Avatar } from 'antd';
@@ -21,7 +21,7 @@ const { Title } = Typography;
 
 
 const Sup = () => {
-    const url = 'http://172.16.0.92:8000/'
+    const url = 'http://localhost:8000/'
     const statut = sessionStorage.getItem('poste');
     const [visibleCount, setVisibleCount] = useState(8); // état pour le nombre de cartes visibles
     const pageSize = 8; // nombre de cartes par page

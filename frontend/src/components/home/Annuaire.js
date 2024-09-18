@@ -31,7 +31,7 @@ const options = [
 
 
 const Annuaire = () => {
-    const url = 'http://172.16.0.92:8000/';
+    const url = 'http://localhost:8000/';
     const ids = sessionStorage.getItem('ids');
     const loggedInUser = sessionStorage.getItem('loginUser');
     const loggedInPwd = sessionStorage.getItem('pwdUser');

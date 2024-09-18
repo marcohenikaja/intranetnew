@@ -6,12 +6,15 @@ import photo from '../../assets/images/eva.mp4';
 import logonpa from './LOGO NPA.png';
 
 const { Title } = Typography;
-const url = 'http://172.16.0.92:8000/'; // Définir l'URL de votre API
+const url = 'http://localhost:8000/'; // Définir l'URL de votre API
 
 const Choixeval = () => {
     const navigate = useNavigate();
     const loggedInUser = sessionStorage.getItem('loginUser');
-    const ids = sessionStorage.getItem('ids');
+
+    //const ids = sessionStorage.getItem('ids');
+
+    const ids = 10
 
     const [nbreval, setNbreval] = useState(0);
     const [evaldata, setEvaldata] = useState([]);
@@ -42,7 +45,7 @@ const Choixeval = () => {
 
     }
 
-     
+
     const getgataeva = async () => {
         try {
             const response = await axios.get(`${url}getgataevas/${loggedInUser}`);
@@ -138,7 +141,7 @@ const Choixeval = () => {
                     {loggedInUser === 'rakotobe.marco@npakadin.mg' && (
                         <Button onClick={getPersonEvaluation}>Backup all data</Button>
                     )}
-                   
+
 
                     <Row gutter={[16, 16]} justify="center">
                         <Col xs={24} sm={12}>

@@ -69,7 +69,7 @@ const Evaluateur = () => {
             key: 'action',
             width: 200,
             render: (_, record) => {
-                const canEdit = loggedInUser === record.emailn1 || loggedInUser === record.emailn2 || loggedInUser === record.emaildr;
+                const canEdit = loggedInUser === record.emailn1;
             
                 return (
                     <div style={{ display: 'flex', gap: '10px' }}>

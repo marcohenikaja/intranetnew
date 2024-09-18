@@ -466,12 +466,31 @@ const ajouteval = async (req, res) => {
             await Evaluation.create({
                 evaluatorType: 'Evaluation cadre',
                 evaluatedId: newEvaluated.id_pers,
-                evaluatorId: newEvaluator.id_evaluator
+                evaluatorId: newEvaluator.id_evaluator,
+                createdAt: new Date(),
             });
         }
 
         // Réponse de succès
-        res.send({ success: true, message: 'Évaluation bien enregistrée.' });
+        if (!existingEvaluation) {
+            createdAt = new Date();
+            formattedDate = createdAt.toLocaleDateString('fr-FR', {
+                weekday: 'long', // Jour de la semaine
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+            });
+        } else {
+            createdAt = existingEvaluation.createdAt;
+            formattedDate = createdAt.toLocaleDateString('fr-FR', {
+                weekday: 'long', // Jour de la semaine
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+            });
+        }
+
+        res.send({ success: true, message: `Évaluation bien enregistrée.`, date: `${formattedDate}` });
 
     } catch (error) {
         console.error('Erreur lors de la mise à jour des données:', error);
@@ -950,12 +969,31 @@ const ajoutevalnoncadre = async (req, res) => {
             await Evaluation.create({
                 evaluatorType: typeEval,
                 evaluatedId: newEvaluated.id_pers,
-                evaluatorId: newEvaluator.id_evaluator
+                evaluatorId: newEvaluator.id_evaluator,
+                createdAt: new Date(),
             });
         }
 
         // Réponse de succès
-        res.send({ success: true, message: 'Évaluation bien enregistrée.' });
+        if (!existingEvaluation) {
+            createdAt = new Date();
+            formattedDate = createdAt.toLocaleDateString('fr-FR', {
+                weekday: 'long', // Jour de la semaine
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+            });
+        } else {
+            createdAt = existingEvaluation.createdAt;
+            formattedDate = createdAt.toLocaleDateString('fr-FR', {
+                weekday: 'long', // Jour de la semaine
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+            });
+        }
+
+        res.send({ success: true, message: `Évaluation bien enregistrée.`, date: `${formattedDate}` });
 
     } catch (error) {
         console.error('Erreur lors de la mise à jour des données:', error);
@@ -1427,12 +1465,31 @@ const enregistrementevalcadrenonmanager = async (req, res) => {
             await Evaluation.create({
                 evaluatorType: typeEval,
                 evaluatedId: newEvaluated.id_pers,
-                evaluatorId: newEvaluator.id_evaluator
+                evaluatorId: newEvaluator.id_evaluator,
+                createdAt: new Date(),
             });
         }
 
         // Réponse de succès
-        res.send({ success: true, message: 'Évaluation bien enregistrée.' });
+        if (!existingEvaluation) {
+            createdAt = new Date();
+            formattedDate = createdAt.toLocaleDateString('fr-FR', {
+                weekday: 'long', // Jour de la semaine
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+            });
+        } else {
+            createdAt = existingEvaluation.createdAt;
+            formattedDate = createdAt.toLocaleDateString('fr-FR', {
+                weekday: 'long', // Jour de la semaine
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+            });
+        }
+
+        res.send({ success: true, message: `Évaluation bien enregistrée.`, date: `${formattedDate}` });
 
     } catch (error) {
         console.error('Erreur lors de la mise à jour des données:', error);
@@ -1659,7 +1716,7 @@ const getAlldataevaluationcadrenonmanager = async (req, res) => {
                 {
                     model: Evaluator,
                     attributes: [
-                        'id_evaluator', 'emailn1', 'emailn2', 'emaildr', 'emailsg', 'emaildg', 'emaildrh'
+                        'id_evaluator', 'emailn1', 'emailn2', 'emaildr', 'emailsg', 'emaildg', 'emaildrh',
                     ],
                 },
             ],
@@ -1992,7 +2049,7 @@ const fetchEvalDatas = async (req, res) => {
 };
 
 
-const fetchEvalDatashisto = async (req,res) => {
+const fetchEvalDatashisto = async (req, res) => {
     try {
         const fetchEvalDatashisto = await HistoEval.findAll()
         res.send(fetchEvalDatashisto);
@@ -2436,6 +2493,6 @@ cron.schedule('0 0 * * *', () => {
 
 
 module.exports = {
-    fetchEvalDatashisto,fetchAlldataEval, fetchAlldate, fetchAndInsertDailyData, getPersonEvaluation, deleteeval, updaterh, getStatus, ajouteval, ajoutevalnoncadre, getAlldataevaluations, getgataevas, validerEvaluations, fetchEvalDatas, getAlldataevaluationnoncadres, getAlldataevaluationcadrenonmanager, enregistrementevalcadrenonmanager
+    fetchEvalDatashisto, fetchAlldataEval, fetchAlldate, fetchAndInsertDailyData, getPersonEvaluation, deleteeval, updaterh, getStatus, ajouteval, ajoutevalnoncadre, getAlldataevaluations, getgataevas, validerEvaluations, fetchEvalDatas, getAlldataevaluationnoncadres, getAlldataevaluationcadrenonmanager, enregistrementevalcadrenonmanager
 
 };

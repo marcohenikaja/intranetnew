@@ -1444,7 +1444,7 @@ const Getevaluationnoncadre = () => {
                                             { value: "Système d'information", label: "Système d'information" },
                                             { value: 'Supply chain', label: 'Supply chain' },
                                             { value: 'Ressources humaines', label: 'Ressources humaines' },
-                                            { value: 'Administratif et Financie', label: 'Administratif et Financie' },
+                                            { value: 'Administratif et Financier', label: 'Administratif et Financier' },
                                             { value: 'Contrôle interne et audit', label: 'Contrôle interne et audit' },
                                             { value: 'Assistance de direction', label: 'Assistance de direction' },
                                         ]}
@@ -1959,7 +1959,7 @@ const Getevaluationnoncadre = () => {
                                         onChange={nivactu}
                                         options={[
                                             { value: 'junior', label: 'junior' },
-                                            { value: 'comfirmé', label: 'comfirmé' },
+                                            { value: 'confirmé', label: 'confirmé' },
                                             { value: 'senior', label: 'senior' },
                                             { value: "expert", label: "expert" },
                                         ]}

@@ -1,7 +1,7 @@
 
 
 import React, { useRef, useState, useEffect, useMemo } from 'react';
-import { Button, Input, Space, Table, AutoComplete, DatePicker, Typography, message, Tooltip, Popover, Avatar, Popconfirm, Modal, Checkbox, Row, Col } from 'antd';
+import { Button, Input, Space, Table, AutoComplete, DatePicker, Typography, message, Tooltip, Popover, Avatar, Popconfirm, Modal, Checkbox, Row, Col, Select } from 'antd';
 import { SearchOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import Link from 'antd/lib/typography/Link';
 import axios from 'axios';
@@ -17,7 +17,7 @@ import { useNavigate } from 'react-router-dom';
 
 
 const Consolidation = () => {
-    const url = 'http://172.16.0.92:8000/';
+    const url = 'http://localhost:8000/';
     const loggedInUser = sessionStorage.getItem('loginUser');
 
     const authorizedUsers = [
@@ -603,11 +603,11 @@ const Consolidation = () => {
     };
 
 
-    useEffect(() => {
-        getEmails()
-        fetchevalData();
-        fetchevalDataHisto();
-    }, []);
+    // useEffect(() => {
+    //     getEmails()
+    //     fetchevalData();
+    //     fetchevalDataHisto();
+    // }, []);
 
     const fetchevalData = async () => {
         try {
@@ -1159,7 +1159,7 @@ const Consolidation = () => {
             <Space style={{ marginBottom: 16 }}>
                 <AutoComplete
                     options={evaldata.map((item) => ({ value: item.nom }))}
-                    style={{ width: 200 }}
+                    style={{ width: 250 }}
                     value={searchValue}
                     onChange={handleSearchChange}
                     placeholder="Rechercher par nom"
@@ -1167,6 +1167,22 @@ const Consolidation = () => {
                         option.value.toLowerCase().includes(inputValue.toLowerCase())
                     }
                 />
+                <Select style={{ width: 250 }}
+                    placeholder="Type d'évaluation"
+                    options={[
+                        {
+                            value: 'Evaluation cadre',
+                            label: 'Evaluation cadre',
+                        },
+                        {
+                            value: 'Evaluation non cadre',
+                            label: 'Evaluation non cadre',
+                        },
+                        {
+                            value: 'Evaluation cadre non manager',
+                            label: 'Evaluation cadre non manager',
+                        },
+                    ]} />
 
             </Space>
             <div style={{ overflowX: 'auto' }}>
