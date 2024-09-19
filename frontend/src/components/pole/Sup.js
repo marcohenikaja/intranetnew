@@ -21,7 +21,7 @@ const { Title } = Typography;
 
 
 const Sup = () => {
-    const url = 'http://localhost:8000/'
+    const url = 'http://172.16.0.92:8000/'
     const statut = sessionStorage.getItem('poste');
     const [visibleCount, setVisibleCount] = useState(8); // état pour le nombre de cartes visibles
     const pageSize = 8; // nombre de cartes par page

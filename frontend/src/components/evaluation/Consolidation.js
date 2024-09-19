@@ -13,11 +13,13 @@ const { Title } = Typography;
 const { RangePicker } = DatePicker;
 import ChoosehistoRH from './histoeval/Choosehistorh';
 import { useNavigate } from 'react-router-dom';
+import { MailOutlined } from '@ant-design/icons';
+
 
 
 
 const Consolidation = () => {
-    const url = 'http://localhost:8000/';
+    const url = 'http://172.16.0.92:8000/';
     const loggedInUser = sessionStorage.getItem('loginUser');
 
     const authorizedUsers = [
@@ -36,6 +38,14 @@ const Consolidation = () => {
     const [emailsg, setEmailsg] = useState("boucher.edouard@npakadin.mg");
     const [emaildg, setEmaildg] = useState("");
     const [emaildrh, setEmaildrh] = useState("direndre.sonal@npakadin.mg");
+
+
+
+    // Fonction pour retirer les accents des chaînes de caractères
+    const removeAccents = (str) => {
+        return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    };
+
 
 
     const [emails, setEmails] = useState([]);
@@ -478,15 +488,9 @@ const Consolidation = () => {
 
 
     const handleFilterChange = (value) => {
-        alert(value)
-        setSelectedType(value);
-
-        // Filtrer les données en fonction de la valeur sélectionnée
-        const newData = evaldata.filter(item => item.evaluatorType === value || value === null);
-
-        // Mettre à jour les données filtrées dans l'état
-        setEvaldata(newData);
+        setSelectedType(value);  // Mettez à jour l'état avec la valeur sélectionnée
     };
+
 
 
 
@@ -496,6 +500,7 @@ const Consolidation = () => {
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
     const [searchValue, setSearchValue] = useState('');
+    const [searchValue1, setSearchValue1] = useState('');
     const [searchValuehisto, setSearchValuehisto] = useState('');
     const [pagination, setPagination] = useState({ current: 1, pageSize: 10 });
     const [isModalOpens, setIsModalOpens] = useState(false);
@@ -657,6 +662,14 @@ const Consolidation = () => {
     const handleSearchChange = (value) => {
         setSearchValue(value);
     };
+
+
+
+    const handleSearchChange1 = (value) => {
+        setSearchValue1(value);
+    };
+
+
 
     const handleSearch = (selectedKeys, confirm, dataIndex) => {
         confirm();
@@ -824,35 +837,54 @@ const Consolidation = () => {
             width: 150,
             render: (text) => moment(text).format('DD/MM/YYYY HH:mm:ss'),
         },
+
+
+
+
         {
             title: 'Évaluateur',
             key: 'evaluator',
             width: 200,
-            render: (text) => {
+            render: (record) => {
+                // Associez chaque email avec son label correspondant
                 const evaluators = [
-                    text.emailn1,
-                    text.emailn2,
-                    text.emaildr,
-                    text.emailsg,
-                    text.emaildg,
-                    text.emaildrh
-                ].filter(email => email);
+                    { email: record.emailn1, label: 'Évaluateur N+1' },
+                    { email: record.emailn2, label: 'Évaluateur N+2' },
+                    { email: record.emaildr, label: 'Directeur de rattachement' },
+                    { email: record.emailsg, label: 'Secrétaire général' },
+                    { email: record.emaildg, label: 'Directeur général' },
+                    { email: record.emaildrh, label: 'Directrice RH' }
+                ].filter(evaluator => evaluator.email); // Filtrer les emails non définis ou vides
 
-                const truncatedText = evaluators.join(', ');
+                // Truncate emails for the table cell (join only emails, not labels)
+                const truncatedText = evaluators.map(evaluator => evaluator.email).join(', ');
+
+                // Préparer le contenu complet pour le Popover avec des liens mailto
+                const fullEmails = evaluators.map(evaluator => (
+                    <div key={evaluator.email}>
+                        <a href={`mailto:${evaluator.email}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+                            {evaluator.label}: {evaluator.email}
+                        </a>
+                    </div>
+                ));
 
                 return (
                     <Popover
-                        content={<div style={{ maxWidth: '350px', whiteSpace: 'pre-wrap' }}>{truncatedText}</div>}
+                        content={<div style={{ maxWidth: '350px', whiteSpace: 'pre-wrap' }}>{fullEmails}</div>}
                         title="Évaluateur"
                         trigger="click"
                     >
-                        <span style={{ cursor: 'pointer' }}>
+                        <span style={{ cursor: 'pointer', display: 'flex', alignItems: 'center' }}>
+                            {/* Afficher les emails tronqués */}
                             {truncatedText.length > 20 ? `${truncatedText.slice(0, 20)}...` : truncatedText}
+                            <MailOutlined style={{ marginLeft: 5 }} /> {/* Icône d'enveloppe pour le clic */}
                         </span>
                     </Popover>
                 );
             },
         },
+
+
         {
             title: 'Résultat obj. indiv. %',
             dataIndex: 'res1',
@@ -1129,17 +1161,34 @@ const Consolidation = () => {
     ]
 
 
+    // const filteredData = useMemo(() => {
+    //     return evaldata.filter((item) => {
+    //         const prenom = item.prenom.toLowerCase();
+    //         const nom = item.nom.toLowerCase();
+    //         const searchTextLower = searchValue.toLowerCase();
+    //         return (
+    //             prenom.includes(searchTextLower) ||
+    //             nom.includes(searchTextLower)
+    //         );
+    //     });
+    // }, [evaldata, searchValue]);
+
     const filteredData = useMemo(() => {
         return evaldata.filter((item) => {
-            const prenom = item.prenom.toLowerCase();
-            const nom = item.nom.toLowerCase();
-            const searchTextLower = searchValue.toLowerCase();
+            const prenom = item.prenom ? removeAccents(item.prenom.toLowerCase().trim()) : '';
+            const nom = item.nom ? removeAccents(item.nom.toLowerCase().trim()) : '';
+            const searchTextLower = removeAccents(searchValue.toLowerCase().trim());
+
+            // Vérification si le type correspond ou si selectedType est vide (allowClear)
+            const typeMatch = selectedType ? item.evaluatorType === selectedType : true;
+
             return (
-                prenom.includes(searchTextLower) ||
-                nom.includes(searchTextLower)
+                (prenom.includes(searchTextLower) || nom.includes(searchTextLower)) &&
+                typeMatch // Filtrer selon le type d'évaluation sélectionné
             );
         });
-    }, [evaldata, searchValue]);
+    }, [evaldata, searchValue, selectedType]); // Ajout de selectedType dans les dépendances
+
 
 
 
@@ -1187,28 +1236,22 @@ const Consolidation = () => {
                         option.value.toLowerCase().includes(inputValue.toLowerCase())
                     }
                 />
-                <Select style={{ width: 250 }}
+                <Select
+                    style={{ width: 250 }}
                     placeholder="Type d'évaluation"
                     value={selectedType}
                     onChange={handleFilterChange}
                     allowClear
                     options={[
-                        {
-                            value: 'Evaluation cadre',
-                            label: 'Evaluation cadre',
-                        },
-                        {
-                            value: 'Evaluation non cadre',
-                            label: 'Evaluation non cadre',
-                        },
-                        {
-                            value: 'Evaluation cadre non manager',
-                            label: 'Evaluation cadre non manager',
-                        },
-                    ]} />
+                        { value: 'Evaluation cadre', label: 'Evaluation cadre' },
+                        { value: 'Evaluation non cadre', label: 'Evaluation non cadre' },
+                        { value: 'Evaluation cadre non manager', label: 'Evaluation cadre non manager' },
+                    ]}
+                />
+
 
             </Space>
-            <div style={{ overflowX: 'auto' }}>
+            {/* <div style={{ overflowX: 'auto' }}>
                 <Table
                     columns={columns}
                     dataSource={filteredData}
@@ -1216,6 +1259,24 @@ const Consolidation = () => {
                     onChange={handleTableChange}
                     scroll={{ x: 2000, y: 600 }}
                     rowKey="mat"
+                />
+            </div> */}
+            <div style={{ overflowX: 'auto' }}>
+                <Table
+                    columns={columns}
+                    dataSource={filteredData}
+                    pagination={{
+                        ...pagination,
+                        position: ['bottomRight']
+                    }}  // Pagination toujours visible en bas à droite
+                    onChange={handleTableChange}
+                    scroll={{ x: 'max-content', y: 600 }}  // Ajustement dynamique pour le défilement horizontal
+                    rowKey="mat"
+                    bordered  // Ajout de bordures pour une meilleure lisibilité
+                    size="small"  // Mode compact pour une meilleure lisibilité
+                    locale={{
+                        emptyText: "Aucune donnée disponible",  // Message personnalisé si aucune donnée
+                    }}
                 />
             </div>
 
@@ -1226,8 +1287,8 @@ const Consolidation = () => {
                 <AutoComplete
                     options={evaldatahisto.map((item) => ({ value: item.nom }))}
                     style={{ width: 200 }}
-                    value={searchValue}
-                    onChange={handleSearchChange}
+                    value={searchValue1}
+                    onChange={handleSearchChange1}
                     placeholder="Rechercher par nom"
                     filterOption={(inputValue, option) =>
                         option.value.toLowerCase().includes(inputValue.toLowerCase())

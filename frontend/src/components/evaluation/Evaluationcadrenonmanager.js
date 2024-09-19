@@ -22,7 +22,7 @@ import { CheckCircleOutlined, CloseCircleOutlined, HourglassOutlined } from '@an
 
 const CheckboxGroup = Checkbox.Group;
 
-const url = 'http://localhost:8000/'
+const url = 'http://172.16.0.92:8000/'
 const Evaluationcadrenonmanager = () => {
     const [current, setCurrent] = useState(0);
     const [api, contextHolder] = notification.useNotification();

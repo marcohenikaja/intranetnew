@@ -46,7 +46,7 @@ const AppHero = () => {
     setModalannif(true)
   }
 
-  const url = 'http://localhost:8000/';
+  const url = 'http://172.16.0.92:8000/';
   const today = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
 
   const fetchBirthdays = async () => {
