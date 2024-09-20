@@ -22,11 +22,14 @@ import { CheckCircleOutlined, CloseCircleOutlined, HourglassOutlined } from '@an
 
 const CheckboxGroup = Checkbox.Group;
 
-const url = 'http://172.16.0.92:8000/'
+const url = 'http://localhost:8000/'
 const Evaluationcadrenonmanager = () => {
     const [current, setCurrent] = useState(0);
     const [api, contextHolder] = notification.useNotification();
     const ids = sessionStorage.getItem('ids')
+
+
+    const [dateday, setDateday] = useState("")
 
     const [allmail, setAllmail] = useState([])
     const loggedInUser = sessionStorage.getItem('loginUser');
@@ -133,7 +136,7 @@ const Evaluationcadrenonmanager = () => {
             if (data && data.length > 0) {
                 console.log(data[0].nom);
 
-
+                setDateday((data[0].datetoday))
                 setEmailn1(data[0].emailn1)
                 setEmailn2(data[0].emailn2)
                 setEmaildr(data[0].emaildr)
@@ -1588,10 +1591,12 @@ const Evaluationcadrenonmanager = () => {
         {
             title: 'Info perso',
             content: (
+
+
                 <div>
                     <Title level={2}>Information personnelle - cadre non manager</Title>
                     <div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center' }}>
-                        {/* Validation N+1 */}
+
                         {status.statusN1 !== undefined && (
                             <Space style={{ margin: '10px', display: 'flex', alignItems: 'center' }}>
                                 {status.statusN1 ? (
@@ -1693,6 +1698,8 @@ const Evaluationcadrenonmanager = () => {
                             </Space>
                         )}
                     </div>
+
+
                     <table style={{ margin: 'auto', textAlign: 'center', width: '95%' }}>
                         <thead>
                             <tr>
@@ -3304,13 +3311,15 @@ const Evaluationcadrenonmanager = () => {
                                     <View style={{ flexDirection: 'row', backgroundColor: 'white', padding: 1 }}>
                                         <Text style={{ flex: 1, color: '#333', fontWeight: 'bold', fontSize: 8 }}>Prénom(s): {prenom}</Text>
                                         <Text style={{ flex: 1, color: '#333', fontWeight: 'bold', fontSize: 8 }}>Poste: {posteeval}</Text>
-                                        <Text style={{ flex: 1, color: '#333', fontWeight: 'bold', fontSize: 8 }}>Fonction: {fonc}</Text>
+                                        <Text style={{ flex: 1, color: '#333', fontWeight: 'bold', fontSize: 8 }}></Text>
                                     </View>
 
                                     <View style={{ flexDirection: 'row', backgroundColor: 'white', padding: 1 }}>
                                         <Text style={{ flex: 1, color: '#333', fontWeight: 'bold', fontSize: 8 }}>Matricule: {mat}</Text>
                                         <Text style={{ flex: 1, color: '#333', fontWeight: 'bold', fontSize: 8 }}>Direction: {dir}</Text>
-                                        <Text style={{ flex: 1, color: '#333', fontWeight: 'bold', fontSize: 8 }}>Date d'évaluation:{dateo}</Text>
+                                        <Text style={{ flex: 1, color: '#333', fontWeight: 'bold', fontSize: 8 }}>
+                                            Date d'évaluation: {new Date(dateday).toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' })}
+                                        </Text>
                                     </View>
                                 </View>
 

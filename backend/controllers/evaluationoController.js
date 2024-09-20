@@ -8,7 +8,7 @@ const ajouteval = async (req, res) => {
     const id_pers = req.params.ids;
     const typeEval = "Evaluation cadre"
 
-    console.log(id_pers);
+
     const cleanData = (data, defaultValue = '') => (data !== undefined ? data : defaultValue);
     const {
         nom, prenom, mat, daty, dir, posteeval, fonc, datys, datyss, mission, objectifs = [],
@@ -29,7 +29,7 @@ const ajouteval = async (req, res) => {
         pa1 = '', pa2 = '', pa3 = '', pa4 = '', dp1 = '', dp2 = '', dp3 = '', dp4 = '',
         ct1 = '', ct2 = '', ct3 = '', mt1 = '', mt2 = '', mt3 = '', ml1 = '', ml2 = '', ml3 = '',
         cpr1 = '', cpr2 = '', cpr3 = '', cg1 = '', cg2 = '', cg3 = '', comcollab = '', somme,
-        objectifs1 = [], alp1 = '', alp2 = '', f5 = '', c5 = '', am5 = '', c25 = '', emailn1 = '', emailn2 = '', emaildr = '', emailsg = '', emaildg = '', emaildrh = '', ids
+        objectifs1 = [], alp1 = '', alp2 = '', f5 = '', c5 = '', am5 = '', c25 = '', emailn1 = '', emailn2 = '', emaildr = '', emailsg = '', emaildg = '', emaildrh = '', ids, todayis
     } = req.body;
     console.log(ids);
 
@@ -449,6 +449,7 @@ const ajouteval = async (req, res) => {
                     poidsend4: cleanData(objectifs1[3]?.poids),
                     notationend4: cleanData(objectifs1[3]?.notation),
                     commentaireend4: cleanData(objectifs1[3]?.commentaire),
+                    datetoday: todayis,
                 }
             });
 
@@ -529,7 +530,7 @@ const ajoutevalnoncadre = async (req, res) => {
         pa1 = '', pa2 = '', pa3 = '', pa4 = '', dp1 = '', dp2 = '', dp3 = '', dp4 = '',
         ct1 = '', ct2 = '', ct3 = '', mt1 = '', mt2 = '', mt3 = '', ml1 = '', ml2 = '', ml3 = '',
         cpr1 = '', cpr2 = '', cpr3 = '', cg1 = '', cg2 = '', cg3 = '', comcollab = '', somme,
-        objectifs1 = [], alp1 = '', alp2 = '', f5 = '', c5 = '', am5 = '', c25 = '', emailn1 = '', emailn2 = '', emaildr = '', emailsg = '', emaildg = '', emaildrh = '', ids
+        objectifs1 = [], alp1 = '', alp2 = '', f5 = '', c5 = '', am5 = '', c25 = '', emailn1 = '', emailn2 = '', emaildr = '', emailsg = '', emaildg = '', emaildrh = '', ids, todayis,
     } = req.body;
 
     if (!id_pers) {
@@ -742,6 +743,7 @@ const ajoutevalnoncadre = async (req, res) => {
                 poidsend4: cleanData(objectifs1[3]?.poids),
                 notationend4: cleanData(objectifs1[3]?.notation),
                 commentaireend4: cleanData(objectifs1[3]?.commentaire),
+
             }, { where: { id_pers } });
 
 
@@ -952,6 +954,7 @@ const ajoutevalnoncadre = async (req, res) => {
                     poidsend4: cleanData(objectifs1[3]?.poids),
                     notationend4: cleanData(objectifs1[3]?.notation),
                     commentaireend4: cleanData(objectifs1[3]?.commentaire),
+                    datetoday: todayis,
                 }
             });
 
@@ -1004,6 +1007,8 @@ const ajoutevalnoncadre = async (req, res) => {
 
 
 const enregistrementevalcadrenonmanager = async (req, res) => {
+
+
     const id_pers = req.params.ids;
     const typeEval = 'Evaluation cadre non manager'
     console.log(id_pers);
@@ -1029,7 +1034,7 @@ const enregistrementevalcadrenonmanager = async (req, res) => {
         pa1 = '', pa2 = '', pa3 = '', pa4 = '', dp1 = '', dp2 = '', dp3 = '', dp4 = '',
         ct1 = '', ct2 = '', ct3 = '', mt1 = '', mt2 = '', mt3 = '', ml1 = '', ml2 = '', ml3 = '',
         cpr1 = '', cpr2 = '', cpr3 = '', cg1 = '', cg2 = '', cg3 = '', comcollab = '', somme,
-        objectifs1 = [], alp1 = '', alp2 = '', f5 = '', c5 = '', am5 = '', c25 = '', emailn1 = '', emailn2 = '', emaildr = '', emailsg = '', emaildg = '', emaildrh = '', ids
+        objectifs1 = [], alp1 = '', alp2 = '', f5 = '', c5 = '', am5 = '', c25 = '', emailn1 = '', emailn2 = '', emaildr = '', emailsg = '', emaildg = '', emaildrh = '', ids, todayis
     } = req.body;
     if (!id_pers) {
         return res.status(400).json({ error: 'Les paramètres id_pers, nomeval et typeeval sont requis.' });
@@ -1448,6 +1453,7 @@ const enregistrementevalcadrenonmanager = async (req, res) => {
                     poidsend4: cleanData(objectifs1[3]?.poids),
                     notationend4: cleanData(objectifs1[3]?.notation),
                     commentaireend4: cleanData(objectifs1[3]?.commentaire),
+                    datetoday: todayis,
                 }
             });
 
@@ -1538,7 +1544,7 @@ const getAlldataevaluations = async (req, res) => {
                         'cpr1', 'cpr2', 'cpr3', 'cg1', 'cg2', 'cg3', 'comcollab', 'libelleend1',
                         'poidsend1', 'notationend1', 'commentaireend1', 'libelleend2', 'poidsend2',
                         'notationend2', 'commentaireend2', 'libelleend3', 'poidsend3', 'notationend3',
-                        'commentaireend3', 'libelleend4', 'poidsend4', 'notationend4', 'commentaireend4', 'alp1', 'alp2'
+                        'commentaireend3', 'libelleend4', 'poidsend4', 'notationend4', 'commentaireend4', 'alp1', 'alp2', 'datetoday'
                     ],
                 },
                 {
@@ -1626,7 +1632,7 @@ const getAlldataevaluationnoncadres = async (req, res) => {
                         'cpr1', 'cpr2', 'cpr3', 'cg1', 'cg2', 'cg3', 'comcollab', 'libelleend1',
                         'poidsend1', 'notationend1', 'commentaireend1', 'libelleend2', 'poidsend2',
                         'notationend2', 'commentaireend2', 'libelleend3', 'poidsend3', 'notationend3',
-                        'commentaireend3', 'libelleend4', 'poidsend4', 'notationend4', 'commentaireend4', 'alp1', 'alp2'
+                        'commentaireend3', 'libelleend4', 'poidsend4', 'notationend4', 'commentaireend4', 'alp1', 'alp2', 'datetoday'
                     ],
                 },
                 {
@@ -1710,7 +1716,7 @@ const getAlldataevaluationcadrenonmanager = async (req, res) => {
                         'cpr1', 'cpr2', 'cpr3', 'cg1', 'cg2', 'cg3', 'comcollab', 'libelleend1',
                         'poidsend1', 'notationend1', 'commentaireend1', 'libelleend2', 'poidsend2',
                         'notationend2', 'commentaireend2', 'libelleend3', 'poidsend3', 'notationend3',
-                        'commentaireend3', 'libelleend4', 'poidsend4', 'notationend4', 'commentaireend4', 'alp1', 'alp2'
+                        'commentaireend3', 'libelleend4', 'poidsend4', 'notationend4', 'commentaireend4', 'alp1', 'alp2', 'datetoday'
                     ],
                 },
                 {
@@ -2387,6 +2393,33 @@ const getPersonEvaluation = async (req, res) => {
 };
 
 
+// const fetchAlldate = async (req, res) => {
+//     console.log(req.body.ids);
+
+//     try {
+//         const fetchAlldate = await HistoEval.findAll({
+//             where: {
+//                 id_pers: req.body.ids,
+//             },
+//             attributes: ['datedu', 'dateau', 'evaluatorType', 'id_evaluator', 'datetoday'], // Sélectionner les colonnes nécessaires
+//         });
+
+//         console.log(fetchAlldate);
+
+//         const formattedData = fetchAlldate.map(entry => ({
+//             value: `${entry.datedu}_${entry.dateau}_${entry.id_evaluator}`, // Concaténation pour un identifiant unique
+//             label: `${new Date(entry.datedu).toLocaleDateString()} - ${new Date(entry.dateau).toLocaleDateString()} (${entry.evaluatorType})`,
+//             id_evaluator: entry.id_evaluator // Inclusion de l'id_evaluator
+//         }));
+
+//         res.send({ evaluations: formattedData });  // Envoi des données sous une clé 'evaluations'
+
+//     } catch (error) {
+//         console.log(error);
+//         res.status(500).send({ message: 'Erreur lors de la récupération des données.' });
+//     }
+// };
+
 const fetchAlldate = async (req, res) => {
     console.log(req.body.ids);
 
@@ -2395,16 +2428,19 @@ const fetchAlldate = async (req, res) => {
             where: {
                 id_pers: req.body.ids,
             },
-            attributes: ['datedu', 'dateau', 'evaluatorType', 'id_evaluator'], // Sélectionner les colonnes nécessaires
+            attributes: ['datedu', 'dateau', 'evaluatorType', 'id_evaluator', 'datetoday'], // Sélectionner les colonnes nécessaires
         });
 
-        console.log(fetchAlldate);
+
 
         const formattedData = fetchAlldate.map(entry => ({
             value: `${entry.datedu}_${entry.dateau}_${entry.id_evaluator}`, // Concaténation pour un identifiant unique
             label: `${new Date(entry.datedu).toLocaleDateString()} - ${new Date(entry.dateau).toLocaleDateString()} (${entry.evaluatorType})`,
-            id_evaluator: entry.id_evaluator // Inclusion de l'id_evaluator
+            id_evaluator: entry.id_evaluator, // Inclusion de l'id_evaluator
+            datetoday: new Date(entry.datetoday).toLocaleDateString() // Inclusion de la date formattée
         }));
+
+        console.log(formattedData);
 
         res.send({ evaluations: formattedData });  // Envoi des données sous une clé 'evaluations'
 
@@ -2417,6 +2453,8 @@ const fetchAlldate = async (req, res) => {
 
 
 async function fetchAndInsertDailyData() {
+    console.log("zzzzz");
+
     try {
         // Récupérer toutes les données de PersonEvaluationView
         const results = await sequelize.query(

@@ -22,7 +22,7 @@ const { Step } = Steps;
 
 const CheckboxGroup = Checkbox.Group;
 
-const url = 'http://172.16.0.92:8000/'
+const url = 'http://localhost:8000/'
 
 const Choosehisto = () => {
     const ids = sessionStorage.getItem('ids');
@@ -31,6 +31,9 @@ const Choosehisto = () => {
     const [histoData, setHistoData] = useState(null);
     const loggedInUser = sessionStorage.getItem('loginUser');
     const [etaeval, setEtateval] = useState('');
+
+
+    const [dateday, setDateday] = useState("")
 
     //all etat 
     const [emails, setEmails] = useState([]);
@@ -1477,16 +1480,15 @@ const Choosehisto = () => {
     const FetchAlldate = async () => {
         try {
             const response = await axios.post(`${url}fetchAlldate`, { ids });
-
             setDates(response.data.evaluations);
+            console.log("1010");
             console.log(response.data.evaluations);
-
-
         } catch (error) {
             console.log(error);
-
         }
     }
+
+
 
     const FetchHistoData = async (selectedId) => {
         const parts = selectedId.split('_');
@@ -1503,7 +1505,7 @@ const Choosehisto = () => {
 
             if (data && data.length > 0) {
                 console.log(data[0].nom);
-
+                setDateday((data[0].datetoday))
                 setEmailn1(data[0].emailn1)
                 setEmailn2(data[0].emailn2)
                 setEmaildr(data[0].emaildr)
@@ -1844,7 +1846,7 @@ const Choosehisto = () => {
                                                 <View style={{ flexDirection: 'row', backgroundColor: 'white', padding: 0.5 }}>
                                                     <Text style={{ flex: 1, color: '#333', fontWeight: 'bold', fontSize: 8 }}>Nom: {nom}</Text>
                                                     <Text style={{ flex: 1, color: '#333', fontWeight: 'bold', fontSize: 8 }}>Date d'entrée: {formattedDate}</Text>
-                                                    <Text style={{ flex: 1, color: '#333', fontWeight: 'bold', fontSize: 8 }}>Evaluateurs: {emailn1}</Text>
+                                                    <Text style={{ flex: 1, color: '#333', fontWeight: 'bold', fontSize: 8 }}>Evaluateur: {emailn1}</Text>
                                                 </View>
 
                                                 <View style={{ flexDirection: 'row', backgroundColor: 'white', padding: 1 }}>
@@ -1856,7 +1858,10 @@ const Choosehisto = () => {
                                                 <View style={{ flexDirection: 'row', backgroundColor: 'white', padding: 1 }}>
                                                     <Text style={{ flex: 1, color: '#333', fontWeight: 'bold', fontSize: 8 }}>Matricule: {mat}</Text>
                                                     <Text style={{ flex: 1, color: '#333', fontWeight: 'bold', fontSize: 8 }}>Direction: {dir}</Text>
-                                                    <Text style={{ flex: 1, color: '#333', fontWeight: 'bold', fontSize: 8 }}>Date d'évaluation:</Text>
+                                                    <Text style={{ flex: 1, color: '#333', fontWeight: 'bold', fontSize: 8 }}>
+                                                        Date d'évaluation: {new Date(dateday).toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' })}
+                                                    </Text>
+
                                                 </View>
                                             </View>
 
@@ -2730,7 +2735,9 @@ const Choosehisto = () => {
                                                     <View style={{ flexDirection: 'row', backgroundColor: 'white', padding: 1 }}>
                                                         <Text style={{ flex: 1, color: '#333', fontWeight: 'bold', fontSize: 8 }}>Matricule: {mat}</Text>
                                                         <Text style={{ flex: 1, color: '#333', fontWeight: 'bold', fontSize: 8 }}>Direction: {dir}</Text>
-                                                        <Text style={{ flex: 1, color: '#333', fontWeight: 'bold', fontSize: 8 }}>Date d'évaluation:</Text>
+                                                        <Text style={{ flex: 1, color: '#333', fontWeight: 'bold', fontSize: 8 }}>
+                                                            Date d'évaluation: {new Date(dateday).toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' })}
+                                                        </Text>
                                                     </View>
                                                 </View>
 
@@ -3544,7 +3551,7 @@ const Choosehisto = () => {
                                                         <View style={{ flexDirection: 'row', backgroundColor: 'white', padding: 0.5 }}>
                                                             <Text style={{ flex: 1, color: '#333', fontWeight: 'bold', fontSize: 8 }}>Nom: {nom}</Text>
                                                             <Text style={{ flex: 1, color: '#333', fontWeight: 'bold', fontSize: 8 }}>Date d'entrée: {formattedDate}</Text>
-                                                            <Text style={{ flex: 1, color: '#333', fontWeight: 'bold', fontSize: 8 }}>Nom de l'évaluateur: {nomeval}</Text>
+                                                            <Text style={{ flex: 1, color: '#333', fontWeight: 'bold', fontSize: 8 }}>Nom de l'évaluateur: {emailn1}</Text>
                                                         </View>
 
                                                         <View style={{ flexDirection: 'row', backgroundColor: 'white', padding: 1 }}>
@@ -3556,7 +3563,9 @@ const Choosehisto = () => {
                                                         <View style={{ flexDirection: 'row', backgroundColor: 'white', padding: 1 }}>
                                                             <Text style={{ flex: 1, color: '#333', fontWeight: 'bold', fontSize: 8 }}>Matricule: {mat}</Text>
                                                             <Text style={{ flex: 1, color: '#333', fontWeight: 'bold', fontSize: 8 }}>Direction: {dir}</Text>
-                                                            <Text style={{ flex: 1, color: '#333', fontWeight: 'bold', fontSize: 8 }}>Date d'évaluation:</Text>
+                                                            <Text style={{ flex: 1, color: '#333', fontWeight: 'bold', fontSize: 8 }}>
+                                                                Date d'évaluation: {new Date(dateday).toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' })}
+                                                            </Text>
                                                         </View>
                                                     </View>
 

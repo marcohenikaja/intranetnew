@@ -24,18 +24,17 @@ const { RangePicker } = DatePicker;
 
 const CheckboxGroup = Checkbox.Group;
 
-const url = 'http://172.16.0.92:8000/'
+const url = 'http://localhost:8000/'
 const Evaluation = () => {
     const [current, setCurrent] = useState(0);
     const [api, contextHolder] = notification.useNotification();
-    //const ids = sessionStorage.getItem('ids');
-    const ids = 10
-
+    const ids = sessionStorage.getItem('ids');
 
 
     const [allmail, setAllmail] = useState([])
     const loggedInUser = sessionStorage.getItem('loginUser');
 
+    const [dateday, setDateday] = useState("")
 
     const [searchValue, setSearchValue] = useState('');
 
@@ -144,7 +143,7 @@ const Evaluation = () => {
                 setEmaildg(data[0].emaildg)
                 setEmaildrh(data[0].emaildrh)
 
-
+                setDateday((data[0].datetoday))
 
 
                 setNom(data[0].nom);
@@ -1099,20 +1098,20 @@ const Evaluation = () => {
 
             const numbers = [R1, value6, R3, R4, R5];
             const nouv = Math.min(...numbers);
-            if (nouv >= 0 && nouv <= 1.9) { 
+            if (nouv >= 0 && nouv <= 1.9) {
                 setNouvnivs("junior");
-            } else if (nouv >= 2 && nouv <= 3) { 
+            } else if (nouv >= 2 && nouv <= 3) {
                 setNouvnivs("confirmé");
-            } else if (nouv >= 3.1 && nouv <= 4.5) { 
+            } else if (nouv >= 3.1 && nouv <= 4.5) {
                 setNouvnivs("senior");
-            } else if (nouv >= 4.6 && nouv <= 5) { 
+            } else if (nouv >= 4.6 && nouv <= 5) {
                 setNouvnivs("expert");
             } else {
                 setNouvnivs("invalide"); // Pour traiter les valeurs hors des plages définies
             }
-            
 
-            
+
+
             next();
         }
 
@@ -1651,7 +1650,7 @@ const Evaluation = () => {
 
 
                     <div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center' }}>
-                        {/* Validation N+1 */}
+
                         {status.statusN1 !== undefined && (
                             <Space style={{ margin: '10px', display: 'flex', alignItems: 'center' }}>
                                 {status.statusN1 ? (
@@ -3393,13 +3392,16 @@ const Evaluation = () => {
                                     <View style={{ flexDirection: 'row', backgroundColor: 'white', padding: 1 }}>
                                         <Text style={{ flex: 1, color: '#333', fontWeight: 'bold', fontSize: 8 }}>Prénom(s): {prenom}</Text>
                                         <Text style={{ flex: 1, color: '#333', fontWeight: 'bold', fontSize: 8 }}>Poste: {posteeval}</Text>
-                                        <Text style={{ flex: 1, color: '#333', fontWeight: 'bold', fontSize: 8 }}>Fonction: {fonc}</Text>
+                                        <Text style={{ flex: 1, color: '#333', fontWeight: 'bold', fontSize: 8 }}></Text>
                                     </View>
 
                                     <View style={{ flexDirection: 'row', backgroundColor: 'white', padding: 1 }}>
                                         <Text style={{ flex: 1, color: '#333', fontWeight: 'bold', fontSize: 8 }}>Matricule: {mat}</Text>
                                         <Text style={{ flex: 1, color: '#333', fontWeight: 'bold', fontSize: 8 }}>Direction: {dir}</Text>
-                                        <Text style={{ flex: 1, color: '#333', fontWeight: 'bold', fontSize: 8 }}>Date d'évaluation:{dateo}</Text>
+
+                                        <Text style={{ flex: 1, color: '#333', fontWeight: 'bold', fontSize: 8 }}>
+                                            Date d'évaluation: {new Date(dateday).toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' })}
+                                        </Text>
                                     </View>
                                 </View>
 

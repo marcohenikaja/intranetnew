@@ -3600,6 +3600,7 @@ function genererClesRSA() {
 const enregistrement = async (req, res) => {
   const id = req.params.ids;
   const todayis = req.body.todayis;
+
   const typeeval = 'Evaluation cadre';
   // Conversion de la chaîne de caractères en objet Date
   const dateObject = new Date(todayis);

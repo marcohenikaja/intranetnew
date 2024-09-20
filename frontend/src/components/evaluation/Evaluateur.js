@@ -7,14 +7,14 @@ import logonpa from './LOGO NPA.png';
 import { EyeOutlined, EditOutlined, CheckOutlined } from '@ant-design/icons';
 
 
-const url = 'http://172.16.0.92:8000/';
+const url = 'http://localhost:8000/';
 
 const Evaluateur = () => {
     const navigate = useNavigate();
     const [dataeva, setDataeva] = useState([]);
     const [api, contextHolder] = notification.useNotification();
     const loggedInUser = sessionStorage.getItem('loginUser');
-   
+
     const columns = [
         {
             title: 'Nom',
@@ -69,8 +69,9 @@ const Evaluateur = () => {
             key: 'action',
             width: 200,
             render: (_, record) => {
+                // Désactiver le bouton si loggedInUser n'est pas égal à record.emailn1
                 const canEdit = loggedInUser === record.emailn1;
-            
+        
                 return (
                     <div style={{ display: 'flex', gap: '10px' }}>
                         <Tooltip title="Visualiser">
@@ -81,22 +82,21 @@ const Evaluateur = () => {
                                 style={{ fontSize: '16px', color: '#1890ff' }}
                             />
                         </Tooltip>
-            
+        
                         <Tooltip title="Modifier">
                             <Button
                                 type="text"
                                 icon={<EditOutlined />}
                                 onClick={() => navigateToEvaluation(record.id_pers, record.evaluatorType)}
                                 style={{ fontSize: '16px', color: '#40A9FF' }}
-                                disabled={!canEdit} // Disable when canEdit is false
+                                disabled={!canEdit} // Désactiver si canEdit est false (l'utilisateur ne peut pas éditer)
                             />
                         </Tooltip>
-                      
                     </div>
                 );
-            }
-            
+            },
         }
+        
     ];
 
     const getgataeva = async () => {

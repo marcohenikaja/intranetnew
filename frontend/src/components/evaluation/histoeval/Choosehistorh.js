@@ -22,7 +22,7 @@ const { Step } = Steps;
 
 const CheckboxGroup = Checkbox.Group;
 
-const url = 'http://172.16.0.92:8000/'
+const url = 'http://localhost:8000/';
 
 const ChoosehistoRH = () => {
     const { id } = useParams();
@@ -32,6 +32,9 @@ const ChoosehistoRH = () => {
     const [histoData, setHistoData] = useState(null);
     const loggedInUser = sessionStorage.getItem('loginUser');
     const [etaeval, setEtateval] = useState('');
+
+
+    const [dateday, setDateday] = useState("")
 
     //all etat 
     const [emails, setEmails] = useState([]);
@@ -1196,7 +1199,7 @@ const ChoosehistoRH = () => {
         selectedVal9, selectedVal10, selectedVal11, selectedVal12,
         selectedVal13, selectedVal14, selectedVal15
     ]);
-    
+
     //7eme etape
     const [nivactus, setNivactus] = useState(null)
     const [nouvnivs, setNouvnivs] = useState(null)
@@ -1479,8 +1482,12 @@ const ChoosehistoRH = () => {
 
         try {
             const response = await axios.post(`${url}fetchAlldate`, { ids });
+
+
+            console.log(response.data.evaluations[0].datetoday);
+            setDateday(response.data.evaluations[0].datetoday)
             setDates(response.data.evaluations);
-            console.log(response.data.evaluations);
+
         } catch (error) {
             console.log(error);
         }
@@ -1495,13 +1502,13 @@ const ChoosehistoRH = () => {
             const response = await axios.post(`${url}get-histo-eval-data`, { selectedId: extractedId, ids });
             const data = response.data;
 
-            console.log(data[0].v12); 
+            console.log(data[0].v12);
             setEtateval(data[0].evaluatorType)
 
 
             if (data && data.length > 0) {
                 console.log(data[0].nom);
-
+                setDateday((data[0].datetoday))
                 setEmailn1(data[0].emailn1)
                 setEmailn2(data[0].emailn2)
                 setEmaildr(data[0].emaildr)
@@ -1668,7 +1675,7 @@ const ChoosehistoRH = () => {
                 setSelectedVal13(data[0].v13 || 0);
                 setSelectedVal14(data[0].v14 || 0);
                 setSelectedVal15(data[0].v15 || 0);
-                
+
 
                 setAlp1(data[0].alp1);
                 setAlp2(data[0].alp2);
@@ -1842,19 +1849,22 @@ const ChoosehistoRH = () => {
                                                 <View style={{ flexDirection: 'row', backgroundColor: 'white', padding: 0.5 }}>
                                                     <Text style={{ flex: 1, color: '#333', fontWeight: 'bold', fontSize: 8 }}>Nom: {nom}</Text>
                                                     <Text style={{ flex: 1, color: '#333', fontWeight: 'bold', fontSize: 8 }}>Date d'entrée: {formattedDate}</Text>
-                                                    <Text style={{ flex: 1, color: '#333', fontWeight: 'bold', fontSize: 8 }}>Evaluateurs: {emailn1}</Text>
+                                                    <Text style={{ flex: 1, color: '#333', fontWeight: 'bold', fontSize: 8 }}>Evaluateur: {emailn1}</Text>
                                                 </View>
 
                                                 <View style={{ flexDirection: 'row', backgroundColor: 'white', padding: 1 }}>
                                                     <Text style={{ flex: 1, color: '#333', fontWeight: 'bold', fontSize: 8 }}>Prénom(s): {prenom}</Text>
                                                     <Text style={{ flex: 1, color: '#333', fontWeight: 'bold', fontSize: 8 }}>Poste: {posteeval}</Text>
-                                                    <Text style={{ flex: 1, color: '#333', fontWeight: 'bold', fontSize: 8 }}>Fonction: {fonc}</Text>
+                                                    <Text style={{ flex: 1, color: '#333', fontWeight: 'bold', fontSize: 8 }}></Text>
                                                 </View>
 
                                                 <View style={{ flexDirection: 'row', backgroundColor: 'white', padding: 1 }}>
                                                     <Text style={{ flex: 1, color: '#333', fontWeight: 'bold', fontSize: 8 }}>Matricule: {mat}</Text>
                                                     <Text style={{ flex: 1, color: '#333', fontWeight: 'bold', fontSize: 8 }}>Direction: {dir}</Text>
-                                                    <Text style={{ flex: 1, color: '#333', fontWeight: 'bold', fontSize: 8 }}>Date d'évaluation:</Text>
+                                                    <Text style={{ flex: 1, color: '#333', fontWeight: 'bold', fontSize: 8 }}>
+                                                        Date d'évaluation: {new Date(dateday).toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' })}
+                                                    </Text>
+
                                                 </View>
                                             </View>
 
@@ -2722,13 +2732,15 @@ const ChoosehistoRH = () => {
                                                     <View style={{ flexDirection: 'row', backgroundColor: 'white', padding: 1 }}>
                                                         <Text style={{ flex: 1, color: '#333', fontWeight: 'bold', fontSize: 8 }}>Prénom(s): {prenom}</Text>
                                                         <Text style={{ flex: 1, color: '#333', fontWeight: 'bold', fontSize: 8 }}>Poste: {posteeval}</Text>
-                                                        <Text style={{ flex: 1, color: '#333', fontWeight: 'bold', fontSize: 8 }}>Fonction: {fonc}</Text>
+                                                        <Text style={{ flex: 1, color: '#333', fontWeight: 'bold', fontSize: 8 }}></Text>
                                                     </View>
 
                                                     <View style={{ flexDirection: 'row', backgroundColor: 'white', padding: 1 }}>
                                                         <Text style={{ flex: 1, color: '#333', fontWeight: 'bold', fontSize: 8 }}>Matricule: {mat}</Text>
                                                         <Text style={{ flex: 1, color: '#333', fontWeight: 'bold', fontSize: 8 }}>Direction: {dir}</Text>
-                                                        <Text style={{ flex: 1, color: '#333', fontWeight: 'bold', fontSize: 8 }}>Date d'évaluation:</Text>
+                                                        <Text style={{ flex: 1, color: '#333', fontWeight: 'bold', fontSize: 8 }}>
+                                                            Date d'évaluation: {new Date(dateday).toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' })}
+                                                        </Text>
                                                     </View>
                                                 </View>
 
@@ -3542,19 +3554,21 @@ const ChoosehistoRH = () => {
                                                         <View style={{ flexDirection: 'row', backgroundColor: 'white', padding: 0.5 }}>
                                                             <Text style={{ flex: 1, color: '#333', fontWeight: 'bold', fontSize: 8 }}>Nom: {nom}</Text>
                                                             <Text style={{ flex: 1, color: '#333', fontWeight: 'bold', fontSize: 8 }}>Date d'entrée: {formattedDate}</Text>
-                                                            <Text style={{ flex: 1, color: '#333', fontWeight: 'bold', fontSize: 8 }}>Nom de l'évaluateur: {nomeval}</Text>
+                                                            <Text style={{ flex: 1, color: '#333', fontWeight: 'bold', fontSize: 8 }}>Nom de l'évaluateur: {emailn1}</Text>
                                                         </View>
 
                                                         <View style={{ flexDirection: 'row', backgroundColor: 'white', padding: 1 }}>
                                                             <Text style={{ flex: 1, color: '#333', fontWeight: 'bold', fontSize: 8 }}>Prénom(s): {prenom}</Text>
                                                             <Text style={{ flex: 1, color: '#333', fontWeight: 'bold', fontSize: 8 }}>Poste: {posteeval}</Text>
-                                                            <Text style={{ flex: 1, color: '#333', fontWeight: 'bold', fontSize: 8 }}>Fonction: {fonc}</Text>
+                                                            <Text style={{ flex: 1, color: '#333', fontWeight: 'bold', fontSize: 8 }}></Text>
                                                         </View>
 
                                                         <View style={{ flexDirection: 'row', backgroundColor: 'white', padding: 1 }}>
                                                             <Text style={{ flex: 1, color: '#333', fontWeight: 'bold', fontSize: 8 }}>Matricule: {mat}</Text>
                                                             <Text style={{ flex: 1, color: '#333', fontWeight: 'bold', fontSize: 8 }}>Direction: {dir}</Text>
-                                                            <Text style={{ flex: 1, color: '#333', fontWeight: 'bold', fontSize: 8 }}>Date d'évaluation:</Text>
+                                                            <Text style={{ flex: 1, color: '#333', fontWeight: 'bold', fontSize: 8 }}>
+                                                                Date d'évaluation: {new Date(dateday).toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' })}
+                                                            </Text>
                                                         </View>
                                                     </View>
 
@@ -3868,18 +3882,55 @@ const ChoosehistoRH = () => {
                                                                 <Text style={{ flex: 2.5, fontWeight: 'bold', fontSize: 10, color: 'white', textAlign: 'center' }}>Commentaires</Text>
                                                             </View>
 
-                                                            {[{ critere: 'Maîtrise techniques du poste', description: 'Performance (objectifs), Quantité du travail fourni, Qualité du travail fourni, Gestion de projet, Aptitude liée au poste, Management opérationnel', resultat: r1.toFixed(2), classement: cdc1, commentaire: cmt1 },
-                                                            { critere: "Degré d'autonomie", description: 'Innovation et créativité', resultat: r2, classement: cdc2, commentaire: cmt2 },
-                                                            { critere: 'Capacité de coordination', description: 'Organisation, Méthode, Indicateurs de contrôle, Planification des tâches de son équipe, Contrôle des activités de son équipe',resultat: parseFloat(parseFloat(r3).toFixed(2)), classement: cdc3, commentaire: cmt3 },
-                                                            { critere: "Capacité d'anticipation et résolution des problèmes", description: 'Ecoute et communication, Plan d\'action, Gestion du changement', resultat: r4, classement: cdc4, commentaire: cmt4 }].map((item, index) => (
+                                                            {[
+                                                                {
+                                                                    critere: 'Maîtrise techniques du poste',
+                                                                    description: 'Performance (objectifs), Quantité du travail fourni, Qualité du travail fourni, Gestion de projet, Aptitude liée au poste, Management opérationnel',
+                                                                    resultat: isNaN(r1) ? 'N/A' : parseFloat(r1).toFixed(2),
+                                                                    classement: cdc1,
+                                                                    commentaire: cmt1
+                                                                },
+                                                                {
+                                                                    critere: "Degré d'autonomie",
+                                                                    description: 'Innovation et créativité',
+                                                                    resultat: isNaN(r2) ? 'N/A' : parseFloat(r2).toFixed(2),
+                                                                    classement: cdc2,
+                                                                    commentaire: cmt2
+                                                                },
+                                                                {
+                                                                    critere: 'Capacité de coordination',
+                                                                    description: 'Organisation, Méthode, Indicateurs de contrôle, Planification des tâches de son équipe, Contrôle des activités de son équipe',
+                                                                    resultat: isNaN(r3) ? 'N/A' : parseFloat(r3).toFixed(2),
+                                                                    classement: cdc3,
+                                                                    commentaire: cmt3
+                                                                },
+                                                                {
+                                                                    critere: "Capacité d'anticipation et résolution des problèmes",
+                                                                    description: "Ecoute et communication, Plan d'action, Gestion du changement",
+                                                                    resultat: isNaN(r4) ? 'N/A' : parseFloat(r4).toFixed(2),
+                                                                    classement: cdc4,
+                                                                    commentaire: cmt4
+                                                                }
+                                                            ].map((item, index) => (
                                                                 <View key={index} style={{ flexDirection: 'row', backgroundColor: 'white', padding: 3, borderBottomWidth: 1, borderColor: '#ccc', pageBreakInside: 'avoid' }}>
-                                                                    <Text style={{ flex: 1, fontSize: 8, color: '#333', fontWeight: 'bold', textAlign: 'justify', padding: 5, borderRightWidth: 1, borderRightColor: '#ccc' }}>{item.critere}</Text>
-                                                                    <Text style={{ flex: 1.5, fontSize: 8, color: '#333', fontWeight: 'bold', textAlign: 'center', padding: 5, borderRightWidth: 1, borderRightColor: '#ccc' }}>{item.description}</Text>
-                                                                    <Text style={{ flex: 0.5, fontSize: 8, color: '#333', fontWeight: 'bold', textAlign: 'center', padding: 5, borderRightWidth: 1, borderRightColor: '#ccc' }}>{item.resultat}</Text>
-                                                                    <Text style={{ flex: 2, fontSize: 8, color: '#333', fontWeight: 'bold', textAlign: 'center', padding: 5, borderRightWidth: 1, borderRightColor: '#ccc' }}>{item.classement}</Text>
-                                                                    <Text style={{ flex: 2, fontSize: 8, color: '#333', fontWeight: 'bold', textAlign: 'center', padding: 5 }}>{item.commentaire}</Text>
+                                                                    <Text style={{ flex: 1, fontSize: 8, color: '#333', fontWeight: 'bold', textAlign: 'justify', padding: 5, borderRightWidth: 1, borderRightColor: '#ccc' }}>
+                                                                        {item.critere}
+                                                                    </Text>
+                                                                    <Text style={{ flex: 1.5, fontSize: 8, color: '#333', fontWeight: 'bold', textAlign: 'center', padding: 5, borderRightWidth: 1, borderRightColor: '#ccc' }}>
+                                                                        {item.description}
+                                                                    </Text>
+                                                                    <Text style={{ flex: 0.5, fontSize: 8, color: '#333', fontWeight: 'bold', textAlign: 'center', padding: 5, borderRightWidth: 1, borderRightColor: '#ccc' }}>
+                                                                        {item.resultat}
+                                                                    </Text>
+                                                                    <Text style={{ flex: 2, fontSize: 8, color: '#333', fontWeight: 'bold', textAlign: 'center', padding: 5, borderRightWidth: 1, borderRightColor: '#ccc' }}>
+                                                                        {item.classement}
+                                                                    </Text>
+                                                                    <Text style={{ flex: 2, fontSize: 8, color: '#333', fontWeight: 'bold', textAlign: 'center', padding: 5 }}>
+                                                                        {item.commentaire}
+                                                                    </Text>
                                                                 </View>
                                                             ))}
+
                                                         </View>
 
 

@@ -22,11 +22,13 @@ const { RangePicker } = DatePicker;
 
 
 
-const url = 'http://172.16.0.92:8000/'
+const url = 'http://localhost:8000/'
 const Evaluationnoncadre = () => {
     const [current, setCurrent] = useState(0);
     const [api, contextHolder] = notification.useNotification();
     const ids = sessionStorage.getItem('ids');
+
+    const [dateday, setDateday] = useState("")
 
     const [allmail, setAllmail] = useState([])
     const loggedInUser = sessionStorage.getItem('loginUser');
@@ -160,7 +162,7 @@ const Evaluationnoncadre = () => {
             if (data && data.length > 0) {
                 console.log(data[0].nom);
 
-
+                setDateday((data[0].datetoday))
                 setEmailn1(data[0].emailn1)
                 setEmailn2(data[0].emailn2)
                 setEmaildr(data[0].emaildr)
@@ -456,7 +458,7 @@ const Evaluationnoncadre = () => {
     }
 
     useEffect(() => {
-       getEmails()
+        getEmails()
         getStatus()
         getAlldataevaluationnoncadre()
     }, [])
@@ -517,7 +519,7 @@ const Evaluationnoncadre = () => {
     };
 
     const etape1 = (placement) => {
-       
+
         if (nom == '') {
             api.info({
                 message: `Notification`,
@@ -1049,13 +1051,13 @@ const Evaluationnoncadre = () => {
 
             const numbers = [R1, value6, R3, R4, R5];
             const nouv = Math.min(...numbers);
-            if (nouv >= 0 && nouv <= 1.9) { 
+            if (nouv >= 0 && nouv <= 1.9) {
                 setNouvnivs("junior");
-            } else if (nouv >= 2 && nouv <= 3) { 
+            } else if (nouv >= 2 && nouv <= 3) {
                 setNouvnivs("confirmé");
-            } else if (nouv >= 3.1 && nouv <= 4.5) { 
+            } else if (nouv >= 3.1 && nouv <= 4.5) {
                 setNouvnivs("senior");
-            } else if (nouv >= 4.6 && nouv <= 5) { 
+            } else if (nouv >= 4.6 && nouv <= 5) {
                 setNouvnivs("expert");
             } else {
                 setNouvnivs("invalide"); // Pour traiter les valeurs hors des plages définies
@@ -1594,7 +1596,7 @@ const Evaluationnoncadre = () => {
                 <div>
                     <Title level={2}>Information personnelle - non cadre</Title>
                     <div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center' }}>
-                        {/* Validation N+1 */}
+
                         {status.statusN1 !== undefined && (
                             <Space style={{ margin: '10px', display: 'flex', alignItems: 'center' }}>
                                 {status.statusN1 ? (
@@ -1696,6 +1698,8 @@ const Evaluationnoncadre = () => {
                             </Space>
                         )}
                     </div>
+
+
                     <table style={{ margin: 'auto', textAlign: 'center', width: '95%' }}>
                         <thead>
                             <tr>
@@ -2533,7 +2537,7 @@ const Evaluationnoncadre = () => {
                             <tr>
                                 <td style={{ padding: '10px', border: '1px solid #40A9FF' }}><TextArea value={t1} onChange={(e) => setT1(e.target.value)} autoSize /></td>
                                 <td style={{ padding: '10px', border: '1px solid #40A9FF' }}><TextArea value={compac1} onChange={(e) => setCompac1(e.target.value)} autoSize /></td>
-                               <td style={{ padding: '10px', border: '1px solid #40A9FF' }}>
+                                <td style={{ padding: '10px', border: '1px solid #40A9FF' }}>
                                     <Select style={{ minWidth: 250, width: 'auto', }}
                                         value={apav1} onChange={(value) => setApav1(value)}
                                         options={[
@@ -2596,7 +2600,7 @@ const Evaluationnoncadre = () => {
                                 <td style={{ padding: '10px', border: '1px solid #40A9FF' }}><TextArea value={t2} onChange={(e) => setT2(e.target.value)} autoSize /></td>
                                 <td style={{ padding: '10px', border: '1px solid #40A9FF' }}><TextArea value={compac2} onChange={(e) => setCompac2(e.target.value)} autoSize /></td>
                                 <td style={{ padding: '10px', border: '1px solid #40A9FF' }}>
-                                     <Select style={{ minWidth: 250, width: 'auto', }}
+                                    <Select style={{ minWidth: 250, width: 'auto', }}
                                         value={apav2} onChange={(value) => setApav2(value)}
                                         options={[
                                             {
@@ -2623,7 +2627,7 @@ const Evaluationnoncadre = () => {
                                 </td>
 
                                 <td style={{ padding: '10px', border: '1px solid #40A9FF' }}>
-                                     <Select style={{ minWidth: 250, width: 'auto', }}
+                                    <Select style={{ minWidth: 250, width: 'auto', }}
                                         value={apap2} onChange={(value) => setApap2(value)}
                                         options={[
                                             {
@@ -2659,7 +2663,7 @@ const Evaluationnoncadre = () => {
                                 <td style={{ padding: '10px', border: '1px solid #40A9FF' }}><TextArea value={t3} onChange={(e) => setT3(e.target.value)} autoSize /></td>
                                 <td style={{ padding: '10px', border: '1px solid #40A9FF' }}><TextArea value={compac3} onChange={(e) => setCompac3(e.target.value)} autoSize /></td>
                                 <td style={{ padding: '10px', border: '1px solid #40A9FF' }}>
-                                     <Select style={{ minWidth: 250, width: 'auto', }}
+                                    <Select style={{ minWidth: 250, width: 'auto', }}
                                         value={apav3} onChange={(value) => setApav3(value)}
                                         options={[
                                             {
@@ -2686,7 +2690,7 @@ const Evaluationnoncadre = () => {
                                 </td>
 
                                 <td style={{ padding: '10px', border: '1px solid #40A9FF' }}>
-                                     <Select style={{ minWidth: 250, width: 'auto', }}
+                                    <Select style={{ minWidth: 250, width: 'auto', }}
                                         value={apap3} onChange={(value) => setApap3(value)}
                                         options={[
                                             {
@@ -2722,7 +2726,7 @@ const Evaluationnoncadre = () => {
                                 <td style={{ padding: '10px', border: '1px solid #40A9FF' }}><TextArea value={t4} onChange={(e) => setT4(e.target.value)} autoSize /></td>
                                 <td style={{ padding: '10px', border: '1px solid #40A9FF' }}><TextArea value={compac4} onChange={(e) => setCompac4(e.target.value)} autoSize /></td>
                                 <td style={{ padding: '10px', border: '1px solid #40A9FF' }}>
-                                     <Select style={{ minWidth: 250, width: 'auto', }}
+                                    <Select style={{ minWidth: 250, width: 'auto', }}
                                         value={apav4} onChange={(value) => setApav4(value)}
                                         options={[
                                             {
@@ -2749,7 +2753,7 @@ const Evaluationnoncadre = () => {
                                 </td>
 
                                 <td style={{ padding: '10px', border: '1px solid #40A9FF' }}>
-                                     <Select style={{ minWidth: 250, width: 'auto', }}
+                                    <Select style={{ minWidth: 250, width: 'auto', }}
                                         value={apap4} onChange={(value) => setApap4(value)}
                                         options={[
                                             {
@@ -3147,84 +3151,84 @@ const Evaluationnoncadre = () => {
             title: 'Troisième étape',
             content: (
                 <div>
-                <h2>     OBJECTIFS DE LA PROCHAINE PERIODE</h2>
-                <table style={{ margin: 'auto', textAlign: 'center', borderCollapse: 'collapse', width: '100%' }}>
-                    <thead style={{ backgroundColor: '#40A9FF', color: 'white' }}>
-                        <tr>
-                            <th style={{ padding: '10px', border: '1px solid white' }}>Libéllé-Objectif</th>
-                            <th style={{ padding: '10px', border: '1px solid white' }}>Poids en %</th>
-                            <th style={{ padding: '10px', border: '1px solid white' }}>Notation sur 5 évalué</th>
-                            <th style={{ padding: '10px', border: '1px solid white' }}>Total pondéré</th>
-                            <th style={{ padding: '10px', border: '1px solid white' }}>Commentaires</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {objectifs1.map((objectif, index) => (
-                            <tr key={index}>
-                                <td style={{ padding: '10px', border: '1px solid #40A9FF', width: '30%' }}>
-                                    <TextArea
-                                        name="libelle"
-                                        value={objectif.libelle}
-                                        onChange={(event) => handleInputChange1(index, event)}
-                                        placeholder="Libéllé-Objectif"
-                                        autoSize
-                                    />
-                                </td>
-                                <td style={{ padding: '10px', border: '1px solid #40A9FF', width: '10%' }}>
-                                    <Input
-                                        type='number'
-                                        name="poids"
-                                        value={objectif.poids}
-                                        onChange={(event) => handleInputChange1(index, event)}
-                                    />
-                                </td>
-                                <td style={{ padding: '10px', border: '1px solid #40A9FF', width: '10%' }}>
-
-                                    <Tooltip title="Ici, c'est la notation de votre objectif sur 5">
+                    <h2>     OBJECTIFS DE LA PROCHAINE PERIODE</h2>
+                    <table style={{ margin: 'auto', textAlign: 'center', borderCollapse: 'collapse', width: '100%' }}>
+                        <thead style={{ backgroundColor: '#40A9FF', color: 'white' }}>
+                            <tr>
+                                <th style={{ padding: '10px', border: '1px solid white' }}>Libéllé-Objectif</th>
+                                <th style={{ padding: '10px', border: '1px solid white' }}>Poids en %</th>
+                                <th style={{ padding: '10px', border: '1px solid white' }}>Notation sur 5 évalué</th>
+                                <th style={{ padding: '10px', border: '1px solid white' }}>Total pondéré</th>
+                                <th style={{ padding: '10px', border: '1px solid white' }}>Commentaires</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {objectifs1.map((objectif, index) => (
+                                <tr key={index}>
+                                    <td style={{ padding: '10px', border: '1px solid #40A9FF', width: '30%' }}>
+                                        <TextArea
+                                            name="libelle"
+                                            value={objectif.libelle}
+                                            onChange={(event) => handleInputChange1(index, event)}
+                                            placeholder="Libéllé-Objectif"
+                                            autoSize
+                                        />
+                                    </td>
+                                    <td style={{ padding: '10px', border: '1px solid #40A9FF', width: '10%' }}>
                                         <Input
                                             type='number'
-                                            name="notation"
-                                            value={objectif.notation}
+                                            name="poids"
+                                            value={objectif.poids}
                                             onChange={(event) => handleInputChange1(index, event)}
-                                            min={1}  // Optionnel, si tu veux également limiter la valeur minimale
-                                            max={5}  // Ceci n'aura d'effet qu'avec les boutons de flèche dans certains navigateurs
-                                            onInput={(event) => {
-                                                if (event.target.value > 5) {
-                                                    event.target.value = 5;
-                                                }
-                                            }}
                                         />
-                                    </Tooltip>
-                                </td>
-                                <td style={{ padding: '10px', border: '1px solid #40A9FF', width: '10%' }}>
-                                    {((parseFloat(objectif.poids) * parseFloat(objectif.notation || 0)) / 5).toFixed(2) || 0}
-                                </td>
-                                <td style={{ padding: '10px', border: '1px solid #40A9FF', width: '40%' }}>
-                                    <TextArea
-                                        name="commentaire"
-                                        value={objectif.commentaire}
-                                        onChange={(event) => handleInputChange1(index, event)}
-                                        placeholder="Commentaires"
-                                        style={{ width: '100%' }}
-                                        autoSize
-                                    />
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-                <p>Résultat en %: {resultat1.toFixed(2)}%</p>
-                <br /> <br />
-                <div style={{ marginBottom: '10px' }}>
-                    <Button type="primary" onClick={prev} style={{ marginRight: '10px' }}>
-                        Précédent
-                    </Button>
+                                    </td>
+                                    <td style={{ padding: '10px', border: '1px solid #40A9FF', width: '10%' }}>
 
-                    <Button type="primary" onClick={() => etape13('top')}>
-                        Suivant
-                    </Button>
+                                        <Tooltip title="Ici, c'est la notation de votre objectif sur 5">
+                                            <Input
+                                                type='number'
+                                                name="notation"
+                                                value={objectif.notation}
+                                                onChange={(event) => handleInputChange1(index, event)}
+                                                min={1}  // Optionnel, si tu veux également limiter la valeur minimale
+                                                max={5}  // Ceci n'aura d'effet qu'avec les boutons de flèche dans certains navigateurs
+                                                onInput={(event) => {
+                                                    if (event.target.value > 5) {
+                                                        event.target.value = 5;
+                                                    }
+                                                }}
+                                            />
+                                        </Tooltip>
+                                    </td>
+                                    <td style={{ padding: '10px', border: '1px solid #40A9FF', width: '10%' }}>
+                                        {((parseFloat(objectif.poids) * parseFloat(objectif.notation || 0)) / 5).toFixed(2) || 0}
+                                    </td>
+                                    <td style={{ padding: '10px', border: '1px solid #40A9FF', width: '40%' }}>
+                                        <TextArea
+                                            name="commentaire"
+                                            value={objectif.commentaire}
+                                            onChange={(event) => handleInputChange1(index, event)}
+                                            placeholder="Commentaires"
+                                            style={{ width: '100%' }}
+                                            autoSize
+                                        />
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                    <p>Résultat en %: {resultat1.toFixed(2)}%</p>
+                    <br /> <br />
+                    <div style={{ marginBottom: '10px' }}>
+                        <Button type="primary" onClick={prev} style={{ marginRight: '10px' }}>
+                            Précédent
+                        </Button>
+
+                        <Button type="primary" onClick={() => etape13('top')}>
+                            Suivant
+                        </Button>
+                    </div>
                 </div>
-            </div>
             )
         },
 
@@ -3302,13 +3306,16 @@ const Evaluationnoncadre = () => {
                                     <View style={{ flexDirection: 'row', backgroundColor: 'white', padding: 1 }}>
                                         <Text style={{ flex: 1, color: '#333', fontWeight: 'bold', fontSize: 8 }}>Prénom(s): {prenom}</Text>
                                         <Text style={{ flex: 1, color: '#333', fontWeight: 'bold', fontSize: 8 }}>Poste: {posteeval}</Text>
-                                        <Text style={{ flex: 1, color: '#333', fontWeight: 'bold', fontSize: 8 }}>Fonction: {fonc}</Text>
+                                        <Text style={{ flex: 1, color: '#333', fontWeight: 'bold', fontSize: 8 }}></Text>
                                     </View>
 
                                     <View style={{ flexDirection: 'row', backgroundColor: 'white', padding: 1 }}>
                                         <Text style={{ flex: 1, color: '#333', fontWeight: 'bold', fontSize: 8 }}>Matricule: {mat}</Text>
                                         <Text style={{ flex: 1, color: '#333', fontWeight: 'bold', fontSize: 8 }}>Direction: {dir}</Text>
-                                        <Text style={{ flex: 1, color: '#333', fontWeight: 'bold', fontSize: 8 }}>Date d'évaluation:{dateo}</Text>
+
+                                        <Text style={{ flex: 1, color: '#333', fontWeight: 'bold', fontSize: 8 }}>
+                                            Date d'évaluation: {new Date(dateday).toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' })}
+                                        </Text>
                                     </View>
                                 </View>
 

@@ -24,11 +24,14 @@ const { Step } = Steps;
 
 const CheckboxGroup = Checkbox.Group;
 
-const url = 'http://172.16.0.92:8000/'
+const url = 'http://localhost:8000/'
 const Cadrenomanagerpdf = () => {
     const [current, setCurrent] = useState(0);
     const [api, contextHolder] = notification.useNotification();
     const ids = sessionStorage.getItem('ids')
+
+
+    const [dateday, setDateday] = useState("")
 
     const [allmail, setAllmail] = useState([])
     const loggedInUser = sessionStorage.getItem('loginUser');
@@ -184,7 +187,7 @@ const Cadrenomanagerpdf = () => {
             if (data && data.length > 0) {
                 console.log(data[0].nom);
 
-
+                setDateday((data[0].datetoday))
                 setEmailn1(data[0].emailn1)
                 setEmailn2(data[0].emailn2)
                 setEmaildr(data[0].emaildr)
@@ -1568,7 +1571,9 @@ const Cadrenomanagerpdf = () => {
                                             <View style={{ flexDirection: 'row', backgroundColor: 'white', padding: 1 }}>
                                                 <Text style={{ flex: 1, color: '#333', fontWeight: 'bold', fontSize: 8 }}>Matricule: {mat}</Text>
                                                 <Text style={{ flex: 1, color: '#333', fontWeight: 'bold', fontSize: 8 }}>Direction: {dir}</Text>
-                                                <Text style={{ flex: 1, color: '#333', fontWeight: 'bold', fontSize: 8 }}>Date d'évaluation:</Text>
+                                                <Text style={{ flex: 1, color: '#333', fontWeight: 'bold', fontSize: 8 }}>
+                                                    Date d'évaluation: {new Date(dateday).toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' })}
+                                                </Text>
                                             </View>
                                         </View>
 

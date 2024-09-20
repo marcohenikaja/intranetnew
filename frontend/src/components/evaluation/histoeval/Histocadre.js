@@ -21,7 +21,7 @@ const { Step } = Steps;
 
 const CheckboxGroup = Checkbox.Group;
 
-const url = 'http://172.16.0.92:8000/'
+const url = 'http://localhost:8000/'
 
 const Histocadre = () => {
     const [current, setCurrent] = useState(0);
@@ -1594,7 +1594,7 @@ const Histocadre = () => {
                                         <View style={{ flexDirection: 'row', backgroundColor: 'white', padding: 0.5 }}>
                                             <Text style={{ flex: 1, color: '#333', fontWeight: 'bold', fontSize: 8 }}>Nom: {nom}</Text>
                                             <Text style={{ flex: 1, color: '#333', fontWeight: 'bold', fontSize: 8 }}>Date d'entrée: {formattedDate}</Text>
-                                            <Text style={{ flex: 1, color: '#333', fontWeight: 'bold', fontSize: 8 }}>Nom de l'évaluateur: {nomeval}</Text>
+                                            <Text style={{ flex: 1, color: '#333', fontWeight: 'bold', fontSize: 8 }}>Nom de l'évaluateur: {emailn1}</Text>
                                         </View>
 
                                         <View style={{ flexDirection: 'row', backgroundColor: 'white', padding: 1 }}>
@@ -1963,7 +1963,7 @@ const Histocadre = () => {
                                             {[{ critere: 'Maîtrise techniques du poste', description: 'Performance (objectifs), Quantité du travail fourni, Qualité du travail fourni, Gestion de projet, Aptitude liée au poste, Management opérationnel', resultat: r1.toFixed(2), classement: cdc1, commentaire: cmt1 },
                                             { critere: "Degré d'autonomie", description: 'Innovation et créativité', resultat: r2, classement: cdc2, commentaire: cmt2 },
                                             { critere: 'Capacité de coordination', description: 'Organisation, Méthode, Indicateurs de contrôle, Planification des tâches de son équipe, Contrôle des activités de son équipe', resultat: r3, classement: cdc3, commentaire: cmt3 },
-                                            { critere: "Capacité d'anticipation et résolution des problèmes", description: 'Ecoute et communication, Plan d\'action, Gestion du changement', resultat: r4, classement: cdc4, commentaire: cmt4 }].map((item, index) => (
+                                            { critere: "Capacité d'anticipation et résolution des problèmes", description: 'Ecoute et communication, Plan d\'action, Gestion du changement', resultat: r4.toFixed(2), classement: cdc4, commentaire: cmt4 }].map((item, index) => (
                                                 <View key={index} style={{ flexDirection: 'row', backgroundColor: 'white', padding: 3, borderBottomWidth: 1, borderColor: '#ccc', pageBreakInside: 'avoid' }}>
                                                     <Text style={{ flex: 1, fontSize: 8, color: '#333', fontWeight: 'bold', textAlign: 'justify', padding: 5, borderRightWidth: 1, borderRightColor: '#ccc' }}>{item.critere}</Text>
                                                     <Text style={{ flex: 1.5, fontSize: 8, color: '#333', fontWeight: 'bold', textAlign: 'center', padding: 5, borderRightWidth: 1, borderRightColor: '#ccc' }}>{item.description}</Text>

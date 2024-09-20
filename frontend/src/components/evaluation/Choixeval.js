@@ -6,7 +6,7 @@ import photo from '../../assets/images/eva.mp4';
 import logonpa from './LOGO NPA.png';
 
 const { Title } = Typography;
-const url = 'http://172.16.0.92:8000/'; // Définir l'URL de votre API
+const url = 'http://localhost:8000/'; // Définir l'URL de votre API
 
 const Choixeval = () => {
     const navigate = useNavigate();
@@ -14,7 +14,6 @@ const Choixeval = () => {
 
     const ids = sessionStorage.getItem('ids');
 
-    // const ids = 10
 
     const [nbreval, setNbreval] = useState(0);
     const [evaldata, setEvaldata] = useState([]);
@@ -211,32 +210,7 @@ const Choixeval = () => {
 
 
                         <Col xs={24}>
-                            {/* <Select
-                               placeholder="Historique d'évaluation"
-                                allowClear
-                                options={[
-                                    {
-                                        value: 'lucy',
-                                        label: 'Lucy',
-                                    },
-                                    {
-                                        value: 'lucy',
-                                        label: 'Lucy',
-                                    },
-                                    {
-                                        value: 'lucy',
-                                        label: 'Lucy',
-                                    },
-                                    {
-                                        value: 'lucy',
-                                        label: 'Lucy',
-                                    },
-                                    {
-                                        value: 'lucy',
-                                        label: 'Lucy',
-                                    },
-                                ]}
-                            /> */}
+                          
                             <Button
                                 type="primary"
                                 style={{ backgroundColor: '#00922E', borderColor: '#00922E', position: 'relative' }}

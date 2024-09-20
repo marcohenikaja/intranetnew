@@ -19,7 +19,7 @@ import { MailOutlined } from '@ant-design/icons';
 
 
 const Consolidation = () => {
-    const url = 'http://172.16.0.92:8000/';
+    const url = 'http://localhost:8000/';
     const loggedInUser = sessionStorage.getItem('loginUser');
 
     const authorizedUsers = [
@@ -623,7 +623,7 @@ const Consolidation = () => {
         } catch (err) {
             setError('Erreur lors de la récupération des e-mails.');
         } finally {
-            setLoading(false);
+          //  setLoading(false);
         }
     };
 
@@ -1205,7 +1205,8 @@ const Consolidation = () => {
         });
     }, [evaldatahisto, searchValuehisto]);
 
-    evaldatahisto
+
+
 
     if (!authorizedUsers.includes(loggedInUser)) {
         return (

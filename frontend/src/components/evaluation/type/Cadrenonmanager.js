@@ -24,7 +24,7 @@ const { RangePicker } = DatePicker;
 
 const CheckboxGroup = Checkbox.Group;
 
-const url = 'http://172.16.0.92:8000/'
+const url = 'http://localhost:8000/'
 const Cadrenonmanager = () => {
     const [current, setCurrent] = useState(0);
     const [api, contextHolder] = notification.useNotification();
@@ -54,6 +54,17 @@ const Cadrenonmanager = () => {
             setIsAdding(false);
         }
     };
+
+
+    const handleSelect = (value) => {
+        setEmailn1(value);
+    };
+
+    const handleChange = (value) => {
+        setEmailn1(value);
+        handleSearch(value); // Optionnel : met à jour les options lors de la modification
+    };
+
 
 
 
@@ -440,7 +451,7 @@ const Cadrenonmanager = () => {
     }
 
     useEffect(() => {
-        //  getEmails()
+        getEmails()
         getAlldataevaluationnonmanager()
     }, [])
 
@@ -3242,7 +3253,7 @@ const Cadrenonmanager = () => {
                                     <View style={{ flexDirection: 'row', backgroundColor: 'white', padding: 0.5 }}>
                                         <Text style={{ flex: 1, color: '#333', fontWeight: 'bold', fontSize: 8 }}>Nom: {nom}</Text>
                                         <Text style={{ flex: 1, color: '#333', fontWeight: 'bold', fontSize: 8 }}>Date d'entrée: {formattedDate}</Text>
-                                        <Text style={{ flex: 1, color: '#333', fontWeight: 'bold', fontSize: 8 }}>Nom de l'évaluateur: {nomeval}</Text>
+                                        <Text style={{ flex: 1, color: '#333', fontWeight: 'bold', fontSize: 8 }}>Nom de l'évaluateur: {emailn1}</Text>
                                     </View>
 
                                     <View style={{ flexDirection: 'row', backgroundColor: 'white', padding: 1 }}>
