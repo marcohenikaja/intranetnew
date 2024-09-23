@@ -7,7 +7,7 @@ import logonpa from './LOGO NPA.png';
 import { EyeOutlined, EditOutlined, CheckOutlined } from '@ant-design/icons';
 
 
-const url = 'http://localhost:8000/';
+const url = 'http://172.16.0.92:8000/';
 
 const Evaluateur = () => {
     const navigate = useNavigate();

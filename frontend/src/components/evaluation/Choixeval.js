@@ -6,7 +6,7 @@ import photo from '../../assets/images/eva.mp4';
 import logonpa from './LOGO NPA.png';
 
 const { Title } = Typography;
-const url = 'http://localhost:8000/'; // Définir l'URL de votre API
+const url = 'http://172.16.0.92:8000/'; // Définir l'URL de votre API
 
 const Choixeval = () => {
     const navigate = useNavigate();
@@ -156,7 +156,7 @@ const Choixeval = () => {
 
                         <Col xs={24}>
                             <Button type="primary" block onClick={() => handleClick(`/evalcadrenonmanager/${ids}/Evaluation cadre non manager`)}>
-                                Evaluation cadre non management
+                                Evaluation cadre non manager
                             </Button>
                         </Col>
 
@@ -210,7 +210,7 @@ const Choixeval = () => {
 
 
                         <Col xs={24}>
-                          
+
                             <Button
                                 type="primary"
                                 style={{ backgroundColor: '#00922E', borderColor: '#00922E', position: 'relative' }}

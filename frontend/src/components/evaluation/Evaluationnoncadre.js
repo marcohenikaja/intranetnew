@@ -22,7 +22,7 @@ const { RangePicker } = DatePicker;
 
 
 
-const url = 'http://localhost:8000/'
+const url = 'http://172.16.0.92:8000/'
 const Evaluationnoncadre = () => {
     const [current, setCurrent] = useState(0);
     const [api, contextHolder] = notification.useNotification();
@@ -1141,18 +1141,7 @@ const Evaluationnoncadre = () => {
                 style: { textAlign: 'justify' },
             });
             return;
-        }
-        else if (cmt1 == null || cmt2 == null || cmt3 == null || cmt4 == null || cmt5 == null) {
-
-            notification.info({
-                message: "Notification",
-                description: "Veuillez remplir tous les champs commentaires.",
-                placement: 'top',
-
-            });
-            return;
-        }
-        else {
+        }else {
             next()
         }
     }
@@ -1316,15 +1305,7 @@ const Evaluationnoncadre = () => {
 
         // Vérification si tous les champs ccd sont vides
         const allCcdsEmpty = fields.every(({ ccd }) => !ccd);
-        if (allCcdsEmpty) {
-            notification.info({
-                message: "Notification",
-                description: "Tous les champs du tableau sont vides.",
-                placement: 'top',
-                style: { textAlign: 'justify' },
-            });
-            return;
-        }
+       
 
         // Passe à l'étape suivante si toutes les validations sont réussies
         next();
@@ -2178,7 +2159,7 @@ const Evaluationnoncadre = () => {
 
                             <tr>
                                 <td style={{ padding: '10px', border: '1px solid #40A9FF' }}>Aptitude liée au poste</td>
-                                <td style={{ padding: '10px', border: '1px solid #40A9FF' }}> <Tooltip title="Les aptitudes liées au poste sont les compétences spécifiques nécessaires pour bien accomplir les tâches du poste.">
+                                <td style={{ padding: '10px', border: '1px solid #40A9FF' }}> <Tooltip title="Les aptitudes liées au poste sont les compétences spécifiques nécessaires à l'accomplissement des tâches au quotidien.">
                                     <TextArea
                                         placeholder="Aptitude liée au poste"
                                         autoSize
@@ -2196,7 +2177,7 @@ const Evaluationnoncadre = () => {
 
                             <tr>
                                 <td style={{ padding: '10px', border: '1px solid #40A9FF' }}>Aptitude liée au poste</td>
-                                <td style={{ padding: '10px', border: '1px solid #40A9FF' }}><Tooltip title="Les aptitudes liées au poste sont les compétences spécifiques nécessaires pour bien accomplir les tâches du poste.">
+                                <td style={{ padding: '10px', border: '1px solid #40A9FF' }}><Tooltip title="Les aptitudes liées au poste sont les compétences spécifiques nécessaires à l'accomplissement des tâches au quotidien.">
                                     <TextArea
                                         placeholder="Aptitude liée au poste"
                                         autoSize
@@ -2547,15 +2528,15 @@ const Evaluationnoncadre = () => {
                                             },
                                             {
                                                 value: 'EI',
-                                                label: 'EI (Elémentaire insuffisant)',
+                                                label: 'EI (En Initiation)',
                                             },
                                             {
                                                 value: 'EA',
-                                                label: 'EA (Elémentaire acquis)',
+                                                label: "EA (En cours d'acquisition)",
                                             },
                                             {
                                                 value: 'MA',
-                                                label: 'MA (Mâtrise approfondie)',
+                                                label: 'MA (Mâtrise)',
                                             },
                                             {
                                                 value: 'EX',
@@ -2574,15 +2555,15 @@ const Evaluationnoncadre = () => {
                                             },
                                             {
                                                 value: 'EI',
-                                                label: 'EI (Elémentaire insuffisant)',
+                                                label: 'EI (En Initiation)',
                                             },
                                             {
                                                 value: 'EA',
-                                                label: 'EA (Elémentaire acquis)',
+                                                label: "EA (En cours d'acquisition)",
                                             },
                                             {
                                                 value: 'MA',
-                                                label: 'MA (Mâtrise approfondie)',
+                                                label: 'MA (Mâtrise)',
                                             },
                                             {
                                                 value: 'EX',
@@ -2609,15 +2590,15 @@ const Evaluationnoncadre = () => {
                                             },
                                             {
                                                 value: 'EI',
-                                                label: 'EI (Elémentaire insuffisant)',
+                                                label: 'EI (En Initiation)',
                                             },
                                             {
                                                 value: 'EA',
-                                                label: 'EA (Elémentaire acquis)',
+                                                label: "EA (En cours d'acquisition)",
                                             },
                                             {
                                                 value: 'MA',
-                                                label: 'MA (Mâtrise approfondie)',
+                                                label: 'MA (Mâtrise)',
                                             },
                                             {
                                                 value: 'EX',
@@ -2636,15 +2617,15 @@ const Evaluationnoncadre = () => {
                                             },
                                             {
                                                 value: 'EI',
-                                                label: 'EI (Elémentaire insuffisant)',
+                                                label: 'EI (En Initiation)',
                                             },
                                             {
                                                 value: 'EA',
-                                                label: 'EA (Elémentaire acquis)',
+                                                label: "EA (En cours d'acquisition)",
                                             },
                                             {
                                                 value: 'MA',
-                                                label: 'MA (Mâtrise approfondie)',
+                                                label: 'MA (Mâtrise)',
                                             },
                                             {
                                                 value: 'EX',
@@ -2672,15 +2653,15 @@ const Evaluationnoncadre = () => {
                                             },
                                             {
                                                 value: 'EI',
-                                                label: 'EI (Elémentaire insuffisant)',
+                                                label: 'EI (En Initiation)',
                                             },
                                             {
                                                 value: 'EA',
-                                                label: 'EA (Elémentaire acquis)',
+                                                label: "EA (En cours d'acquisition)",
                                             },
                                             {
                                                 value: 'MA',
-                                                label: 'MA (Mâtrise approfondie)',
+                                                label: 'MA (Mâtrise)',
                                             },
                                             {
                                                 value: 'EX',
@@ -2699,15 +2680,15 @@ const Evaluationnoncadre = () => {
                                             },
                                             {
                                                 value: 'EI',
-                                                label: 'EI (Elémentaire insuffisant)',
+                                                label: 'EI (En Initiation)',
                                             },
                                             {
                                                 value: 'EA',
-                                                label: 'EA (Elémentaire acquis)',
+                                                label: "EA (En cours d'acquisition)",
                                             },
                                             {
                                                 value: 'MA',
-                                                label: 'MA (Mâtrise approfondie)',
+                                                label: 'MA (Mâtrise)',
                                             },
                                             {
                                                 value: 'EX',
@@ -2735,15 +2716,15 @@ const Evaluationnoncadre = () => {
                                             },
                                             {
                                                 value: 'EI',
-                                                label: 'EI (Elémentaire insuffisant)',
+                                                label: 'EI (En Initiation)',
                                             },
                                             {
                                                 value: 'EA',
-                                                label: 'EA (Elémentaire acquis)',
+                                                label: "EA (En cours d'acquisition)",
                                             },
                                             {
                                                 value: 'MA',
-                                                label: 'MA (Mâtrise approfondie)',
+                                                label: 'MA (Mâtrise)',
                                             },
                                             {
                                                 value: 'EX',
@@ -2762,15 +2743,15 @@ const Evaluationnoncadre = () => {
                                             },
                                             {
                                                 value: 'EI',
-                                                label: 'EI (Elémentaire insuffisant)',
+                                                label: 'EI (En Initiation)',
                                             },
                                             {
                                                 value: 'EA',
-                                                label: 'EA (Elémentaire acquis)',
+                                                label: "EA (En cours d'acquisition)",
                                             },
                                             {
                                                 value: 'MA',
-                                                label: 'MA (Mâtrise approfondie)',
+                                                label: 'MA (Mâtrise)',
                                             },
                                             {
                                                 value: 'EX',
@@ -2874,7 +2855,14 @@ const Evaluationnoncadre = () => {
                                     />
                                 </td>
                                 <td style={{ padding: '10px', border: '1px solid #40A9FF', width: '25%' }}>
-                                    <DatePicker value={dp1 ? moment(dp1) : null} onChange={date1} />
+                                    <DatePicker
+                                        value={dp1 ? moment(dp1) : null}
+                                        onChange={date1}
+                                        picker="month"  // Mode pour sélectionner uniquement mois et année
+                                        format="YYYY-MM" // Format d'affichage: Année-Mois
+                                        placeholder="Sélectionnez un mois et une année" // Placeholder personnalisé
+                                    />
+
                                 </td>
 
                             </tr>

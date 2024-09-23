@@ -21,7 +21,7 @@ const { Step } = Steps;
 
 const CheckboxGroup = Checkbox.Group;
 
-const url = 'http://localhost:8000/'
+const url = 'http://172.16.0.92:8000/'
 
 const Getevaluationnoncadre = () => {
     const [current, setCurrent] = useState(0);
@@ -1040,18 +1040,7 @@ const Getevaluationnoncadre = () => {
                 style: { textAlign: 'justify' },
             });
             return;
-        }
-        else if (cmt1 == null || cmt2 == null || cmt3 == null || cmt4 == null || cmt5 == null) {
-          
-            notification.info({
-                message: "Notification",
-                description: "Veuillez remplir tous les champs commentaires.",
-                placement: 'top',
-             
-            });
-            return;
-        }
-        else {
+        } else {
             next()
         }
     }
@@ -1215,15 +1204,7 @@ const Getevaluationnoncadre = () => {
     
         // Vérification si tous les champs ccd sont vides
         const allCcdsEmpty = fields.every(({ ccd }) => !ccd);
-        if (allCcdsEmpty) {
-            notification.info({
-                message: "Notification",
-                description: "Tous les champs ccd sont vides.",
-                placement: 'top',
-                style: { textAlign: 'justify' },
-            });
-            return;
-        }
+      
     
         // Passe à l'étape suivante si toutes les validations sont réussies
         next();

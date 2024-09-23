@@ -24,7 +24,7 @@ const { RangePicker } = DatePicker;
 
 const CheckboxGroup = Checkbox.Group;
 
-const url = 'http://localhost:8000/'
+const url = 'http://172.16.0.92:8000/'
 const Cadrenonmanager = () => {
     const [current, setCurrent] = useState(0);
     const [api, contextHolder] = notification.useNotification();
@@ -1220,18 +1220,7 @@ const Cadrenonmanager = () => {
                 style: { textAlign: 'justify' },
             });
             return;
-        }
-        else if (cmt1 == null || cmt2 == null || cmt3 == null || cmt4 == null || cmt5 == null) {
-
-            notification.info({
-                message: "Notification",
-                description: "Veuillez remplir tous les champs commentaires.",
-                placement: 'top',
-
-            });
-            return;
-        }
-        else {
+        }else {
             next()
         }
     }
@@ -1394,15 +1383,7 @@ const Cadrenonmanager = () => {
 
         // Vérification si tous les champs ccd sont vides
         const allCcdsEmpty = fields.every(({ ccd }) => !ccd);
-        if (allCcdsEmpty) {
-            notification.info({
-                message: "Notification",
-                description: "Tous les champs ccd sont vides.",
-                placement: 'top',
-                style: { textAlign: 'justify' },
-            });
-            return;
-        }
+        
 
         // Passe à l'étape suivante si toutes les validations sont réussies
         next();
@@ -2101,7 +2082,7 @@ const Cadrenonmanager = () => {
                             </tr>
                             <tr>
                                 <td style={{ padding: '10px', border: '1px solid #40A9FF' }}>Aptitude liée au poste</td>
-                                <td style={{ padding: '10px', border: '1px solid #40A9FF' }}> <Tooltip title="Les aptitudes liées au poste sont les compétences spécifiques nécessaires pour bien accomplir les tâches du poste.">
+                                <td style={{ padding: '10px', border: '1px solid #40A9FF' }}> <Tooltip title="Les aptitudes liées au poste sont les compétences spécifiques nécessaires à l'accomplissement des tâches au quotidien.">
                                     <TextArea
                                         placeholder="Aptitude liée au poste"
                                         autoSize
@@ -2119,7 +2100,7 @@ const Cadrenonmanager = () => {
 
                             <tr>
                                 <td style={{ padding: '10px', border: '1px solid #40A9FF' }}>Aptitude liée au poste</td>
-                                <td style={{ padding: '10px', border: '1px solid #40A9FF' }}><Tooltip title="Les aptitudes liées au poste sont les compétences spécifiques nécessaires pour bien accomplir les tâches du poste.">
+                                <td style={{ padding: '10px', border: '1px solid #40A9FF' }}><Tooltip title="Les aptitudes liées au poste sont les compétences spécifiques nécessaires à l'accomplissement des tâches au quotidien.">
                                     <TextArea
                                         placeholder="Aptitude liée au poste"
                                         autoSize
@@ -2470,7 +2451,7 @@ const Cadrenonmanager = () => {
                                             },
                                             {
                                                 value: 'EI',
-                                                label: 'EI (Elémentaire insuffisant)',
+                                                label: 'EI (En Initiation)',
                                             },
                                             {
                                                 value: 'EA',
@@ -2478,7 +2459,7 @@ const Cadrenonmanager = () => {
                                             },
                                             {
                                                 value: 'MA',
-                                                label: 'MA (Mâtrise approfondie)',
+                                                label: 'MA (Mâtrise)',
                                             },
                                             {
                                                 value: 'EX',
@@ -2497,7 +2478,7 @@ const Cadrenonmanager = () => {
                                             },
                                             {
                                                 value: 'EI',
-                                                label: 'EI (Elémentaire insuffisant)',
+                                                label: 'EI (En Initiation)',
                                             },
                                             {
                                                 value: 'EA',
@@ -2505,7 +2486,7 @@ const Cadrenonmanager = () => {
                                             },
                                             {
                                                 value: 'MA',
-                                                label: 'MA (Mâtrise approfondie)',
+                                                label: 'MA (Mâtrise)',
                                             },
                                             {
                                                 value: 'EX',
@@ -2532,7 +2513,7 @@ const Cadrenonmanager = () => {
                                             },
                                             {
                                                 value: 'EI',
-                                                label: 'EI (Elémentaire insuffisant)',
+                                                label: 'EI (En Initiation)',
                                             },
                                             {
                                                 value: 'EA',
@@ -2540,7 +2521,7 @@ const Cadrenonmanager = () => {
                                             },
                                             {
                                                 value: 'MA',
-                                                label: 'MA (Mâtrise approfondie)',
+                                                label: 'MA (Mâtrise)',
                                             },
                                             {
                                                 value: 'EX',
@@ -2559,7 +2540,7 @@ const Cadrenonmanager = () => {
                                             },
                                             {
                                                 value: 'EI',
-                                                label: 'EI (Elémentaire insuffisant)',
+                                                label: 'EI (En Initiation)',
                                             },
                                             {
                                                 value: 'EA',
@@ -2567,7 +2548,7 @@ const Cadrenonmanager = () => {
                                             },
                                             {
                                                 value: 'MA',
-                                                label: 'MA (Mâtrise approfondie)',
+                                                label: 'MA (Mâtrise)',
                                             },
                                             {
                                                 value: 'EX',
@@ -2595,7 +2576,7 @@ const Cadrenonmanager = () => {
                                             },
                                             {
                                                 value: 'EI',
-                                                label: 'EI (Elémentaire insuffisant)',
+                                                label: 'EI (En Initiation)',
                                             },
                                             {
                                                 value: 'EA',
@@ -2603,7 +2584,7 @@ const Cadrenonmanager = () => {
                                             },
                                             {
                                                 value: 'MA',
-                                                label: 'MA (Mâtrise approfondie)',
+                                                label: 'MA (Mâtrise)',
                                             },
                                             {
                                                 value: 'EX',
@@ -2622,7 +2603,7 @@ const Cadrenonmanager = () => {
                                             },
                                             {
                                                 value: 'EI',
-                                                label: 'EI (Elémentaire insuffisant)',
+                                                label: 'EI (En Initiation)',
                                             },
                                             {
                                                 value: 'EA',
@@ -2630,7 +2611,7 @@ const Cadrenonmanager = () => {
                                             },
                                             {
                                                 value: 'MA',
-                                                label: 'MA (Mâtrise approfondie)',
+                                                label: 'MA (Mâtrise)',
                                             },
                                             {
                                                 value: 'EX',
@@ -2658,7 +2639,7 @@ const Cadrenonmanager = () => {
                                             },
                                             {
                                                 value: 'EI',
-                                                label: 'EI (Elémentaire insuffisant)',
+                                                label: 'EI (En Initiation)',
                                             },
                                             {
                                                 value: 'EA',
@@ -2666,7 +2647,7 @@ const Cadrenonmanager = () => {
                                             },
                                             {
                                                 value: 'MA',
-                                                label: 'MA (Mâtrise approfondie)',
+                                                label: 'MA (Mâtrise)',
                                             },
                                             {
                                                 value: 'EX',
@@ -2685,7 +2666,7 @@ const Cadrenonmanager = () => {
                                             },
                                             {
                                                 value: 'EI',
-                                                label: 'EI (Elémentaire insuffisant)',
+                                                label: 'EI (En Initiation)',
                                             },
                                             {
                                                 value: 'EA',
@@ -2693,7 +2674,7 @@ const Cadrenonmanager = () => {
                                             },
                                             {
                                                 value: 'MA',
-                                                label: 'MA (Mâtrise approfondie)',
+                                                label: 'MA (Mâtrise)',
                                             },
                                             {
                                                 value: 'EX',

@@ -26,7 +26,7 @@ const Choix = () => {
 
     return (
         <div>
-            <h1 style={{ marginTop: '100px' }}>Evaluation ID: {id} ,{type}</h1>
+            {/* <h1 style={{ marginTop: '100px' }}>Evaluation ID: {id} ,{type}</h1> */}
             <ComponentToRender />
         </div>
     );

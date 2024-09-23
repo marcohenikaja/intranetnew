@@ -19,7 +19,7 @@ import { MailOutlined } from '@ant-design/icons';
 
 
 const Consolidation = () => {
-    const url = 'http://localhost:8000/';
+    const url = 'http://172.16.0.92:8000/';
     const loggedInUser = sessionStorage.getItem('loginUser');
 
     const authorizedUsers = [
@@ -623,7 +623,7 @@ const Consolidation = () => {
         } catch (err) {
             setError('Erreur lors de la récupération des e-mails.');
         } finally {
-          //  setLoading(false);
+            //  setLoading(false);
         }
     };
 
@@ -835,7 +835,7 @@ const Consolidation = () => {
             dataIndex: 'dateentree',
             key: 'dateentree',
             width: 150,
-            render: (text) => moment(text).format('DD/MM/YYYY HH:mm:ss'),
+            render: (text) => moment(text).format('DD/MM/YYYY'),
         },
 
 
@@ -1028,7 +1028,7 @@ const Consolidation = () => {
             key: 'libelleend1',
             width: 200,
             render: (text, record) => {
-                const combinedForces = [record.ct1, record.ct2, record.ct3, record.mt1, record.mt2, record.mt3, , record.ml1, record.ml2, record.ml3].filter(Boolean).join(', ');
+                const combinedForces = [record.libelleend1, record.libelleend2, record.libelleend3, record.libelleend4].filter(Boolean).join(', ');
                 return (
                     <Popover content={<div style={{ maxWidth: '300px', whiteSpace: 'pre-wrap' }}>{combinedForces}</div>} title="Objectif pour 2024" trigger="click">
                         <span style={{ cursor: 'pointer' }}>
