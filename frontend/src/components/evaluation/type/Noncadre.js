@@ -2420,7 +2420,7 @@ const Noncadre = () => {
                                             },
                                             {
                                                 value: 'MA',
-                                                label: 'MA (Mâtrise)',
+                                                label: 'MA (Maîtrise)',
                                             },
                                             {
                                                 value: 'EX',
@@ -2447,7 +2447,7 @@ const Noncadre = () => {
                                             },
                                             {
                                                 value: 'MA',
-                                                label: 'MA (Mâtrise)',
+                                                label: 'MA (Maîtrise)',
                                             },
                                             {
                                                 value: 'EX',
@@ -2482,7 +2482,7 @@ const Noncadre = () => {
                                             },
                                             {
                                                 value: 'MA',
-                                                label: 'MA (Mâtrise)',
+                                                label: 'MA (Maîtrise)',
                                             },
                                             {
                                                 value: 'EX',
@@ -2509,7 +2509,7 @@ const Noncadre = () => {
                                             },
                                             {
                                                 value: 'MA',
-                                                label: 'MA (Mâtrise)',
+                                                label: 'MA (Maîtrise)',
                                             },
                                             {
                                                 value: 'EX',
@@ -2545,7 +2545,7 @@ const Noncadre = () => {
                                             },
                                             {
                                                 value: 'MA',
-                                                label: 'MA (Mâtrise)',
+                                                label: 'MA (Maîtrise)',
                                             },
                                             {
                                                 value: 'EX',
@@ -2572,7 +2572,7 @@ const Noncadre = () => {
                                             },
                                             {
                                                 value: 'MA',
-                                                label: 'MA (Mâtrise)',
+                                                label: 'MA (Maîtrise)',
                                             },
                                             {
                                                 value: 'EX',
@@ -2608,7 +2608,7 @@ const Noncadre = () => {
                                             },
                                             {
                                                 value: 'MA',
-                                                label: 'MA (Mâtrise)',
+                                                label: 'MA (Maîtrise)',
                                             },
                                             {
                                                 value: 'EX',

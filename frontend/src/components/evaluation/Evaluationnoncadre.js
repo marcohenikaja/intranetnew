@@ -2536,7 +2536,7 @@ const Evaluationnoncadre = () => {
                                             },
                                             {
                                                 value: 'MA',
-                                                label: 'MA (Mâtrise)',
+                                                label: 'MA (Maîtrise)',
                                             },
                                             {
                                                 value: 'EX',
@@ -2563,7 +2563,7 @@ const Evaluationnoncadre = () => {
                                             },
                                             {
                                                 value: 'MA',
-                                                label: 'MA (Mâtrise)',
+                                                label: 'MA (Maîtrise)',
                                             },
                                             {
                                                 value: 'EX',
@@ -2598,7 +2598,7 @@ const Evaluationnoncadre = () => {
                                             },
                                             {
                                                 value: 'MA',
-                                                label: 'MA (Mâtrise)',
+                                                label: 'MA (Maîtrise)',
                                             },
                                             {
                                                 value: 'EX',
@@ -2625,7 +2625,7 @@ const Evaluationnoncadre = () => {
                                             },
                                             {
                                                 value: 'MA',
-                                                label: 'MA (Mâtrise)',
+                                                label: 'MA (Maîtrise)',
                                             },
                                             {
                                                 value: 'EX',
@@ -2661,7 +2661,7 @@ const Evaluationnoncadre = () => {
                                             },
                                             {
                                                 value: 'MA',
-                                                label: 'MA (Mâtrise)',
+                                                label: 'MA (Maîtrise)',
                                             },
                                             {
                                                 value: 'EX',
@@ -2688,7 +2688,7 @@ const Evaluationnoncadre = () => {
                                             },
                                             {
                                                 value: 'MA',
-                                                label: 'MA (Mâtrise)',
+                                                label: 'MA (Maîtrise)',
                                             },
                                             {
                                                 value: 'EX',
@@ -2724,7 +2724,7 @@ const Evaluationnoncadre = () => {
                                             },
                                             {
                                                 value: 'MA',
-                                                label: 'MA (Mâtrise)',
+                                                label: 'MA (Maîtrise)',
                                             },
                                             {
                                                 value: 'EX',
@@ -2751,7 +2751,7 @@ const Evaluationnoncadre = () => {
                                             },
                                             {
                                                 value: 'MA',
-                                                label: 'MA (Mâtrise)',
+                                                label: 'MA (Maîtrise)',
                                             },
                                             {
                                                 value: 'EX',

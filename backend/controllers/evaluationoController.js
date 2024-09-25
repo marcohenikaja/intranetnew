@@ -3,10 +3,12 @@ const { Op } = require('sequelize');
 const cron = require('node-cron');
 const { Sequelize } = require('sequelize')
 const { sequelize } = require('../db/db');
+const { log } = require('util');
 
 const ajouteval = async (req, res) => {
     const id_pers = req.params.ids;
     const typeEval = "Evaluation cadre"
+
 
 
     const cleanData = (data, defaultValue = '') => (data !== undefined ? data : defaultValue);
@@ -507,10 +509,9 @@ const ajouteval = async (req, res) => {
 const ajoutevalnoncadre = async (req, res) => {
     const id_pers = req.params.ids;
     const typeEval = 'Evaluation non cadre'
-    const mail = req.body.loggedInUser;
-    console.log(id_pers);
+
+    //    console.log(id_pers); return;
     const cleanData = (data, defaultValue = '') => (data !== undefined ? data : defaultValue);
-    console.log(req.body.emailn1);
     const {
         nom, prenom, mat, daty, dir, posteeval, fonc, datys, datyss, mission, objectifs = [],
         resultat, selectedValue1 = [], selectedValue2 = [], selectedVal1 = [], selectedVal2 = [], selectedVal3 = [],
@@ -530,14 +531,14 @@ const ajoutevalnoncadre = async (req, res) => {
         pa1 = '', pa2 = '', pa3 = '', pa4 = '', dp1 = '', dp2 = '', dp3 = '', dp4 = '',
         ct1 = '', ct2 = '', ct3 = '', mt1 = '', mt2 = '', mt3 = '', ml1 = '', ml2 = '', ml3 = '',
         cpr1 = '', cpr2 = '', cpr3 = '', cg1 = '', cg2 = '', cg3 = '', comcollab = '', somme,
-        objectifs1 = [], alp1 = '', alp2 = '', f5 = '', c5 = '', am5 = '', c25 = '', emailn1 = '', emailn2 = '', emaildr = '', emailsg = '', emaildg = '', emaildrh = '', ids, todayis,
+        objectifs1 = [], alp1 = '', alp2 = '', f5 = '', c5 = '', am5 = '', c25 = '', emailn1 = '', emailn2 = '', emaildr = '', emailsg = '', emaildg = '', emaildrh = '', ids, todayis
     } = req.body;
+    console.log(ids);
+
 
     if (!id_pers) {
         return res.status(400).json({ error: 'Les paramètres id_pers, nomeval et typeeval sont requis.' });
     }
-
-
 
     try {
         // Vérifier si l'évaluation existe
@@ -548,7 +549,6 @@ const ajoutevalnoncadre = async (req, res) => {
             }
         });
 
-
         const existingEvalued = await Evaluation.findOne({
             where: {
                 evaluatedId: id_pers,
@@ -557,9 +557,6 @@ const ajoutevalnoncadre = async (req, res) => {
                 }
             }
         });
-
-
-
 
 
         if (existingEvalued) {
@@ -579,6 +576,7 @@ const ajoutevalnoncadre = async (req, res) => {
         let evaluatorId;
 
         if (existingEvaluation) {
+            console.log('ato ppp', typeEval);
             // Mise à jour de l'évalué
             await Evaluated.update({
                 nom: cleanData(nom),
@@ -743,7 +741,6 @@ const ajoutevalnoncadre = async (req, res) => {
                 poidsend4: cleanData(objectifs1[3]?.poids),
                 notationend4: cleanData(objectifs1[3]?.notation),
                 commentaireend4: cleanData(objectifs1[3]?.commentaire),
-
             }, { where: { id_pers } });
 
 
@@ -753,7 +750,7 @@ const ajoutevalnoncadre = async (req, res) => {
             });
 
             if (evaluator) {
-
+                // Mise à jour de l'évaluateur
                 await Evaluator.update({
                     emailn1,
                     emailn2,
@@ -764,7 +761,6 @@ const ajoutevalnoncadre = async (req, res) => {
                 }, { where: { id_evaluator: evaluator.id_evaluator } });
                 evaluatorId = evaluator.id_evaluator;
             } else {
-                console.log("2");
                 // Créez un nouvel évaluateur si nécessaire
                 const newEvaluator = await Evaluator.create({
                     emailn1,
@@ -788,6 +784,7 @@ const ajoutevalnoncadre = async (req, res) => {
             }, { where: { evaluatedId: id_pers } });
 
         } else {
+
             // Insertion d'un nouvel évalué
             const [newEvaluated] = await Evaluated.findOrCreate({
                 where: { id_pers },
@@ -970,7 +967,7 @@ const ajoutevalnoncadre = async (req, res) => {
 
             // Créez une nouvelle évaluation
             await Evaluation.create({
-                evaluatorType: typeEval,
+                evaluatorType: 'Evaluation non cadre',
                 evaluatedId: newEvaluated.id_pers,
                 evaluatorId: newEvaluator.id_evaluator,
                 createdAt: new Date(),
@@ -1007,14 +1004,11 @@ const ajoutevalnoncadre = async (req, res) => {
 
 
 const enregistrementevalcadrenonmanager = async (req, res) => {
-
-
     const id_pers = req.params.ids;
     const typeEval = 'Evaluation cadre non manager'
-    console.log(id_pers);
+
+
     const cleanData = (data, defaultValue = '') => (data !== undefined ? data : defaultValue);
-    console.log(req.body.emailn1);
-    const mail = req.body.loggedInUser;
     const {
         nom, prenom, mat, daty, dir, posteeval, fonc, datys, datyss, mission, objectifs = [],
         resultat, selectedValue1 = [], selectedValue2 = [], selectedVal1 = [], selectedVal2 = [], selectedVal3 = [],
@@ -1036,11 +1030,12 @@ const enregistrementevalcadrenonmanager = async (req, res) => {
         cpr1 = '', cpr2 = '', cpr3 = '', cg1 = '', cg2 = '', cg3 = '', comcollab = '', somme,
         objectifs1 = [], alp1 = '', alp2 = '', f5 = '', c5 = '', am5 = '', c25 = '', emailn1 = '', emailn2 = '', emaildr = '', emailsg = '', emaildg = '', emaildrh = '', ids, todayis
     } = req.body;
+    console.log(ids);
+
+
     if (!id_pers) {
         return res.status(400).json({ error: 'Les paramètres id_pers, nomeval et typeeval sont requis.' });
     }
-
-
 
     try {
         // Vérifier si l'évaluation existe
@@ -1050,7 +1045,6 @@ const enregistrementevalcadrenonmanager = async (req, res) => {
                 evaluatorType: typeEval
             }
         });
-
 
         const existingEvalued = await Evaluation.findOne({
             where: {
@@ -1079,6 +1073,7 @@ const enregistrementevalcadrenonmanager = async (req, res) => {
         let evaluatorId;
 
         if (existingEvaluation) {
+            console.log('ato ppp', typeEval);
             // Mise à jour de l'évalué
             await Evaluated.update({
                 nom: cleanData(nom),
@@ -1252,7 +1247,7 @@ const enregistrementevalcadrenonmanager = async (req, res) => {
             });
 
             if (evaluator) {
-
+                // Mise à jour de l'évaluateur
                 await Evaluator.update({
                     emailn1,
                     emailn2,
@@ -1263,7 +1258,6 @@ const enregistrementevalcadrenonmanager = async (req, res) => {
                 }, { where: { id_evaluator: evaluator.id_evaluator } });
                 evaluatorId = evaluator.id_evaluator;
             } else {
-                console.log("2");
                 // Créez un nouvel évaluateur si nécessaire
                 const newEvaluator = await Evaluator.create({
                     emailn1,
@@ -1287,6 +1281,7 @@ const enregistrementevalcadrenonmanager = async (req, res) => {
             }, { where: { evaluatedId: id_pers } });
 
         } else {
+
             // Insertion d'un nouvel évalué
             const [newEvaluated] = await Evaluated.findOrCreate({
                 where: { id_pers },
@@ -1469,7 +1464,7 @@ const enregistrementevalcadrenonmanager = async (req, res) => {
 
             // Créez une nouvelle évaluation
             await Evaluation.create({
-                evaluatorType: typeEval,
+                evaluatorType: 'Evaluation cadre non manager',
                 evaluatedId: newEvaluated.id_pers,
                 evaluatorId: newEvaluator.id_evaluator,
                 createdAt: new Date(),
@@ -2026,6 +2021,22 @@ const fetchEvalDatas = async (req, res) => {
         });
 
         // Combiner les données
+        // const getAlldataevaluation = evaluations.map(evaluation => ({
+        //     id: evaluation.id,
+        //     evaluatorType: evaluation.evaluatorType,
+        //     statusN1: evaluation.statusN1,
+        //     statusN2: evaluation.statusN2,
+        //     statusDirection: evaluation.statusDirection,
+        //     statusSecretary: evaluation.statusSecretary,
+        //     statusGeneralDirection: evaluation.statusGeneralDirection,
+        //     statusHR: evaluation.statusHR,
+        //     createdAt: evaluation.createdAt,
+        //     updatedAt: evaluation.updatedAt,
+        //     evaluatedId: evaluation.evaluatedId,
+        //     evaluatorId: evaluation.evaluatorId,
+        //     ...evaluation.evaluated.dataValues,
+        //     ...evaluation.evaluator.dataValues,
+        // }));
         const getAlldataevaluation = evaluations.map(evaluation => ({
             id: evaluation.id,
             evaluatorType: evaluation.evaluatorType,
@@ -2039,9 +2050,10 @@ const fetchEvalDatas = async (req, res) => {
             updatedAt: evaluation.updatedAt,
             evaluatedId: evaluation.evaluatedId,
             evaluatorId: evaluation.evaluatorId,
-            ...evaluation.evaluated.dataValues,
-            ...evaluation.evaluator.dataValues,
+            ...(evaluation.evaluated ? evaluation.evaluated.dataValues : {}), // Vérification si evaluation.evaluated n'est pas null
+            ...(evaluation.evaluator ? evaluation.evaluator.dataValues : {}), // Vérification si evaluation.evaluator n'est pas null
         }));
+
 
         if (getAlldataevaluation.length === 0) {
             return res.status(404).json({ message: 'Aucune évaluation trouvée pour cet ID' });

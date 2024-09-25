@@ -21,7 +21,6 @@ const { Step } = Steps;
 
 
 
-
 const CheckboxGroup = Checkbox.Group;
 
 const url = 'http://172.16.0.92:8000/'
@@ -195,6 +194,7 @@ const Cadrenomanagerpdf = () => {
                 setEmaildg(data[0].emaildg)
                 setEmaildrh(data[0].emaildrh)
 
+                setDateday((data[0].datetoday))
 
                 setEmail(data[0].maileval);
                 setNom(data[0].nom);

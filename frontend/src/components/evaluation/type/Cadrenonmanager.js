@@ -35,6 +35,7 @@ const Cadrenonmanager = () => {
     const [searchValue, setSearchValue] = useState('');
 
     const { id, type } = useParams();
+    const [dateday, setDateday] = useState("")
 
     const [options1, setOptions1] = useState([])
     const [options2, setOptions2] = useState([])
@@ -139,9 +140,10 @@ const Cadrenonmanager = () => {
     //validation
     const validerEvaluation = async () => {
 
+
         const placement = 'top';
         try {
-            const response = await axios.post(`${url}validerEvaluation/${id}`);
+            const response = await axios.post(`${url}validerEvaluations/${id}`, { loggedInUser });
 
             if (response.data.message) {
 
@@ -174,6 +176,8 @@ const Cadrenonmanager = () => {
                 setEmailsg(data[0].emailsg)
                 setEmaildg(data[0].emaildg)
                 setEmaildrh(data[0].emaildrh)
+
+                setDateday((data[0].datetoday))
 
                 setEmail(data[0].maileval);
                 setNom(data[0].nom);
@@ -1220,7 +1224,7 @@ const Cadrenonmanager = () => {
                 style: { textAlign: 'justify' },
             });
             return;
-        }else {
+        } else {
             next()
         }
     }
@@ -1383,7 +1387,7 @@ const Cadrenonmanager = () => {
 
         // Vérification si tous les champs ccd sont vides
         const allCcdsEmpty = fields.every(({ ccd }) => !ccd);
-        
+
 
         // Passe à l'étape suivante si toutes les validations sont réussies
         next();
@@ -1520,7 +1524,7 @@ const Cadrenonmanager = () => {
 
     const enregistrement = async () => {
         try {
-            const enrg = await axios.post(`${url}enregistrementevalcadrenonmanager/${ids}`, {
+            const enrg = await axios.post(`${url}enregistrementevalcadrenonmanager/${id}`, {
                 nom, prenom, mat, daty, dir, nomeval, posteeval, fonc, email, datys, datyss, mission,
                 objectifs, resultat, selectedValue1, selectedValue2, selectedVal1, selectedVal2, selectedVal3, selectedVal4, selectedVal5, selectedVal6, selectedVal7, selectedVal8, selectedVal9, selectedVal10, selectedVal11, selectedVal12, selectedVal13, selectedVal14, selectedVal15,
                 cmt1, cmt2, cmt3, cmt4, cmt5, r1, r2, r3, r4, r5, cdc1, cdc2, cdc3, cdc4, cdc5, nivactus, nouvnivs, concl, ancienneteniv, com, pg, classification, idr,
@@ -2455,11 +2459,11 @@ const Cadrenonmanager = () => {
                                             },
                                             {
                                                 value: 'EA',
-                                                label: 'EA (Elémentaire acquis)',
+                                                 label: "EA (En cours d'acquisition)",
                                             },
                                             {
                                                 value: 'MA',
-                                                label: 'MA (Mâtrise)',
+                                                label: 'MA (Maîtrise)',
                                             },
                                             {
                                                 value: 'EX',
@@ -2482,11 +2486,11 @@ const Cadrenonmanager = () => {
                                             },
                                             {
                                                 value: 'EA',
-                                                label: 'EA (Elémentaire acquis)',
+                                                 label: "EA (En cours d'acquisition)",
                                             },
                                             {
                                                 value: 'MA',
-                                                label: 'MA (Mâtrise)',
+                                                label: 'MA (Maîtrise)',
                                             },
                                             {
                                                 value: 'EX',
@@ -2517,11 +2521,11 @@ const Cadrenonmanager = () => {
                                             },
                                             {
                                                 value: 'EA',
-                                                label: 'EA (Elémentaire acquis)',
+                                                 label: "EA (En cours d'acquisition)",
                                             },
                                             {
                                                 value: 'MA',
-                                                label: 'MA (Mâtrise)',
+                                                label: 'MA (Maîtrise)',
                                             },
                                             {
                                                 value: 'EX',
@@ -2544,11 +2548,11 @@ const Cadrenonmanager = () => {
                                             },
                                             {
                                                 value: 'EA',
-                                                label: 'EA (Elémentaire acquis)',
+                                                 label: "EA (En cours d'acquisition)",
                                             },
                                             {
                                                 value: 'MA',
-                                                label: 'MA (Mâtrise)',
+                                                label: 'MA (Maîtrise)',
                                             },
                                             {
                                                 value: 'EX',
@@ -2580,11 +2584,11 @@ const Cadrenonmanager = () => {
                                             },
                                             {
                                                 value: 'EA',
-                                                label: 'EA (Elémentaire acquis)',
+                                                 label: "EA (En cours d'acquisition)",
                                             },
                                             {
                                                 value: 'MA',
-                                                label: 'MA (Mâtrise)',
+                                                label: 'MA (Maîtrise)',
                                             },
                                             {
                                                 value: 'EX',
@@ -2607,11 +2611,11 @@ const Cadrenonmanager = () => {
                                             },
                                             {
                                                 value: 'EA',
-                                                label: 'EA (Elémentaire acquis)',
+                                                 label: "EA (En cours d'acquisition)",
                                             },
                                             {
                                                 value: 'MA',
-                                                label: 'MA (Mâtrise)',
+                                                label: 'MA (Maîtrise)',
                                             },
                                             {
                                                 value: 'EX',
@@ -2643,11 +2647,11 @@ const Cadrenonmanager = () => {
                                             },
                                             {
                                                 value: 'EA',
-                                                label: 'EA (Elémentaire acquis)',
+                                                 label: "EA (En cours d'acquisition)",
                                             },
                                             {
                                                 value: 'MA',
-                                                label: 'MA (Mâtrise)',
+                                                label: 'MA (Maîtrise)',
                                             },
                                             {
                                                 value: 'EX',
@@ -2670,11 +2674,11 @@ const Cadrenonmanager = () => {
                                             },
                                             {
                                                 value: 'EA',
-                                                label: 'EA (Elémentaire acquis)',
+                                                 label: "EA (En cours d'acquisition)",
                                             },
                                             {
                                                 value: 'MA',
-                                                label: 'MA (Mâtrise)',
+                                                label: 'MA (Maîtrise)',
                                             },
                                             {
                                                 value: 'EX',
@@ -3246,7 +3250,11 @@ const Cadrenonmanager = () => {
                                     <View style={{ flexDirection: 'row', backgroundColor: 'white', padding: 1 }}>
                                         <Text style={{ flex: 1, color: '#333', fontWeight: 'bold', fontSize: 8 }}>Matricule: {mat}</Text>
                                         <Text style={{ flex: 1, color: '#333', fontWeight: 'bold', fontSize: 8 }}>Direction: {dir}</Text>
-                                        <Text style={{ flex: 1, color: '#333', fontWeight: 'bold', fontSize: 8 }}>Date d'évaluation:</Text>
+
+                                        <Text style={{ flex: 1, color: '#333', fontWeight: 'bold', fontSize: 8 }}>
+                                            Date d'évaluation: {new Date(dateday).toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' })}
+                                        </Text>
+
                                     </View>
                                 </View>
 

@@ -2523,11 +2523,11 @@ const Cadre = () => {
                                             },
                                             {
                                                 value: 'EA',
-                                                label: 'EA (Elémentaire acquis)',
+                                                 label: "EA (En cours d'acquisition)",
                                             },
                                             {
                                                 value: 'MA',
-                                                label: 'MA (Mâtrise)',
+                                                label: 'MA (Maîtrise)',
                                             },
                                             {
                                                 value: 'EX',
@@ -2550,11 +2550,11 @@ const Cadre = () => {
                                             },
                                             {
                                                 value: 'EA',
-                                                label: 'EA (Elémentaire acquis)',
+                                                 label: "EA (En cours d'acquisition)",
                                             },
                                             {
                                                 value: 'MA',
-                                                label: 'MA (Mâtrise)',
+                                                label: 'MA (Maîtrise)',
                                             },
                                             {
                                                 value: 'EX',
@@ -2585,11 +2585,11 @@ const Cadre = () => {
                                             },
                                             {
                                                 value: 'EA',
-                                                label: 'EA (Elémentaire acquis)',
+                                                 label: "EA (En cours d'acquisition)",
                                             },
                                             {
                                                 value: 'MA',
-                                                label: 'MA (Mâtrise)',
+                                                label: 'MA (Maîtrise)',
                                             },
                                             {
                                                 value: 'EX',
@@ -2612,11 +2612,11 @@ const Cadre = () => {
                                             },
                                             {
                                                 value: 'EA',
-                                                label: 'EA (Elémentaire acquis)',
+                                                 label: "EA (En cours d'acquisition)",
                                             },
                                             {
                                                 value: 'MA',
-                                                label: 'MA (Mâtrise)',
+                                                label: 'MA (Maîtrise)',
                                             },
                                             {
                                                 value: 'EX',
@@ -2648,11 +2648,11 @@ const Cadre = () => {
                                             },
                                             {
                                                 value: 'EA',
-                                                label: 'EA (Elémentaire acquis)',
+                                                 label: "EA (En cours d'acquisition)",
                                             },
                                             {
                                                 value: 'MA',
-                                                label: 'MA (Mâtrise)',
+                                                label: 'MA (Maîtrise)',
                                             },
                                             {
                                                 value: 'EX',
@@ -2675,11 +2675,11 @@ const Cadre = () => {
                                             },
                                             {
                                                 value: 'EA',
-                                                label: 'EA (Elémentaire acquis)',
+                                                 label: "EA (En cours d'acquisition)",
                                             },
                                             {
                                                 value: 'MA',
-                                                label: 'MA (Mâtrise)',
+                                                label: 'MA (Maîtrise)',
                                             },
                                             {
                                                 value: 'EX',
@@ -2711,11 +2711,11 @@ const Cadre = () => {
                                             },
                                             {
                                                 value: 'EA',
-                                                label: 'EA (Elémentaire acquis)',
+                                                 label: "EA (En cours d'acquisition)",
                                             },
                                             {
                                                 value: 'MA',
-                                                label: 'MA (Mâtrise)',
+                                                label: 'MA (Maîtrise)',
                                             },
                                             {
                                                 value: 'EX',
@@ -2738,11 +2738,11 @@ const Cadre = () => {
                                             },
                                             {
                                                 value: 'EA',
-                                                label: 'EA (Elémentaire acquis)',
+                                                 label: "EA (En cours d'acquisition)",
                                             },
                                             {
                                                 value: 'MA',
-                                                label: 'MA (Mâtrise)',
+                                                label: 'MA (Maîtrise)',
                                             },
                                             {
                                                 value: 'EX',
