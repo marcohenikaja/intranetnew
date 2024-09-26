@@ -19,7 +19,7 @@ import { MailOutlined } from '@ant-design/icons';
 
 
 const Consolidation = () => {
-    const url = 'http://172.16.0.92:8000/';
+    const url = 'http://localhost:8000/';
     const loggedInUser = sessionStorage.getItem('loginUser');
 
     const authorizedUsers = [
@@ -643,7 +643,7 @@ const Consolidation = () => {
             setEvaldata(response.data);
         } catch (error) {
             console.error('Erreur lors de la récupération des données', error);
-            message.error('Erreur lors de la récupération des données.');
+            // message.error('Erreur lors de la récupération des données.');
         }
     };
 
@@ -655,7 +655,7 @@ const Consolidation = () => {
             setEvaldatahisto(response.data);
         } catch (error) {
             console.error('Erreur lors de la récupération des données', error);
-            message.error('Erreur lors de la récupération des données.');
+            // message.error('Erreur lors de la récupération des données.');
         }
     };
 

@@ -6,7 +6,7 @@ import photo from '../../assets/images/eva.mp4';
 import logonpa from './LOGO NPA.png';
 
 const { Title } = Typography;
-const url = 'http://172.16.0.92:8000/'; // Définir l'URL de votre API
+const url = 'http://localhost:8000/'; // Définir l'URL de votre API
 
 const Choixeval = () => {
     const navigate = useNavigate();

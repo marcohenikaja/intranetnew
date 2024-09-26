@@ -23,7 +23,7 @@ const { Step } = Steps;
 
 const CheckboxGroup = Checkbox.Group;
 
-const url = 'http://172.16.0.92:8000/'
+const url = 'http://localhost:8000/'
 const Cadrenomanagerpdf = () => {
     const [current, setCurrent] = useState(0);
     const [api, contextHolder] = notification.useNotification();

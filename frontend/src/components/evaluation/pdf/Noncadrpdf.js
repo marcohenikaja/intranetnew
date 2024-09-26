@@ -22,7 +22,7 @@ const { Step } = Steps;
 
 
 
-const url = 'http://172.16.0.92:8000/'
+const url = 'http://localhost:8000/'
 const Noncadrpdf = () => {
     const [current, setCurrent] = useState(0);
     const [api, contextHolder] = notification.useNotification();
