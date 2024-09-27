@@ -19,7 +19,7 @@ const { Title } = Typography;
 const { Step } = Steps;
 
 
-
+import { CheckCircleOutlined, CloseCircleOutlined, HourglassOutlined, InfoCircleOutlined } from '@ant-design/icons';
 const { RangePicker } = DatePicker;
 
 const url = 'http://localhost:8000/'
@@ -54,6 +54,14 @@ const Noncadre = () => {
             setIsAdding(false);
         }
     };
+
+    const [isTableVisible, setIsTableVisible] = useState(false);
+
+    // Fonction pour basculer l'état de visibilité
+    const toggleTableVisibility = () => {
+        setIsTableVisible(!isTableVisible); // Inverse l'état actuel
+    };
+
 
 
 
@@ -586,14 +594,7 @@ const Noncadre = () => {
                 placement,
             });
             return;
-            // } else if (nomeval == '') {
-            //     api.info({
-            //         message: `Notification`,
-            //         description:
-            //             "Veuillez remplir le champ nom d'évaluateur.",
-            //         placement,
-            //     });
-            //     return;
+
         } else if (posteeval == '') {
             api.info({
                 message: `Notification`,
@@ -602,14 +603,7 @@ const Noncadre = () => {
                 placement,
             });
             return;
-            // } else if (fonc == '') {
-            //     api.info({
-            //         message: `Notification`,
-            //         description:
-            //             "Veuillez remplir le champ Fonction d'évaluateur.",
-            //         placement,
-            //     });
-            //     return;
+
         } else if (emailn2 === '' && emaildr === '') {
             notification.info({
                 message: `Notification`,
@@ -617,16 +611,12 @@ const Noncadre = () => {
                 placement,
             });
             return;
-            // } else if (!validateEmail(email)) {
-            //     notification.info({
-            //         message: `Notification`,
-            //         description: "Le format de l'adresse mail est invalide.",
-            //         placement,
-            //     });
-            //     return;
+
         } else {
+            enregistrement()
             setCurrent(current + 1);
         }
+        enregistrement()
         setCurrent(current + 1)
     }
 
@@ -704,6 +694,7 @@ const Noncadre = () => {
             return;
         }
         else {
+            enregistrement()
             next();
         }
 
@@ -738,30 +729,33 @@ const Noncadre = () => {
         setResultat(resultatPourcentage);
     }, [objectifs]);
 
-    const handleInputChange = (index, event) => {
-        const { name, value } = event.target;
 
 
+    const handleInputChange = (index, valueOrEvent, fieldName) => {
         const newObjectifs = [...objectifs];
 
 
-        if (name === 'poids') {
-            const newValue = parseFloat(value) || 0;
-            const currentTotal = objectifs.reduce((total, obj, idx) =>
-                idx === index ? total : total + parseFloat(obj.poids || 0), 0);
+        if (typeof valueOrEvent === 'object' && valueOrEvent.target) {
+            newObjectifs[index][fieldName] = valueOrEvent.target.value;
+        } else {
 
-            if (currentTotal + newValue > 100) {
-                notification.info({
-                    message: 'Info',
-                    description: 'La somme des poids ne peut pas dépasser 100%',
+            newObjectifs[index][fieldName] = valueOrEvent;
+        }
+
+
+        if (fieldName === 'poids') {
+            const sommePoids = newObjectifs.reduce((acc, obj) => acc + (parseFloat(obj.poids) || 0), 0);
+
+
+            if (sommePoids > 100) {
+                notification.error({
+                    message: 'Erreur',
+                    description: 'La somme des poids ne peut pas dépasser 100.',
                     placement: 'top',
                 });
                 return;
             }
         }
-
-
-        newObjectifs[index][name] = value;
 
 
         setObjectifs(newObjectifs);
@@ -798,6 +792,7 @@ const Noncadre = () => {
             });
             return;
         } else {
+            enregistrement()
             next()
         }
     };
@@ -841,12 +836,13 @@ const Noncadre = () => {
                     description: `Veuillez cocher la ligne ${index + 1}`,
                     placement,
                 });
-                allChecked = false; // Définir la variable à false si une case n'est pas cochée
+                allChecked = false;
             }
         });
 
         if (allChecked) {
-            next(); // Passer à l'étape suivante uniquement si toutes les cases sont cochées
+            enregistrement();
+            next();
         }
 
     };
@@ -1106,6 +1102,7 @@ const Noncadre = () => {
             } else {
                 setNouvnivs("invalide"); // Pour traiter les valeurs hors des plages définies
             }
+            enregistrement()
             next();
         }
 
@@ -1184,18 +1181,8 @@ const Noncadre = () => {
                 style: { textAlign: 'justify' },
             });
             return;
-        }
-        else if (cmt1 == null || cmt2 == null || cmt3 == null || cmt4 == null || cmt5 == null) {
-
-            notification.info({
-                message: "Notification",
-                description: "Veuillez remplir tous les champs commentaires.",
-                placement: 'top',
-
-            });
-            return;
-        }
-        else {
+        } else {
+            enregistrement()
             next()
         }
     }
@@ -1205,6 +1192,7 @@ const Noncadre = () => {
     //etape8
     const [idr, setIdr] = useState(null)
     const etape8 = () => {
+        enregistrement()
         next()
     }
 
@@ -1233,7 +1221,10 @@ const Noncadre = () => {
     const [c24, setC24] = useState(null)
     const [c25, setC25] = useState(null)
 
-
+    const etape9 = () => {
+        enregistrement()
+        next()
+    }
 
 
 
@@ -1265,6 +1256,11 @@ const Noncadre = () => {
     const [comm3, setComm3] = useState(null)
     const [comm4, setComm4] = useState(null)
 
+
+    const etape10 = () => {
+        enregistrement();
+        next();
+    }
 
     //etape11
     const [ccd1, setCcd1] = useState(null)
@@ -1359,17 +1355,9 @@ const Noncadre = () => {
 
         // Vérification si tous les champs ccd sont vides
         const allCcdsEmpty = fields.every(({ ccd }) => !ccd);
-        if (allCcdsEmpty) {
-            notification.info({
-                message: "Notification",
-                description: "Tous les champs ccd sont vides.",
-                placement: 'top',
-                style: { textAlign: 'justify' },
-            });
-            return;
-        }
 
-        // Passe à l'étape suivante si toutes les validations sont réussies
+
+        enregistrement()
         next();
     };
 
@@ -1398,6 +1386,24 @@ const Noncadre = () => {
 
 
     const [comcollab, setComcollab] = useState(null)
+
+    const etape12 = () => {
+
+        if (
+            (ct1 || mt1 || ml1) && !cpr1 ||
+            (ct2 || mt2 || ml2) && !cpr2 ||
+            (ct3 || mt3 || ml3) && !cpr3
+        ) {
+            notification.info({
+                message: 'Info',
+                description: "Veuillez remplir le champ 'Contribution personnelle",
+                placement: 'top',
+            });
+        } else {
+            enregistrement()
+            next();
+        }
+    };
 
 
     //etape13
@@ -1495,8 +1501,10 @@ const Noncadre = () => {
             });
             return;
         } else {
+            enregistrement()
             next()
         }
+        enregistrement()
         next()
     };
 
@@ -1714,9 +1722,11 @@ const Noncadre = () => {
 
 
                     </table>
+
                     <Button type="primary" onClick={() => etape1('top')}>
                         Suivant
                     </Button>
+
 
                 </div>
             ),
@@ -1764,8 +1774,47 @@ const Noncadre = () => {
             title: 'Troisième étape',
             content: (
                 <div>
-
                     <h2>OBJECTIFS INDIVIDUELS</h2>
+
+
+                    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                        <Title level={5} style={{ margin: 0, marginRight: '5px', lineHeight: '1.5' }}>Infos</Title>
+                        <InfoCircleOutlined onClick={toggleTableVisibility} style={{ cursor: 'pointer', fontSize: '20px' }} />
+                    </div>
+
+                    {isTableVisible && (
+                        <table style={{ margin: 'auto', textAlign: 'center', borderCollapse: 'collapse', width: '50%', height: '20%' }}>
+                            <thead style={{ backgroundColor: '#40A9FF', color: 'white' }}>
+                                <tr>
+                                    <th style={{ padding: '10px', border: '1px solid white' }}>Notation</th>
+                                    <th style={{ padding: '10px', border: '1px solid white' }}>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td style={{ padding: '10px', border: '1px solid #40A9FF' }}>1: Non acquis</td>
+                                    <td style={{ padding: '10px', border: '1px solid #40A9FF' }}>N'assimile pas et aucune démarche entreprise pour acquérir la compétence</td>
+                                </tr>
+                                <tr>
+                                    <td style={{ padding: '10px', border: '1px solid #40A9FF' }}>2: En initiation</td>
+                                    <td style={{ padding: '10px', border: '1px solid #40A9FF' }}>Début de compréhension; nécessite une amélioration significative</td>
+                                </tr>
+                                <tr>
+                                    <td style={{ padding: '10px', border: '1px solid #40A9FF' }}>3: En cours d'adaptation</td>
+                                    <td style={{ padding: '10px', border: '1px solid #40A9FF' }}>En application quotidienne avec une marge de progression; nécessite du contrôle</td>
+                                </tr>
+                                <tr>
+                                    <td style={{ padding: '10px', border: '1px solid #40A9FF' }}>4: Maîtrise</td>
+                                    <td style={{ padding: '10px', border: '1px solid #40A9FF' }}>Résultats conformes aux objectifs assignés, performance éprouvée sur la compétence évaluée</td>
+                                </tr>
+                                <tr>
+                                    <td style={{ padding: '10px', border: '1px solid #40A9FF' }}>5: Exceptionnel</td>
+                                    <td style={{ padding: '10px', border: '1px solid #40A9FF' }}>Rendement qui à tous égards a nettement dépassé les exigences et les attentes du poste. Niveau de référence</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    )}
+                    <br />
                     <table style={{ margin: 'auto', textAlign: 'center', borderCollapse: 'collapse', width: '100%' }}>
                         <thead style={{ backgroundColor: '#40A9FF', color: 'white' }}>
                             <tr>
@@ -1783,37 +1832,41 @@ const Noncadre = () => {
                                         <TextArea
                                             name="libelle"
                                             value={objectif.libelle}
-                                            onChange={(event) => handleInputChange(index, event)}
-                                            placeholder="Libéllé-Objectif"
+                                            onChange={(event) => handleInputChange(index, event, 'libelle')}  // Passes 'libelle'
+                                            placeholder="Libellé-Objectif"
                                             autoSize
                                         />
                                     </td>
                                     <td style={{ padding: '10px', border: '1px solid #40A9FF', width: '10%' }}>
-                                        <Tooltip title="Ici, c'est le poids de votre objectif en %">
-                                            <Input
-                                                type='number'
-                                                name="poids"
-                                                value={objectif.poids}
-                                                onChange={(event) => handleInputChange(index, event)}
-                                            />
-                                        </Tooltip>
+                                        <Select
+                                            value={objectif.poids}
+                                            onChange={(value) => handleInputChange(index, value, 'poids')}  // Passes 'poids'
+                                            allowClear
+                                            placeholder="-- Sélectionnez le poids --"
+                                        >
+                                            {[...Array(19)].map((_, i) => {
+                                                const value = (i + 2) * 5; // 10, 15, 20, ... 100
+                                                return <Option key={value} value={value}>{value}</Option>;
+                                            })}
+                                        </Select>
                                     </td>
                                     <td style={{ padding: '10px', border: '1px solid #40A9FF', width: '10%' }}>
-                                        <Tooltip title="Ici, c'est la notation de votre objectif sur 5">
-                                            <Input
-                                                type='number'
-                                                name="notation"
-                                                value={objectif.notation}
-                                                onChange={(event) => handleInputChange(index, event)}
-                                                min={1}  // Optionnel, si tu veux également limiter la valeur minimale
-                                                max={5}  // Ceci n'aura d'effet qu'avec les boutons de flèche dans certains navigateurs
-                                                onInput={(event) => {
-                                                    if (event.target.value > 5) {
-                                                        event.target.value = 5;
-                                                    }
-                                                }}
-                                            />
-                                        </Tooltip>
+                                        <Select
+                                            value={objectif.notation}
+                                            onChange={(value) => handleInputChange(index, value, 'notation')}  // Passes 'notation'
+                                            allowClear
+                                            placeholder="-- Aucune sélection --"
+                                        >
+                                            <Option value={1}>1</Option>
+                                            <Option value={1.5}>1.5</Option>
+                                            <Option value={2}>2</Option>
+                                            <Option value={2.5}>2.5</Option>
+                                            <Option value={3}>3</Option>
+                                            <Option value={3.5}>3.5</Option>
+                                            <Option value={4}>4</Option>
+                                            <Option value={4.5}>4.5</Option>
+                                            <Option value={5}>5</Option>
+                                        </Select>
                                     </td>
                                     <td style={{ padding: '10px', border: '1px solid #40A9FF', width: '10%' }}>
                                         {((parseFloat(objectif.poids) * parseFloat(objectif.notation || 0)) / 5).toFixed(2) || 0}
@@ -1822,7 +1875,7 @@ const Noncadre = () => {
                                         <TextArea
                                             name="commentaire"
                                             value={objectif.commentaire}
-                                            onChange={(event) => handleInputChange(index, event)}
+                                            onChange={(event) => handleInputChange(index, event, 'commentaire')}  // Passes 'commentaire'
                                             placeholder="Commentaires"
                                             style={{ width: '100%' }}
                                             autoSize
@@ -1840,9 +1893,12 @@ const Noncadre = () => {
                             Précédent
                         </Button>
 
+
+
                         <Button type="primary" onClick={() => etape3('top')}>
                             Suivant
                         </Button>
+
                     </div>
                 </div>
             )
@@ -2062,7 +2118,7 @@ const Noncadre = () => {
 
                             <tr>
                                 <td style={{ padding: '10px', border: '1px solid #40A9FF' }}>Aptitude liée au poste</td>
-                                <td style={{ padding: '10px', border: '1px solid #40A9FF' }}> <Tooltip title="Les aptitudes liées au poste sont les compétences spécifiques nécessaires pour bien accomplir les tâches du poste.">
+                                <td style={{ padding: '10px', border: '1px solid #40A9FF' }}> <Tooltip title="Les aptitudes liées au poste sont les compétences spécifiques nécessaires à l'accomplissement des tâches au quotidien.">
                                     <TextArea
                                         placeholder="Aptitude liée au poste"
                                         autoSize
@@ -2080,7 +2136,7 @@ const Noncadre = () => {
 
                             <tr>
                                 <td style={{ padding: '10px', border: '1px solid #40A9FF' }}>Aptitude liée au poste</td>
-                                <td style={{ padding: '10px', border: '1px solid #40A9FF' }}><Tooltip title="Les aptitudes liées au poste sont les compétences spécifiques nécessaires pour bien accomplir les tâches du poste.">
+                                <td style={{ padding: '10px', border: '1px solid #40A9FF' }}><Tooltip title="Les aptitudes liées au poste sont les compétences spécifiques nécessaires à l'accomplissement des tâches au quotidien.">
                                     <TextArea
                                         placeholder="Aptitude liée au poste"
                                         autoSize
@@ -2386,7 +2442,7 @@ const Noncadre = () => {
                             Précédent
                         </Button>
 
-                        <Button type="primary" onClick={next} >
+                        <Button type="primary" onClick={etape9} >
                             Suivant
                         </Button>
                     </div>
@@ -2431,15 +2487,15 @@ const Noncadre = () => {
                                             },
                                             {
                                                 value: 'EI',
-                                                label: 'EI (Elémentaire insuffisant)',
+                                                label: 'EI (En Initiation)',
                                             },
                                             {
                                                 value: 'EA',
-                                                label: 'EA (Elémentaire acquis)',
+                                                label: "EA (En cours d'acquisition)",
                                             },
                                             {
                                                 value: 'MA',
-                                                label: 'MA (Mâtrise approfondie)',
+                                                label: 'MA (Maîtrise)',
                                             },
                                             {
                                                 value: 'EX',
@@ -2458,15 +2514,15 @@ const Noncadre = () => {
                                             },
                                             {
                                                 value: 'EI',
-                                                label: 'EI (Elémentaire insuffisant)',
+                                                label: 'EI (En Initiation)',
                                             },
                                             {
                                                 value: 'EA',
-                                                label: 'EA (Elémentaire acquis)',
+                                                label: "EA (En cours d'acquisition)",
                                             },
                                             {
                                                 value: 'MA',
-                                                label: 'MA (Mâtrise approfondie)',
+                                                label: 'MA (Maîtrise)',
                                             },
                                             {
                                                 value: 'EX',
@@ -2493,15 +2549,15 @@ const Noncadre = () => {
                                             },
                                             {
                                                 value: 'EI',
-                                                label: 'EI (Elémentaire insuffisant)',
+                                                label: 'EI (En Initiation)',
                                             },
                                             {
                                                 value: 'EA',
-                                                label: 'EA (Elémentaire acquis)',
+                                                label: "EA (En cours d'acquisition)",
                                             },
                                             {
                                                 value: 'MA',
-                                                label: 'MA (Mâtrise approfondie)',
+                                                label: 'MA (Maîtrise)',
                                             },
                                             {
                                                 value: 'EX',
@@ -2520,15 +2576,15 @@ const Noncadre = () => {
                                             },
                                             {
                                                 value: 'EI',
-                                                label: 'EI (Elémentaire insuffisant)',
+                                                label: 'EI (En Initiation)',
                                             },
                                             {
                                                 value: 'EA',
-                                                label: 'EA (Elémentaire acquis)',
+                                                label: "EA (En cours d'acquisition)",
                                             },
                                             {
                                                 value: 'MA',
-                                                label: 'MA (Mâtrise approfondie)',
+                                                label: 'MA (Maîtrise)',
                                             },
                                             {
                                                 value: 'EX',
@@ -2556,15 +2612,15 @@ const Noncadre = () => {
                                             },
                                             {
                                                 value: 'EI',
-                                                label: 'EI (Elémentaire insuffisant)',
+                                                label: 'EI (En Initiation)',
                                             },
                                             {
                                                 value: 'EA',
-                                                label: 'EA (Elémentaire acquis)',
+                                                label: "EA (En cours d'acquisition)",
                                             },
                                             {
                                                 value: 'MA',
-                                                label: 'MA (Mâtrise approfondie)',
+                                                label: 'MA (Maîtrise)',
                                             },
                                             {
                                                 value: 'EX',
@@ -2583,15 +2639,15 @@ const Noncadre = () => {
                                             },
                                             {
                                                 value: 'EI',
-                                                label: 'EI (Elémentaire insuffisant)',
+                                                label: 'EI (En Initiation)',
                                             },
                                             {
                                                 value: 'EA',
-                                                label: 'EA (Elémentaire acquis)',
+                                                label: "EA (En cours d'acquisition)",
                                             },
                                             {
                                                 value: 'MA',
-                                                label: 'MA (Mâtrise approfondie)',
+                                                label: 'MA (Maîtrise)',
                                             },
                                             {
                                                 value: 'EX',
@@ -2619,15 +2675,15 @@ const Noncadre = () => {
                                             },
                                             {
                                                 value: 'EI',
-                                                label: 'EI (Elémentaire insuffisant)',
+                                                label: 'EI (En Initiation)',
                                             },
                                             {
                                                 value: 'EA',
-                                                label: 'EA (Elémentaire acquis)',
+                                                label: "EA (En cours d'acquisition)",
                                             },
                                             {
                                                 value: 'MA',
-                                                label: 'MA (Mâtrise approfondie)',
+                                                label: 'MA (Maîtrise)',
                                             },
                                             {
                                                 value: 'EX',
@@ -2673,7 +2729,7 @@ const Noncadre = () => {
                             Précédent
                         </Button>
 
-                        <Button type="primary" onClick={next} >
+                        <Button type="primary" onClick={etape10} >
                             Suivant
                         </Button>
                     </div>
@@ -3024,7 +3080,7 @@ const Noncadre = () => {
                             Précédent
                         </Button>
 
-                        <Button type="primary" onClick={next} >
+                        <Button type="primary" onClick={etape12} >
                             Suivant
                         </Button>
                     </div>

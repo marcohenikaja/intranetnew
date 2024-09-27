@@ -623,7 +623,7 @@ const Consolidation = () => {
         } catch (err) {
             setError('Erreur lors de la récupération des e-mails.');
         } finally {
-          //  setLoading(false);
+            //  setLoading(false);
         }
     };
 
@@ -643,7 +643,7 @@ const Consolidation = () => {
             setEvaldata(response.data);
         } catch (error) {
             console.error('Erreur lors de la récupération des données', error);
-            message.error('Erreur lors de la récupération des données.');
+            // message.error('Erreur lors de la récupération des données.');
         }
     };
 
@@ -655,7 +655,7 @@ const Consolidation = () => {
             setEvaldatahisto(response.data);
         } catch (error) {
             console.error('Erreur lors de la récupération des données', error);
-            message.error('Erreur lors de la récupération des données.');
+            // message.error('Erreur lors de la récupération des données.');
         }
     };
 
@@ -835,7 +835,7 @@ const Consolidation = () => {
             dataIndex: 'dateentree',
             key: 'dateentree',
             width: 150,
-            render: (text) => moment(text).format('DD/MM/YYYY HH:mm:ss'),
+            render: (text) => moment(text).format('DD/MM/YYYY'),
         },
 
 
@@ -1028,7 +1028,7 @@ const Consolidation = () => {
             key: 'libelleend1',
             width: 200,
             render: (text, record) => {
-                const combinedForces = [record.ct1, record.ct2, record.ct3, record.mt1, record.mt2, record.mt3, , record.ml1, record.ml2, record.ml3].filter(Boolean).join(', ');
+                const combinedForces = [record.libelleend1, record.libelleend2, record.libelleend3, record.libelleend4].filter(Boolean).join(', ');
                 return (
                     <Popover content={<div style={{ maxWidth: '300px', whiteSpace: 'pre-wrap' }}>{combinedForces}</div>} title="Objectif pour 2024" trigger="click">
                         <span style={{ cursor: 'pointer' }}>

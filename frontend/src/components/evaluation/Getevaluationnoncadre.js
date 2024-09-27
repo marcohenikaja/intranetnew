@@ -1032,7 +1032,7 @@ const Getevaluationnoncadre = () => {
         }
 
         else if (concl == null) {
-         
+
             notification.info({
                 message: "Notification",
                 description: "Veuillez choisir votre conclusion.",
@@ -1040,18 +1040,7 @@ const Getevaluationnoncadre = () => {
                 style: { textAlign: 'justify' },
             });
             return;
-        }
-        else if (cmt1 == null || cmt2 == null || cmt3 == null || cmt4 == null || cmt5 == null) {
-          
-            notification.info({
-                message: "Notification",
-                description: "Veuillez remplir tous les champs commentaires.",
-                placement: 'top',
-             
-            });
-            return;
-        }
-        else {
+        } else {
             next()
         }
     }
@@ -1199,7 +1188,7 @@ const Getevaluationnoncadre = () => {
             { ccd: ccd3, motif: motif3, index: 3 },
             { ccd: ccd4, motif: motif4, index: 4 }
         ];
-    
+
         // Vérification des paires ccd et motif
         for (const { ccd, motif, index } of fields) {
             if (ccd && !motif) {
@@ -1212,19 +1201,11 @@ const Getevaluationnoncadre = () => {
                 return;
             }
         }
-    
+
         // Vérification si tous les champs ccd sont vides
         const allCcdsEmpty = fields.every(({ ccd }) => !ccd);
-        if (allCcdsEmpty) {
-            notification.info({
-                message: "Notification",
-                description: "Tous les champs ccd sont vides.",
-                placement: 'top',
-                style: { textAlign: 'justify' },
-            });
-            return;
-        }
-    
+
+
         // Passe à l'étape suivante si toutes les validations sont réussies
         next();
     };
@@ -1353,7 +1334,7 @@ const Getevaluationnoncadre = () => {
 
 
 
-    //enregistrement valider
+    //enregistrement valid
 
     const enregistrementvalide = async () => {
         try {

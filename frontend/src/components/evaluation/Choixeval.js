@@ -156,7 +156,7 @@ const Choixeval = () => {
 
                         <Col xs={24}>
                             <Button type="primary" block onClick={() => handleClick(`/evalcadrenonmanager/${ids}/Evaluation cadre non manager`)}>
-                                Evaluation cadre non management
+                                Evaluation cadre non manager
                             </Button>
                         </Col>
 
@@ -210,7 +210,7 @@ const Choixeval = () => {
 
 
                         <Col xs={24}>
-                          
+
                             <Button
                                 type="primary"
                                 style={{ backgroundColor: '#00922E', borderColor: '#00922E', position: 'relative' }}

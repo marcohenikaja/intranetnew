@@ -18,11 +18,14 @@ const { TextArea } = Input;
 const { Title } = Typography;
 const { Step } = Steps;
 const { RangePicker } = DatePicker;
-import { CheckCircleOutlined, CloseCircleOutlined, HourglassOutlined } from '@ant-design/icons';
+import { CheckCircleOutlined, CloseCircleOutlined, HourglassOutlined, InfoCircleOutlined } from '@ant-design/icons';
 
 const CheckboxGroup = Checkbox.Group;
 
 const url = 'http://localhost:8000/'
+
+
+
 const Evaluationcadrenonmanager = () => {
     const [current, setCurrent] = useState(0);
     const [api, contextHolder] = notification.useNotification();
@@ -45,6 +48,15 @@ const Evaluationcadrenonmanager = () => {
     ]);
     const [isAdding, setIsAdding] = useState(false);
     const [newOption, setNewOption] = useState('');
+
+    const [isTableVisible, setIsTableVisible] = useState(false);
+
+    // Fonction pour basculer l'état de visibilité
+    const toggleTableVisibility = () => {
+        setIsTableVisible(!isTableVisible); // Inverse l'état actuel
+    };
+
+
     const handleAddOption = () => {
         if (newOption) {
             setOptions([...options, { value: newOption, label: newOption }]);
@@ -568,8 +580,10 @@ const Evaluationcadrenonmanager = () => {
             return;
 
         } else {
+            enregistrementcadrenon()
             setCurrent(current + 1);
         }
+      
         setCurrent(current + 1)
     }
 
@@ -649,6 +663,7 @@ const Evaluationcadrenonmanager = () => {
             return;
         }
         else {
+            enregistrementcadrenon()
             next();
         }
 
@@ -683,32 +698,33 @@ const Evaluationcadrenonmanager = () => {
         setResultat(resultatPourcentage);
     }, [objectifs]);
 
-    const handleInputChange = (index, event) => {
-        const { name, value } = event.target;
-
-
+    const handleInputChange = (index, valueOrEvent, fieldName) => {
         const newObjectifs = [...objectifs];
 
+        // Vérifier si la valeur est un événement pour TextArea ou une sélection dans Select
+        if (typeof valueOrEvent === 'object' && valueOrEvent.target) {
+            newObjectifs[index][fieldName] = valueOrEvent.target.value;
+        } else {
+            // Sinon, c'est une valeur provenant d'un Select
+            newObjectifs[index][fieldName] = valueOrEvent;
+        }
 
-        if (name === 'poids') {
-            const newValue = parseFloat(value) || 0;
-            const currentTotal = objectifs.reduce((total, obj, idx) =>
-                idx === index ? total : total + parseFloat(obj.poids || 0), 0);
+        // Si on modifie le "poids", vérifier que la somme des poids ne dépasse pas 100
+        if (fieldName === 'poids') {
+            const sommePoids = newObjectifs.reduce((acc, obj) => acc + (parseFloat(obj.poids) || 0), 0);
 
-            if (currentTotal + newValue > 100) {
-                notification.info({
-                    message: 'Info',
-                    description: 'La somme des poids ne peut pas dépasser 100%',
+            // Vérifier si la somme des poids dépasse 100
+            if (sommePoids > 100) {
+                notification.error({
+                    message: 'Erreur',
+                    description: 'La somme des poids ne peut pas dépasser 100.',
                     placement: 'top',
                 });
-                return;
+                return; // Empêche la mise à jour si la somme dépasse 100
             }
         }
 
-
-        newObjectifs[index][name] = value;
-
-
+        // Met à jour les objectifs avec la nouvelle valeur si tout est correct
         setObjectifs(newObjectifs);
     };
 
@@ -743,6 +759,7 @@ const Evaluationcadrenonmanager = () => {
             });
             return;
         } else {
+            enregistrementcadrenon()
             next()
         }
     };
@@ -791,6 +808,7 @@ const Evaluationcadrenonmanager = () => {
         });
 
         if (allChecked) {
+            enregistrementcadrenon()
             next(); // Passer à l'étape suivante uniquement si toutes les cases sont cochées
         }
 
@@ -1063,6 +1081,7 @@ const Evaluationcadrenonmanager = () => {
             } else {
                 setNouvnivs("invalide"); // Pour traiter les valeurs hors des plages définies
             }
+            enregistrementcadrenon()
             next();
         }
 
@@ -1141,18 +1160,9 @@ const Evaluationcadrenonmanager = () => {
                 style: { textAlign: 'justify' },
             });
             return;
-        }
-        else if (cmt1 == null || cmt2 == null || cmt3 == null || cmt4 == null || cmt5 == null) {
 
-            notification.info({
-                message: "Notification",
-                description: "Veuillez remplir tous les champs commentaires.",
-                placement: 'top',
-
-            });
-            return;
-        }
-        else {
+        } else {
+            enregistrementcadrenon()
             next()
         }
     }
@@ -1162,6 +1172,7 @@ const Evaluationcadrenonmanager = () => {
     //etape8
     const [idr, setIdr] = useState(null)
     const etape8 = () => {
+        enregistrementcadrenon()
         next()
     }
 
@@ -1191,6 +1202,10 @@ const Evaluationcadrenonmanager = () => {
     const [c25, setC25] = useState(null)
 
 
+    const etape9 = () => {
+        enregistrementcadrenon()
+        next()
+    }
 
 
 
@@ -1222,6 +1237,10 @@ const Evaluationcadrenonmanager = () => {
     const [comm3, setComm3] = useState(null)
     const [comm4, setComm4] = useState(null)
 
+    const etape10 = () => {
+        enregistrementcadrenon()
+        next()
+    }
 
     //etape11
     const [ccd1, setCcd1] = useState(null)
@@ -1316,17 +1335,9 @@ const Evaluationcadrenonmanager = () => {
 
         // Vérification si tous les champs ccd sont vides
         const allCcdsEmpty = fields.every(({ ccd }) => !ccd);
-        if (allCcdsEmpty) {
-            notification.info({
-                message: "Notification",
-                description: "Tous les champs ccd sont vides.",
-                placement: 'top',
-                style: { textAlign: 'justify' },
-            });
-            return;
-        }
 
-        // Passe à l'étape suivante si toutes les validations sont réussies
+
+        enregistrementcadrenon()
         next();
     };
 
@@ -1356,7 +1367,23 @@ const Evaluationcadrenonmanager = () => {
 
     const [comcollab, setComcollab] = useState(null)
 
+    const etape12 = () => {
 
+        if (
+            (ct1 || mt1 || ml1) && !cpr1 ||
+            (ct2 || mt2 || ml2) && !cpr2 ||
+            (ct3 || mt3 || ml3) && !cpr3
+        ) {
+            notification.info({
+                message: 'Info',
+                description: "Veuillez remplir le champ 'Contribution personnelle",
+                placement: 'top',
+            });
+        } else {
+            enregistrementcadrenon()
+            next();
+        }
+    };
     //etape13
     const [objectifs1, setObjectifs1] = useState([
         { libelle: "", poids: "", notation: "", commentaire: "" },
@@ -1384,62 +1411,59 @@ const Evaluationcadrenonmanager = () => {
         setResultat1(resultatPourcentage1);
     }, [objectifs1]);
 
-    const handleInputChange1 = (index, event) => {
-        // const { name, value } = event.target;
-        // const newObjectifs1 = [...objectifs1];
-        // newObjectifs1[index][name] = value;
-        // setObjectifs1(newObjectifs1);
-
-
-        const { name, value } = event.target;
-
-
+    const handleInputChange1 = (index, valueOrEvent, fieldName) => {
         const newObjectifs1 = [...objectifs1];
 
-
-        if (name === 'poids') {
-            const newValue1 = parseFloat(value) || 0;
-            const currentTotal = objectifs1.reduce((total, obj, idx) =>
-                idx === index ? total : total + parseFloat(obj.poids || 0), 0);
-
-            if (currentTotal + newValue1 > 100) {
-                notification.info({
-                    message: 'Info',
-                    description: 'La somme des poids ne peut pas dépasser 100%',
-                    placement: 'top',
-                });
-                return;
-            }
+        // Vérifier si la valeur est un événement pour TextArea ou une sélection dans Select
+        if (typeof valueOrEvent === 'object' && valueOrEvent.target) {
+            newObjectifs1[index][fieldName] = valueOrEvent.target.value;
+        } else {
+            // Sinon, c'est une valeur provenant d'un Select
+            newObjectifs1[index][fieldName] = valueOrEvent;
         }
 
+        // Si on modifie le "poids", vérifier que la somme des poids ne dépasse pas 100
+        if (fieldName === 'poids') {
+            const sommePoids = newObjectifs1.reduce((acc, obj) => acc + (parseFloat(obj.poids) || 0), 0);
 
-        newObjectifs1[index][name] = value;
+            // Vérifier si la somme des poids dépasse 100
+            if (sommePoids > 100) {
+                notification.error({
+                    message: 'Erreur',
+                    description: 'La somme des poids ne peut pas dépasser 100.',
+                    placement: 'top',
+                });
+                return; // Empêche la mise à jour si la somme dépasse 100
+            }
+        }
 
 
         setObjectifs1(newObjectifs1);
     };
 
     const etape13 = (placement) => {
-        // Vérifier si tous les champs sont remplis dans chaque ligne
+
         const isValid = objectifs1.every(objectif => {
-            // Si au moins un des champs est rempli, alors tous les champs doivent être remplis
+
             if (objectif.libelle || objectif.poids || objectif.notation) {
                 return objectif.libelle && objectif.poids && objectif.notation;
             }
-            // Sinon, la ligne est valide (pas de valeurs dans aucun champ)
+
             return true;
         });
 
-        // Vérifier si tous les champs sont vides dans toutes les lignes
+
         const allFieldsEmpty = objectifs1.every(objectif => !objectif.libelle && !objectif.poids && !objectif.notation);
+
+
+        const sommePoids = objectifs1.reduce((acc, obj) => acc + (parseFloat(obj.poids) || 0), 0);
 
         if (!isValid) {
             notification.info({
                 message: "Notification",
                 description:
                     "Veuillez remplir les champs vides dans la ligne du tableau",
-                placement: 'top',
-                style: { textAlign: 'justify' },
+                placement,
             });
             return;
         } else if (allFieldsEmpty) {
@@ -1447,14 +1471,20 @@ const Evaluationcadrenonmanager = () => {
                 message: "Notification",
                 description:
                     "Veuillez remplir les champs vides",
-                placement: 'top',
-                style: { textAlign: 'justify' },
+                placement,
+            });
+            return;
+        } else if (sommePoids !== 100) {  // Vérification que la somme des poids est exactement égale à 100
+            notification.error({
+                message: "Erreur",
+                description: "La somme des poids doit être exactement égale à 100%.",
+                placement,
             });
             return;
         } else {
-            next()
+            enregistrementcadrenon()
+            next();
         }
-        next()
     };
 
     //enregistrement
@@ -1536,6 +1566,78 @@ const Evaluationcadrenonmanager = () => {
         }
     };
 
+
+
+
+    const enregistrementcadrenon = async () => {
+        try {
+            const enrg = await axios.post(`${url}enregistrementevalcadrenonmanager/${ids}`, {
+                nom, prenom, mat, daty, dir, nomeval, posteeval, fonc, email, datys, datyss, mission,
+                objectifs, resultat, selectedValue1, selectedValue2, selectedVal1, selectedVal2, selectedVal3, selectedVal4, selectedVal5, selectedVal6, selectedVal7, selectedVal8, selectedVal9, selectedVal10, selectedVal11, selectedVal12, selectedVal13, selectedVal14, selectedVal15,
+                cmt1, cmt2, cmt3, cmt4, cmt5, r1, r2, r3, r4, r5, cdc1, cdc2, cdc3, cdc4, cdc5, nivactus, nouvnivs, concl, ancienneteniv, com, pg, classification, idr,
+                f1, f2, f3, f4, f5, c1, c2, c3, c4, c5, am1, am2, am3, am4, am5, c21, c22, c23, c24, c25,
+                t1, t2, t3, t4, compac1, compac2, compac3, compac4, apav1, apav2, apav3, apav4, apap1, apap2, apap3, apap4, comm1, comm2, comm3, comm4,
+                ccd1, ccd2, ccd3, ccd4, catcomp1, catcomp2, catcomp3, catcomp4, motif1, motif2, motif3, motif4, pa1, pa2, pa3, pa4, dp1, dp2, dp3, dp4,
+                ct1, ct2, ct3, mt1, mt2, mt3, ml1, ml2, ml3, cpr1, cpr2, cpr3, cg1, cg2, cg3, comcollab, objectifs1, resultat1, somme, todayis, alp1, alp2, emailn1, emailn2, emaildr, emailsg, emaildg, emaildrh, ids, loggedInUser
+            });
+            console.log(enrg.data);
+            if (enrg.data.success === false) {
+                const placement = 'top';
+                notification.error({
+                    message: `Notification`,
+                    description: enrg.data.message,
+                    placement,
+                });
+                return;
+            } else if (enrg.data.success === true) {
+                const placement = 'top';
+
+                next();
+            }
+
+        } catch (error) {
+            if (error.response) {
+                // La requête a été faite et le serveur a répondu avec un code de statut
+                // qui tombe hors de la plage de 2xx
+                console.error(error.response.data);
+                console.error(error.response.status);
+                console.error(error.response.headers);
+
+                if (error.response.status === 400) {
+                    const placement = 'top';
+                    notification.error({
+                        message: `Notification`,
+                        description: error.response.data.message || "Erreur de mise à jour",
+                        placement,
+                    });
+                } else {
+                    // Gérer les autres statuts d'erreur si nécessaire
+                    notification.error({
+                        message: `Notification`,
+                        description: `Erreur: ${error.response.status}`,
+                        placement,
+                    });
+                }
+            } else if (error.request) {
+                // La requête a été faite mais aucune réponse n'a été reçue
+                console.error(error.request);
+                notification.error({
+                    message: `Notification`,
+                    description: "Aucune réponse du serveur",
+                    placement: 'top',
+                });
+            } else {
+                // Quelque chose s'est passé lors de la configuration de la requête qui a déclenché une erreur
+                console.error('Erreur', error.message);
+                notification.error({
+                    message: `Notification`,
+                    description: `Erreur: ${error.message}`,
+                    placement: 'top',
+                });
+            }
+        }
+    };
+
     const [emails, setEmails] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
@@ -1561,6 +1663,8 @@ const Evaluationcadrenonmanager = () => {
 
 
     const [status, setStatus] = useState([])
+    const [statusres, setStatusres] = useState("")
+
     const getStatus = async () => {
         console.log("ids views:", ids);
 
@@ -1881,14 +1985,53 @@ const Evaluationcadrenonmanager = () => {
             title: 'Troisième étape',
             content: (
                 <div>
-
                     <h2>OBJECTIFS INDIVIDUELS</h2>
+
+
+                    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                        <Title level={5} style={{ margin: 0, marginRight: '5px', lineHeight: '1.5' }}>Infos</Title>
+                        <InfoCircleOutlined onClick={toggleTableVisibility} style={{ cursor: 'pointer', fontSize: '20px' }} />
+                    </div>
+
+                    {isTableVisible && (
+                        <table style={{ margin: 'auto', textAlign: 'center', borderCollapse: 'collapse', width: '50%', height: '20%' }}>
+                            <thead style={{ backgroundColor: '#40A9FF', color: 'white' }}>
+                                <tr>
+                                    <th style={{ padding: '10px', border: '1px solid white' }}>Notation</th>
+                                    <th style={{ padding: '10px', border: '1px solid white' }}>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td style={{ padding: '10px', border: '1px solid #40A9FF' }}>1: Non acquis</td>
+                                    <td style={{ padding: '10px', border: '1px solid #40A9FF' }}>N'assimile pas et aucune démarche entreprise pour acquérir la compétence</td>
+                                </tr>
+                                <tr>
+                                    <td style={{ padding: '10px', border: '1px solid #40A9FF' }}>2: En initiation</td>
+                                    <td style={{ padding: '10px', border: '1px solid #40A9FF' }}>Début de compréhension; nécessite une amélioration significative</td>
+                                </tr>
+                                <tr>
+                                    <td style={{ padding: '10px', border: '1px solid #40A9FF' }}>3: En cours d'adaptation</td>
+                                    <td style={{ padding: '10px', border: '1px solid #40A9FF' }}>En application quotidienne avec une marge de progression; nécessite du contrôle</td>
+                                </tr>
+                                <tr>
+                                    <td style={{ padding: '10px', border: '1px solid #40A9FF' }}>4: Maîtrise</td>
+                                    <td style={{ padding: '10px', border: '1px solid #40A9FF' }}>Résultats conformes aux objectifs assignés, performance éprouvée sur la compétence évaluée</td>
+                                </tr>
+                                <tr>
+                                    <td style={{ padding: '10px', border: '1px solid #40A9FF' }}>5: Exceptionnel</td>
+                                    <td style={{ padding: '10px', border: '1px solid #40A9FF' }}>Rendement qui à tous égards a nettement dépassé les exigences et les attentes du poste. Niveau de référence</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    )}
+                    <br />
                     <table style={{ margin: 'auto', textAlign: 'center', borderCollapse: 'collapse', width: '100%' }}>
                         <thead style={{ backgroundColor: '#40A9FF', color: 'white' }}>
                             <tr>
                                 <th style={{ padding: '10px', border: '1px solid white' }}>Libéllé-Objectif</th>
                                 <th style={{ padding: '10px', border: '1px solid white' }}>Poids en %</th>
-                                <th style={{ padding: '10px', border: '1px solid white' }}>Notation sur 5 évalué</th>
+                                <th style={{ padding: '10px', border: '1px solid white' }}>Notation sur 5</th>
                                 <th style={{ padding: '10px', border: '1px solid white' }}>Total pondéré</th>
                                 <th style={{ padding: '10px', border: '1px solid white' }}>Commentaires</th>
                             </tr>
@@ -1900,37 +2043,41 @@ const Evaluationcadrenonmanager = () => {
                                         <TextArea
                                             name="libelle"
                                             value={objectif.libelle}
-                                            onChange={(event) => handleInputChange(index, event)}
-                                            placeholder="Libéllé-Objectif"
+                                            onChange={(event) => handleInputChange(index, event, 'libelle')}  // Passes 'libelle'
+                                            placeholder="Libellé-Objectif"
                                             autoSize
                                         />
                                     </td>
                                     <td style={{ padding: '10px', border: '1px solid #40A9FF', width: '10%' }}>
-                                        <Tooltip title="Ici, c'est le poids de votre objectif en %">
-                                            <Input
-                                                type='number'
-                                                name="poids"
-                                                value={objectif.poids}
-                                                onChange={(event) => handleInputChange(index, event)}
-                                            />
-                                        </Tooltip>
+                                        <Select
+                                            value={objectif.poids}
+                                            onChange={(value) => handleInputChange(index, value, 'poids')}  // Passes 'poids'
+                                            allowClear
+                                            placeholder="-- Sélectionnez le poids --"
+                                        >
+                                            {[...Array(19)].map((_, i) => {
+                                                const value = (i + 2) * 5; // 10, 15, 20, ... 100
+                                                return <Option key={value} value={value}>{value}</Option>;
+                                            })}
+                                        </Select>
                                     </td>
                                     <td style={{ padding: '10px', border: '1px solid #40A9FF', width: '10%' }}>
-                                        <Tooltip title="Ici, c'est la notation de votre objectif sur 5">
-                                            <Input
-                                                type='number'
-                                                name="notation"
-                                                value={objectif.notation}
-                                                onChange={(event) => handleInputChange(index, event)}
-                                                min={1}  // Optionnel, si tu veux également limiter la valeur minimale
-                                                max={5}  // Ceci n'aura d'effet qu'avec les boutons de flèche dans certains navigateurs
-                                                onInput={(event) => {
-                                                    if (event.target.value > 5) {
-                                                        event.target.value = 5;
-                                                    }
-                                                }}
-                                            />
-                                        </Tooltip>
+                                        <Select
+                                            value={objectif.notation}
+                                            onChange={(value) => handleInputChange(index, value, 'notation')}  // Passes 'notation'
+                                            allowClear
+                                            placeholder="-- Aucune sélection --"
+                                        >
+                                            <Option value={1}>1</Option>
+                                            <Option value={1.5}>1.5</Option>
+                                            <Option value={2}>2</Option>
+                                            <Option value={2.5}>2.5</Option>
+                                            <Option value={3}>3</Option>
+                                            <Option value={3.5}>3.5</Option>
+                                            <Option value={4}>4</Option>
+                                            <Option value={4.5}>4.5</Option>
+                                            <Option value={5}>5</Option>
+                                        </Select>
                                     </td>
                                     <td style={{ padding: '10px', border: '1px solid #40A9FF', width: '10%' }}>
                                         {((parseFloat(objectif.poids) * parseFloat(objectif.notation || 0)) / 5).toFixed(2) || 0}
@@ -1939,7 +2086,7 @@ const Evaluationcadrenonmanager = () => {
                                         <TextArea
                                             name="commentaire"
                                             value={objectif.commentaire}
-                                            onChange={(event) => handleInputChange(index, event)}
+                                            onChange={(event) => handleInputChange(index, event, 'commentaire')}  // Passes 'commentaire'
                                             placeholder="Commentaires"
                                             style={{ width: '100%' }}
                                             autoSize
@@ -1957,9 +2104,18 @@ const Evaluationcadrenonmanager = () => {
                             Précédent
                         </Button>
 
-                        <Button type="primary" onClick={() => etape3('top')}>
-                            Suivant
-                        </Button>
+
+                        {
+                            statusres ? (
+                                <Button type="primary" onClick={next}>
+                                    Suivant
+                                </Button>
+                            ) : (
+                                <Button type="primary" onClick={() => etape3('top')}>
+                                    Suivant
+                                </Button>
+                            )
+                        }
                     </div>
                 </div>
             )
@@ -2019,6 +2175,49 @@ const Evaluationcadrenonmanager = () => {
                     <Title level={2}>APTITUDES PROFESSIONNELLES</Title>
                     <Title level={5}>* Veuillez cocher la case correspondant à votre appréciation. Une seule réponse valable</Title>
 
+                    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                        <Title level={5} style={{ margin: 0, marginRight: '5px', lineHeight: '1.5' }}>Infos</Title>
+                        <InfoCircleOutlined onClick={toggleTableVisibility} style={{ cursor: 'pointer', fontSize: '20px' }} />
+                    </div>
+
+
+
+
+
+                    {isTableVisible && (
+                        <table style={{ margin: 'auto', textAlign: 'center', borderCollapse: 'collapse', width: '50%', height: '20%' }}>
+                            <thead style={{ backgroundColor: '#40A9FF', color: 'white' }}>
+                                <tr>
+                                    <th style={{ padding: '10px', border: '1px solid white' }}>Notation</th>
+                                    <th style={{ padding: '10px', border: '1px solid white' }}>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td style={{ padding: '10px', border: '1px solid #40A9FF' }}>1: Non acquis</td>
+                                    <td style={{ padding: '10px', border: '1px solid #40A9FF' }}>N'assimile pas et aucune démarche entreprise pour acquérir la compétence</td>
+                                </tr>
+                                <tr>
+                                    <td style={{ padding: '10px', border: '1px solid #40A9FF' }}>2: En initiation</td>
+                                    <td style={{ padding: '10px', border: '1px solid #40A9FF' }}>Début de compréhension; nécessite une amélioration significative</td>
+                                </tr>
+                                <tr>
+                                    <td style={{ padding: '10px', border: '1px solid #40A9FF' }}>3: En cours d'adaptation</td>
+                                    <td style={{ padding: '10px', border: '1px solid #40A9FF' }}>En application quotidienne avec une marge de progression; nécessite du contrôle</td>
+                                </tr>
+                                <tr>
+                                    <td style={{ padding: '10px', border: '1px solid #40A9FF' }}>4: Maîtrise</td>
+                                    <td style={{ padding: '10px', border: '1px solid #40A9FF' }}>Résultats conformes aux objectifs assignés, performance éprouvée sur la compétence évaluée</td>
+                                </tr>
+                                <tr>
+                                    <td style={{ padding: '10px', border: '1px solid #40A9FF' }}>5: Exceptionnel</td>
+                                    <td style={{ padding: '10px', border: '1px solid #40A9FF' }}>Rendement qui à tous égards a nettement dépassé les exigences et les attentes du poste. Niveau de référence</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    )}
+                    <br />
+
                     <table style={{ margin: 'auto', textAlign: 'center', borderCollapse: 'collapse', width: '80%' }}>
                         <thead style={{ backgroundColor: '#40A9FF', color: 'white' }}>
                             <tr>
@@ -2059,9 +2258,19 @@ const Evaluationcadrenonmanager = () => {
                             Précédent
                         </Button>
 
-                        <Button type="primary" onClick={() => etape5('top')}>
-                            Suivant
-                        </Button>
+
+
+                        {
+                            statusres ? (
+                                <Button type="primary" onClick={next}>
+                                    Suivant
+                                </Button>
+                            ) : (
+                                <Button type="primary" onClick={() => etape5('top')}>
+                                    Suivant
+                                </Button>
+                            )
+                        }
                     </div>
                 </div>
             )
@@ -2072,6 +2281,45 @@ const Evaluationcadrenonmanager = () => {
                 <div>
                     <Title level={2}>COMPORTEMENT</Title>
                     <Title level={5}>* Veuillez cocher la case correspondant à votre appréciation. Une seule réponse valable</Title>
+                    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                        <Title level={5} style={{ margin: 0, marginRight: '5px', lineHeight: '1.5' }}>Infos</Title>
+                        <InfoCircleOutlined onClick={toggleTableVisibility} style={{ cursor: 'pointer', fontSize: '20px' }} />
+                    </div>
+
+
+                    {isTableVisible && (
+                        <table style={{ margin: 'auto', textAlign: 'center', borderCollapse: 'collapse', width: '50%', height: '20%' }}>
+                            <thead style={{ backgroundColor: '#40A9FF', color: 'white' }}>
+                                <tr>
+                                    <th style={{ padding: '10px', border: '1px solid white' }}>Notation</th>
+                                    <th style={{ padding: '10px', border: '1px solid white' }}>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td style={{ padding: '10px', border: '1px solid #40A9FF' }}>1: Non acquis</td>
+                                    <td style={{ padding: '10px', border: '1px solid #40A9FF' }}>N'assimile pas et aucune démarche entreprise pour acquérir la compétence</td>
+                                </tr>
+                                <tr>
+                                    <td style={{ padding: '10px', border: '1px solid #40A9FF' }}>2: En initiation</td>
+                                    <td style={{ padding: '10px', border: '1px solid #40A9FF' }}>Début de compréhension; nécessite une amélioration significative</td>
+                                </tr>
+                                <tr>
+                                    <td style={{ padding: '10px', border: '1px solid #40A9FF' }}>3: En cours d'adaptation</td>
+                                    <td style={{ padding: '10px', border: '1px solid #40A9FF' }}>En application quotidienne avec une marge de progression; nécessite du contrôle</td>
+                                </tr>
+                                <tr>
+                                    <td style={{ padding: '10px', border: '1px solid #40A9FF' }}>4: Maîtrise</td>
+                                    <td style={{ padding: '10px', border: '1px solid #40A9FF' }}>Résultats conformes aux objectifs assignés, performance éprouvée sur la compétence évaluée</td>
+                                </tr>
+                                <tr>
+                                    <td style={{ padding: '10px', border: '1px solid #40A9FF' }}>5: Exceptionnel</td>
+                                    <td style={{ padding: '10px', border: '1px solid #40A9FF' }}>Rendement qui à tous égards a nettement dépassé les exigences et les attentes du poste. Niveau de référence</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    )}
+                    <br />
 
                     <table style={{ margin: 'auto', textAlign: 'center', borderCollapse: 'collapse', width: '80%' }}>
                         <thead style={{ backgroundColor: '#40A9FF', color: 'white' }}>
@@ -2183,7 +2431,7 @@ const Evaluationcadrenonmanager = () => {
                             </tr>
                             <tr>
                                 <td style={{ padding: '10px', border: '1px solid #40A9FF' }}>Aptitude liée au poste</td>
-                                <td style={{ padding: '10px', border: '1px solid #40A9FF' }}> <Tooltip title="Les aptitudes liées au poste sont les compétences spécifiques nécessaires pour bien accomplir les tâches du poste.">
+                                <td style={{ padding: '10px', border: '1px solid #40A9FF' }}> <Tooltip title="Les aptitudes liées au poste sont les compétences spécifiques nécessaires à l'accomplissement des tâches au quotidien.">
                                     <TextArea
                                         placeholder="Aptitude liée au poste"
                                         autoSize
@@ -2201,7 +2449,7 @@ const Evaluationcadrenonmanager = () => {
 
                             <tr>
                                 <td style={{ padding: '10px', border: '1px solid #40A9FF' }}>Aptitude liée au poste</td>
-                                <td style={{ padding: '10px', border: '1px solid #40A9FF' }}><Tooltip title="Les aptitudes liées au poste sont les compétences spécifiques nécessaires pour bien accomplir les tâches du poste.">
+                                <td style={{ padding: '10px', border: '1px solid #40A9FF' }}><Tooltip title="Les aptitudes liées au poste sont les compétences spécifiques nécessaires à l'accomplissement des tâches au quotidien.">
                                     <TextArea
                                         placeholder="Aptitude liée au poste"
                                         autoSize
@@ -2227,9 +2475,17 @@ const Evaluationcadrenonmanager = () => {
                             Précédent
                         </Button>
 
-                        <Button type="primary" onClick={() => etape6('top')}>
-                            Suivant
-                        </Button>
+                        {
+                            statusres ? (
+                                <Button type="primary" onClick={next}>
+                                    Suivant
+                                </Button>
+                            ) : (
+                                <Button type="primary" onClick={() => etape6('top')}>
+                                    Suivant
+                                </Button>
+                            )
+                        }
                     </div>
                 </div>
             )
@@ -2391,9 +2647,17 @@ const Evaluationcadrenonmanager = () => {
                             Précédent
                         </Button>
 
-                        <Button type="primary" onClick={etape7}>
-                            Suivant
-                        </Button>
+                        {
+                            statusres ? (
+                                <Button type="primary" onClick={next}>
+                                    Suivant
+                                </Button>
+                            ) : (
+                                <Button type="primary" onClick={etape7}>
+                                    Suivant
+                                </Button>
+                            )
+                        }
                     </div>
 
                 </div>
@@ -2507,9 +2771,17 @@ const Evaluationcadrenonmanager = () => {
                             Précédent
                         </Button>
 
-                        <Button type="primary" onClick={next} >
-                            Suivant
-                        </Button>
+                        {
+                            statusres ? (
+                                <Button type="primary" onClick={next}>
+                                    Suivant
+                                </Button>
+                            ) : (
+                                <Button type="primary" onClick={etape9} >
+                                    Suivant
+                                </Button>
+                            )
+                        }
                     </div>
                 </div>
             )
@@ -2552,15 +2824,15 @@ const Evaluationcadrenonmanager = () => {
                                             },
                                             {
                                                 value: 'EI',
-                                                label: 'EI (Elémentaire insuffisant)',
+                                                label: 'EI (En Initiation)',
                                             },
                                             {
                                                 value: 'EA',
-                                                label: 'EA (Elémentaire acquis)',
+                                                label: "EA (En cours d'acquisition)",
                                             },
                                             {
                                                 value: 'MA',
-                                                label: 'MA (Mâtrise approfondie)',
+                                                label: 'MA (Maîtrise)',
                                             },
                                             {
                                                 value: 'EX',
@@ -2579,15 +2851,15 @@ const Evaluationcadrenonmanager = () => {
                                             },
                                             {
                                                 value: 'EI',
-                                                label: 'EI (Elémentaire insuffisant)',
+                                                label: 'EI (En Initiation)',
                                             },
                                             {
                                                 value: 'EA',
-                                                label: 'EA (Elémentaire acquis)',
+                                                label: "EA (En cours d'acquisition)",
                                             },
                                             {
                                                 value: 'MA',
-                                                label: 'MA (Mâtrise approfondie)',
+                                                label: 'MA (Maîtrise)',
                                             },
                                             {
                                                 value: 'EX',
@@ -2614,15 +2886,15 @@ const Evaluationcadrenonmanager = () => {
                                             },
                                             {
                                                 value: 'EI',
-                                                label: 'EI (Elémentaire insuffisant)',
+                                                label: 'EI (En Initiation)',
                                             },
                                             {
                                                 value: 'EA',
-                                                label: 'EA (Elémentaire acquis)',
+                                                label: "EA (En cours d'acquisition)",
                                             },
                                             {
                                                 value: 'MA',
-                                                label: 'MA (Mâtrise approfondie)',
+                                                label: 'MA (Maîtrise)',
                                             },
                                             {
                                                 value: 'EX',
@@ -2641,15 +2913,15 @@ const Evaluationcadrenonmanager = () => {
                                             },
                                             {
                                                 value: 'EI',
-                                                label: 'EI (Elémentaire insuffisant)',
+                                                label: 'EI (En Initiation)',
                                             },
                                             {
                                                 value: 'EA',
-                                                label: 'EA (Elémentaire acquis)',
+                                                label: "EA (En cours d'acquisition)",
                                             },
                                             {
                                                 value: 'MA',
-                                                label: 'MA (Mâtrise approfondie)',
+                                                label: 'MA (Maîtrise)',
                                             },
                                             {
                                                 value: 'EX',
@@ -2677,15 +2949,15 @@ const Evaluationcadrenonmanager = () => {
                                             },
                                             {
                                                 value: 'EI',
-                                                label: 'EI (Elémentaire insuffisant)',
+                                                label: 'EI (En Initiation)',
                                             },
                                             {
                                                 value: 'EA',
-                                                label: 'EA (Elémentaire acquis)',
+                                                label: "EA (En cours d'acquisition)",
                                             },
                                             {
                                                 value: 'MA',
-                                                label: 'MA (Mâtrise approfondie)',
+                                                label: 'MA (Maîtrise)',
                                             },
                                             {
                                                 value: 'EX',
@@ -2704,15 +2976,15 @@ const Evaluationcadrenonmanager = () => {
                                             },
                                             {
                                                 value: 'EI',
-                                                label: 'EI (Elémentaire insuffisant)',
+                                                label: 'EI (En Initiation)',
                                             },
                                             {
                                                 value: 'EA',
-                                                label: 'EA (Elémentaire acquis)',
+                                                label: "EA (En cours d'acquisition)",
                                             },
                                             {
                                                 value: 'MA',
-                                                label: 'MA (Mâtrise approfondie)',
+                                                label: 'MA (Maîtrise)',
                                             },
                                             {
                                                 value: 'EX',
@@ -2740,15 +3012,15 @@ const Evaluationcadrenonmanager = () => {
                                             },
                                             {
                                                 value: 'EI',
-                                                label: 'EI (Elémentaire insuffisant)',
+                                                label: 'EI (En Initiation)',
                                             },
                                             {
                                                 value: 'EA',
-                                                label: 'EA (Elémentaire acquis)',
+                                                label: "EA (En cours d'acquisition)",
                                             },
                                             {
                                                 value: 'MA',
-                                                label: 'MA (Mâtrise approfondie)',
+                                                label: 'MA (Maîtrise)',
                                             },
                                             {
                                                 value: 'EX',
@@ -2767,15 +3039,15 @@ const Evaluationcadrenonmanager = () => {
                                             },
                                             {
                                                 value: 'EI',
-                                                label: 'EI (Elémentaire insuffisant)',
+                                                label: 'EI (En Initiation)',
                                             },
                                             {
                                                 value: 'EA',
-                                                label: 'EA (Elémentaire acquis)',
+                                                label: "EA (En cours d'acquisition)",
                                             },
                                             {
                                                 value: 'MA',
-                                                label: 'MA (Mâtrise approfondie)',
+                                                label: 'MA (Maîtrise)',
                                             },
                                             {
                                                 value: 'EX',
@@ -2794,9 +3066,17 @@ const Evaluationcadrenonmanager = () => {
                             Précédent
                         </Button>
 
-                        <Button type="primary" onClick={next} >
-                            Suivant
-                        </Button>
+                        {
+                            statusres ? (
+                                <Button type="primary" onClick={next}>
+                                    Suivant
+                                </Button>
+                            ) : (
+                                <Button type="primary" onClick={etape10} >
+                                    Suivant
+                                </Button>
+                            )
+                        }
                     </div>
                 </div>
             )
@@ -2879,7 +3159,14 @@ const Evaluationcadrenonmanager = () => {
                                     />
                                 </td>
                                 <td style={{ padding: '10px', border: '1px solid #40A9FF', width: '25%' }}>
-                                    <DatePicker value={dp1 ? moment(dp1) : null} onChange={date1} />
+
+                                    <DatePicker
+                                        value={dp1 ? moment(dp1) : null}
+                                        onChange={date1}
+                                        picker="month"  // Mode pour sélectionner uniquement mois et année
+                                        format="YYYY-MM" // Format d'affichage: Année-Mois
+                                        placeholder="Sélectionnez un mois et une année" // Placeholder personnalisé
+                                    />
                                 </td>
 
                             </tr>
@@ -2944,7 +3231,14 @@ const Evaluationcadrenonmanager = () => {
                                     />
                                 </td>
                                 <td style={{ padding: '10px', border: '1px solid #40A9FF' }}>
-                                    <DatePicker value={dp2 ? moment(dp2) : null} onChange={date2} />
+
+                                    <DatePicker
+                                        value={dp2 ? moment(dp2) : null}
+                                        onChange={date2}
+                                        picker="month"  // Mode pour sélectionner uniquement mois et année
+                                        format="YYYY-MM" // Format d'affichage: Année-Mois
+                                        placeholder="Sélectionnez un mois et une année" // Placeholder personnalisé
+                                    />
                                 </td>
 
                             </tr>
@@ -3005,7 +3299,14 @@ const Evaluationcadrenonmanager = () => {
                                     />
                                 </td>
                                 <td style={{ padding: '10px', border: '1px solid #40A9FF' }}>
-                                    <DatePicker value={dp3 ? moment(dp3) : null} onChange={date3} />
+
+                                    <DatePicker
+                                        value={dp3 ? moment(dp3) : null}
+                                        onChange={date3}
+                                        picker="month"  // Mode pour sélectionner uniquement mois et année
+                                        format="YYYY-MM" // Format d'affichage: Année-Mois
+                                        placeholder="Sélectionnez un mois et une année" // Placeholder personnalisé
+                                    />
                                 </td>
 
                             </tr>
@@ -3068,7 +3369,14 @@ const Evaluationcadrenonmanager = () => {
                                     />
                                 </td>
                                 <td style={{ padding: '10px', border: '1px solid #40A9FF' }}>
-                                    <DatePicker value={dp4 ? moment(dp4) : null} onChange={date4} />
+
+                                    <DatePicker
+                                        value={dp4 ? moment(dp4) : null}
+                                        onChange={date4}
+                                        picker="month"  // Mode pour sélectionner uniquement mois et année
+                                        format="YYYY-MM" // Format d'affichage: Année-Mois
+                                        placeholder="Sélectionnez un mois et une année" // Placeholder personnalisé
+                                    />
                                 </td>
 
                             </tr>
@@ -3145,9 +3453,18 @@ const Evaluationcadrenonmanager = () => {
                             Précédent
                         </Button>
 
-                        <Button type="primary" onClick={next} >
-                            Suivant
-                        </Button>
+                        {
+                            statusres ? (
+                                <Button type="primary" onClick={next}>
+                                    Suivant
+                                </Button>
+                            ) : (
+                                <Button type="primary" onClick={etape12} >
+                                    Suivant
+                                </Button>
+                            )
+                        }
+
                     </div>
                 </div>
             )
@@ -3156,54 +3473,99 @@ const Evaluationcadrenonmanager = () => {
             title: 'Troisième étape',
             content: (
                 <div>
-                    <h2>     OBJECTIFS DE LA PROCHAINE PERIODE</h2>
+                    <h2>OBJECTIFS DE LA PROCHAINE PERIODE</h2>
+                    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                        <Title level={5} style={{ margin: 0, marginRight: '5px', lineHeight: '1.5' }}>Infos</Title>
+                        <InfoCircleOutlined onClick={toggleTableVisibility} style={{ cursor: 'pointer', fontSize: '20px' }} />
+                    </div>
+                    {isTableVisible && (
+                        <table style={{ margin: 'auto', textAlign: 'center', borderCollapse: 'collapse', width: '50%', height: '20%' }}>
+                            <thead style={{ backgroundColor: '#40A9FF', color: 'white' }}>
+                                <tr>
+                                    <th style={{ padding: '10px', border: '1px solid white' }}>Notation</th>
+                                    <th style={{ padding: '10px', border: '1px solid white' }}>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td style={{ padding: '10px', border: '1px solid #40A9FF' }}>1: Non acquis</td>
+                                    <td style={{ padding: '10px', border: '1px solid #40A9FF' }}>N'assimile pas et aucune démarche entreprise pour acquérir la compétence</td>
+                                </tr>
+                                <tr>
+                                    <td style={{ padding: '10px', border: '1px solid #40A9FF' }}>2: En initiation</td>
+                                    <td style={{ padding: '10px', border: '1px solid #40A9FF' }}>Début de compréhension; nécessite une amélioration significative</td>
+                                </tr>
+                                <tr>
+                                    <td style={{ padding: '10px', border: '1px solid #40A9FF' }}>3: En cours d'adaptation</td>
+                                    <td style={{ padding: '10px', border: '1px solid #40A9FF' }}>En application quotidienne avec une marge de progression; nécessite du contrôle</td>
+                                </tr>
+                                <tr>
+                                    <td style={{ padding: '10px', border: '1px solid #40A9FF' }}>4: Maîtrise</td>
+                                    <td style={{ padding: '10px', border: '1px solid #40A9FF' }}>Résultats conformes aux objectifs assignés, performance éprouvée sur la compétence évaluée</td>
+                                </tr>
+                                <tr>
+                                    <td style={{ padding: '10px', border: '1px solid #40A9FF' }}>5: Exceptionnel</td>
+                                    <td style={{ padding: '10px', border: '1px solid #40A9FF' }}>Rendement qui à tous égards a nettement dépassé les exigences et les attentes du poste. Niveau de référence</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    )}
                     <table style={{ margin: 'auto', textAlign: 'center', borderCollapse: 'collapse', width: '100%' }}>
                         <thead style={{ backgroundColor: '#40A9FF', color: 'white' }}>
                             <tr>
                                 <th style={{ padding: '10px', border: '1px solid white' }}>Libéllé-Objectif</th>
                                 <th style={{ padding: '10px', border: '1px solid white' }}>Poids en %</th>
-                                <th style={{ padding: '10px', border: '1px solid white' }}>Notation sur 5</th>
+                                <th style={{ padding: '10px', border: '1px solid white' }}>Notation sur 5 évalué</th>
                                 <th style={{ padding: '10px', border: '1px solid white' }}>Total pondéré</th>
                                 <th style={{ padding: '10px', border: '1px solid white' }}>Commentaires</th>
                             </tr>
                         </thead>
                         <tbody>
+
+
+
+
                             {objectifs1.map((objectif, index) => (
                                 <tr key={index}>
                                     <td style={{ padding: '10px', border: '1px solid #40A9FF', width: '30%' }}>
                                         <TextArea
                                             name="libelle"
                                             value={objectif.libelle}
-                                            onChange={(event) => handleInputChange1(index, event)}
-                                            placeholder="Libéllé-Objectif"
+                                            onChange={(event) => handleInputChange1(index, event, 'libelle')}  // Passes 'libelle'
+                                            placeholder="Libellé-Objectif"
                                             autoSize
                                         />
                                     </td>
                                     <td style={{ padding: '10px', border: '1px solid #40A9FF', width: '10%' }}>
-                                        <Input
-                                            type='number'
-                                            name="poids"
+                                        <Select
                                             value={objectif.poids}
-                                            onChange={(event) => handleInputChange1(index, event)}
-                                        />
+                                            onChange={(value) => handleInputChange1(index, value, 'poids')}  // Passes 'poids'
+                                            allowClear
+                                            placeholder="-- Sélectionnez le poids --"
+                                        >
+                                            {[...Array(19)].map((_, i) => {
+                                                const value = (i + 2) * 5; // 10, 15, 20, ... 100
+                                                return <Option key={value} value={value}>{value}</Option>;
+                                            })}
+                                        </Select>
                                     </td>
                                     <td style={{ padding: '10px', border: '1px solid #40A9FF', width: '10%' }}>
-
-                                        <Tooltip title="Ici, c'est la notation de votre objectif sur 5">
-                                            <Input
-                                                type='number'
-                                                name="notation"
-                                                value={objectif.notation}
-                                                onChange={(event) => handleInputChange1(index, event)}
-                                                min={1}  // Optionnel, si tu veux également limiter la valeur minimale
-                                                max={5}  // Ceci n'aura d'effet qu'avec les boutons de flèche dans certains navigateurs
-                                                onInput={(event) => {
-                                                    if (event.target.value > 5) {
-                                                        event.target.value = 5;
-                                                    }
-                                                }}
-                                            />
-                                        </Tooltip>
+                                        <Select
+                                            value={objectif.notation}
+                                            onChange={(value) => handleInputChange1(index, value, 'notation')}  // Passes 'notation'
+                                            allowClear
+                                            placeholder="-- Aucune sélection --"
+                                        >
+                                            <Option value={1}>1</Option>
+                                            <Option value={1.5}>1.5</Option>
+                                            <Option value={2}>2</Option>
+                                            <Option value={2.5}>2.5</Option>
+                                            <Option value={3}>3</Option>
+                                            <Option value={3.5}>3.5</Option>
+                                            <Option value={4}>4</Option>
+                                            <Option value={4.5}>4.5</Option>
+                                            <Option value={5}>5</Option>
+                                        </Select>
                                     </td>
                                     <td style={{ padding: '10px', border: '1px solid #40A9FF', width: '10%' }}>
                                         {((parseFloat(objectif.poids) * parseFloat(objectif.notation || 0)) / 5).toFixed(2) || 0}
@@ -3212,7 +3574,7 @@ const Evaluationcadrenonmanager = () => {
                                         <TextArea
                                             name="commentaire"
                                             value={objectif.commentaire}
-                                            onChange={(event) => handleInputChange1(index, event)}
+                                            onChange={(event) => handleInputChange1(index, event, 'commentaire')}  // Passes 'commentaire'
                                             placeholder="Commentaires"
                                             style={{ width: '100%' }}
                                             autoSize
@@ -3229,9 +3591,16 @@ const Evaluationcadrenonmanager = () => {
                             Précédent
                         </Button>
 
-                        <Button type="primary" onClick={() => etape13('top')}>
-                            Suivant
-                        </Button>
+
+                        {
+                            statusres ? (
+                                null
+                            ) : (
+                                <Button type="primary" onClick={() => etape13('top')}>
+                                    Suivant
+                                </Button>
+                            )
+                        }
                     </div>
                 </div>
             )
