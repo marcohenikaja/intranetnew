@@ -11,7 +11,7 @@ import photo from '../../../assets/images/eva.mp4'
 import logonpa from '../LOGO NPA.png'
 import { AutoComplete } from 'antd';
 import { useParams } from 'react-router-dom';
-
+import { CheckCircleOutlined, CloseCircleOutlined, HourglassOutlined, InfoCircleOutlined } from '@ant-design/icons';
 const { Option } = AutoComplete;
 import axios from 'axios';
 import { Popconfirm } from 'antd';
@@ -48,6 +48,19 @@ const Cadrenonmanager = () => {
     ]);
     const [isAdding, setIsAdding] = useState(false);
     const [newOption, setNewOption] = useState('');
+
+
+
+
+
+    const [isTableVisible, setIsTableVisible] = useState(false);
+
+    // Fonction pour basculer l'état de visibilité
+    const toggleTableVisibility = () => {
+        setIsTableVisible(!isTableVisible); // Inverse l'état actuel
+    };
+
+
     const handleAddOption = () => {
         if (newOption) {
             setOptions([...options, { value: newOption, label: newOption }]);
@@ -606,14 +619,7 @@ const Cadrenonmanager = () => {
                 placement,
             });
             return;
-            // } else if (nomeval == '') {
-            //     api.info({
-            //         message: `Notification`,
-            //         description:
-            //             "Veuillez remplir le champ nom d'évaluateur.",
-            //         placement,
-            //     });
-            //     return;
+
         } else if (posteeval == '') {
             api.info({
                 message: `Notification`,
@@ -622,41 +628,14 @@ const Cadrenonmanager = () => {
                 placement,
             });
             return;
-            // } else if (fonc == '') {
-            //     api.info({
-            //         message: `Notification`,
-            //         description:
-            //             "Veuillez remplir le champ Fonction d'évaluateur.",
-            //         placement,
-            //     });
-            //     return;
-            // } else if (!emails.includes(email)) {
-            //     notification.info({
-            //         message: `Notification`,
-            //         description: "Vérifiez l'adresse mail de votre évaluateur.",
-            //         placement,
-            //     });
-            //     return;
-            // } else if (email === '') {
-            //     notification.info({
-            //         message: `Notification`,
-            //         description: "Vérifiez l'adresse mail de votre évaluateur.",
-            //         placement,
-            //     });
-            //     return;
-            // } else if (!validateEmail(email)) {
-            //     notification.info({
-            //         message: `Notification`,
-            //         description: "Le format de l'adresse mail est invalide.",
-            //         placement,
-            //     });
-            //     return;
 
         } else {
+            enregistrementcadrenom()
             setCurrent(current + 1);
         }
+
         setCurrent(current + 1)
-        // setCurrent(current + 14)
+
     }
 
 
@@ -734,10 +713,12 @@ const Cadrenonmanager = () => {
             return;
         }
         else {
+            enregistrementcadrenom()
             next();
         }
 
     }
+
 
 
     //3 eme etape
@@ -768,32 +749,33 @@ const Cadrenonmanager = () => {
         setResultat(resultatPourcentage);
     }, [objectifs]);
 
-    const handleInputChange = (index, event) => {
-        const { name, value } = event.target;
-
-
+    const handleInputChange = (index, valueOrEvent, fieldName) => {
         const newObjectifs = [...objectifs];
 
+        // Vérifier si la valeur est un événement pour TextArea ou une sélection dans Select
+        if (typeof valueOrEvent === 'object' && valueOrEvent.target) {
+            newObjectifs[index][fieldName] = valueOrEvent.target.value;
+        } else {
+            // Sinon, c'est une valeur provenant d'un Select
+            newObjectifs[index][fieldName] = valueOrEvent;
+        }
 
-        if (name === 'poids') {
-            const newValue = parseFloat(value) || 0;
-            const currentTotal = objectifs.reduce((total, obj, idx) =>
-                idx === index ? total : total + parseFloat(obj.poids || 0), 0);
+        // Si on modifie le "poids", vérifier que la somme des poids ne dépasse pas 100
+        if (fieldName === 'poids') {
+            const sommePoids = newObjectifs.reduce((acc, obj) => acc + (parseFloat(obj.poids) || 0), 0);
 
-            if (currentTotal + newValue > 100) {
-                notification.info({
-                    message: 'Info',
-                    description: 'La somme des poids ne peut pas dépasser 100%',
+            // Vérifier si la somme des poids dépasse 100
+            if (sommePoids > 100) {
+                notification.error({
+                    message: 'Erreur',
+                    description: 'La somme des poids ne peut pas dépasser 100.',
                     placement: 'top',
                 });
-                return;
+                return; // Empêche la mise à jour si la somme dépasse 100
             }
         }
 
-
-        newObjectifs[index][name] = value;
-
-
+        // Met à jour les objectifs avec la nouvelle valeur si tout est correct
         setObjectifs(newObjectifs);
     };
 
@@ -876,6 +858,7 @@ const Cadrenonmanager = () => {
         });
 
         if (allChecked) {
+            enregistrementcadrenom()
             next(); // Passer à l'étape suivante uniquement si toutes les cases sont cochées
         }
 
@@ -1146,6 +1129,7 @@ const Cadrenonmanager = () => {
             } else {
                 setNouvnivs("invalide"); // Pour traiter les valeurs hors des plages définies
             }
+            enregistrementcadrenom()
             next();
         }
 
@@ -1225,6 +1209,7 @@ const Cadrenonmanager = () => {
             });
             return;
         } else {
+            enregistrementcadrenom()
             next()
         }
     }
@@ -1234,6 +1219,7 @@ const Cadrenonmanager = () => {
     //etape8
     const [idr, setIdr] = useState(null)
     const etape8 = () => {
+        enregistrementcadrenom()
         next()
     }
 
@@ -1263,7 +1249,10 @@ const Cadrenonmanager = () => {
     const [c25, setC25] = useState(null)
 
 
-
+    const etape9 = () => {
+        enregistrementcadrenom()
+        next()
+    }
 
 
     //etape10
@@ -1294,7 +1283,10 @@ const Cadrenonmanager = () => {
     const [comm3, setComm3] = useState(null)
     const [comm4, setComm4] = useState(null)
 
-
+    const etape10 = () => {
+        enregistrementcadrenom()
+        next()
+    }
     //etape11
     const [ccd1, setCcd1] = useState(null)
     const [ccd2, setCcd2] = useState(null)
@@ -1364,7 +1356,7 @@ const Cadrenonmanager = () => {
     };
 
     const etape11 = () => {
-        // Tableau des champs à valider
+
         const fields = [
             { ccd: ccd1, motif: motif1, index: 1 },
             { ccd: ccd2, motif: motif2, index: 2 },
@@ -1372,7 +1364,7 @@ const Cadrenonmanager = () => {
             { ccd: ccd4, motif: motif4, index: 4 }
         ];
 
-        // Vérification des paires ccd et motif
+
         for (const { ccd, motif, index } of fields) {
             if (ccd && !motif) {
                 notification.info({
@@ -1385,11 +1377,11 @@ const Cadrenonmanager = () => {
             }
         }
 
-        // Vérification si tous les champs ccd sont vides
+
         const allCcdsEmpty = fields.every(({ ccd }) => !ccd);
 
+        enregistrementcadrenom()
 
-        // Passe à l'étape suivante si toutes les validations sont réussies
         next();
     };
     //etape12
@@ -1417,7 +1409,23 @@ const Cadrenonmanager = () => {
 
 
     const [comcollab, setComcollab] = useState(null)
+    const etape12 = () => {
 
+        if (
+            (ct1 || mt1 || ml1) && !cpr1 ||
+            (ct2 || mt2 || ml2) && !cpr2 ||
+            (ct3 || mt3 || ml3) && !cpr3
+        ) {
+            notification.info({
+                message: 'Info',
+                description: "Veuillez remplir le champ 'Contribution personnelle",
+                placement: 'top',
+            });
+        } else {
+            enregistrementcadrenom()
+            next();
+        }
+    };
 
     //etape13
     const [objectifs1, setObjectifs1] = useState([
@@ -1446,28 +1454,26 @@ const Cadrenonmanager = () => {
         setResultat1(resultatPourcentage1);
     }, [objectifs1]);
 
-    const handleInputChange1 = (index, event) => {
-        // const { name, value } = event.target;
-        // const newObjectifs1 = [...objectifs1];
-        // newObjectifs1[index][name] = value;
-        // setObjectifs1(newObjectifs1);
-
-
-        const { name, value } = event.target;
-
-
+    const handleInputChange1 = (index, valueOrEvent, fieldName) => {
         const newObjectifs1 = [...objectifs1];
 
 
-        if (name === 'poids') {
-            const newValue1 = parseFloat(value) || 0;
-            const currentTotal = objectifs1.reduce((total, obj, idx) =>
-                idx === index ? total : total + parseFloat(obj.poids || 0), 0);
+        if (typeof valueOrEvent === 'object' && valueOrEvent.target) {
+            newObjectifs1[index][fieldName] = valueOrEvent.target.value;
+        } else {
 
-            if (currentTotal + newValue1 > 100) {
-                notification.info({
-                    message: 'Info',
-                    description: 'La somme des poids ne peut pas dépasser 100%',
+            newObjectifs1[index][fieldName] = valueOrEvent;
+        }
+
+
+        if (fieldName === 'poids') {
+            const sommePoids = newObjectifs1.reduce((acc, obj) => acc + (parseFloat(obj.poids) || 0), 0);
+
+
+            if (sommePoids > 100) {
+                notification.error({
+                    message: 'Erreur',
+                    description: 'La somme des poids ne peut pas dépasser 100.',
                     placement: 'top',
                 });
                 return;
@@ -1475,33 +1481,32 @@ const Cadrenonmanager = () => {
         }
 
 
-        newObjectifs1[index][name] = value;
-
-
         setObjectifs1(newObjectifs1);
     };
 
     const etape13 = (placement) => {
-        // Vérifier si tous les champs sont remplis dans chaque ligne
+
         const isValid = objectifs1.every(objectif => {
-            // Si au moins un des champs est rempli, alors tous les champs doivent être remplis
+
             if (objectif.libelle || objectif.poids || objectif.notation) {
                 return objectif.libelle && objectif.poids && objectif.notation;
             }
-            // Sinon, la ligne est valide (pas de valeurs dans aucun champ)
+
             return true;
         });
 
-        // Vérifier si tous les champs sont vides dans toutes les lignes
+
         const allFieldsEmpty = objectifs1.every(objectif => !objectif.libelle && !objectif.poids && !objectif.notation);
+
+
+        const sommePoids = objectifs1.reduce((acc, obj) => acc + (parseFloat(obj.poids) || 0), 0);
 
         if (!isValid) {
             notification.info({
                 message: "Notification",
                 description:
                     "Veuillez remplir les champs vides dans la ligne du tableau",
-                placement: 'top',
-                style: { textAlign: 'justify' },
+                placement,
             });
             return;
         } else if (allFieldsEmpty) {
@@ -1509,20 +1514,68 @@ const Cadrenonmanager = () => {
                 message: "Notification",
                 description:
                     "Veuillez remplir les champs vides",
-                placement: 'top',
-                style: { textAlign: 'justify' },
+                placement,
+            });
+            return;
+        } else if (sommePoids !== 100) {  // Vérification que la somme des poids est exactement égale à 100
+            notification.error({
+                message: "Erreur",
+                description: "La somme des poids doit être exactement égale à 100%.",
+                placement,
             });
             return;
         } else {
-            next()
+            enregistrementcadrenom()
+            next();
         }
-        next()
     };
 
     //enregistrement
 
 
     const enregistrement = async () => {
+        try {
+            const enrg = await axios.post(`${url}enregistrementevalcadrenonmanager/${id}`, {
+                nom, prenom, mat, daty, dir, nomeval, posteeval, fonc, email, datys, datyss, mission,
+                objectifs, resultat, selectedValue1, selectedValue2, selectedVal1, selectedVal2, selectedVal3, selectedVal4, selectedVal5, selectedVal6, selectedVal7, selectedVal8, selectedVal9, selectedVal10, selectedVal11, selectedVal12, selectedVal13, selectedVal14, selectedVal15,
+                cmt1, cmt2, cmt3, cmt4, cmt5, r1, r2, r3, r4, r5, cdc1, cdc2, cdc3, cdc4, cdc5, nivactus, nouvnivs, concl, ancienneteniv, com, pg, classification, idr,
+                f1, f2, f3, f4, f5, c1, c2, c3, c4, c5, am1, am2, am3, am4, am5, c21, c22, c23, c24, c25,
+                t1, t2, t3, t4, compac1, compac2, compac3, compac4, apav1, apav2, apav3, apav4, apap1, apap2, apap3, apap4, comm1, comm2, comm3, comm4,
+                ccd1, ccd2, ccd3, ccd4, catcomp1, catcomp2, catcomp3, catcomp4, motif1, motif2, motif3, motif4, pa1, pa2, pa3, pa4, dp1, dp2, dp3, dp4,
+                ct1, ct2, ct3, mt1, mt2, mt3, ml1, ml2, ml3, cpr1, cpr2, cpr3, cg1, cg2, cg3, comcollab, objectifs1, resultat1, somme, todayis, alp1, alp2, emailn1, emailn2, emaildr, emailsg, emaildg, emaildrh, ids, loggedInUser
+            });
+            console.log(enrg.data);
+            if (enrg.data.success === false) {
+                const placement = 'top';
+                notification.error({
+                    message: `Notification`,
+                    description: "Vous ne pouvez pas changer d'évaluateur.",
+                    placement,
+                });
+                return;
+            } else {
+
+                next();
+            }
+
+        } catch (error) {
+            if (error.response) {
+                // La requête a été faite et le serveur a répondu avec un code de statut qui n'est pas dans la plage de 2xx
+                console.error('Error data:', error.response.data);
+                console.error('Error status:', error.response.status);
+                console.error('Error headers:', error.response.headers);
+            } else if (error.request) {
+                // La requête a été faite mais aucune réponse n'a été reçue
+                console.error('Error request:', error.request);
+            } else {
+                // Quelque chose s'est passé en configurant la requête qui a déclenché une erreur
+                console.error('Error message:', error.message);
+            }
+            console.error('Error config:', error.config);
+        }
+    };
+
+    const enregistrementcadrenom = async () => {
         try {
             const enrg = await axios.post(`${url}enregistrementevalcadrenonmanager/${id}`, {
                 nom, prenom, mat, daty, dir, nomeval, posteeval, fonc, email, datys, datyss, mission,
@@ -1784,8 +1837,47 @@ const Cadrenonmanager = () => {
             title: 'Troisième étape',
             content: (
                 <div>
-
                     <h2>OBJECTIFS INDIVIDUELS</h2>
+
+
+                    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                        <Title level={5} style={{ margin: 0, marginRight: '5px', lineHeight: '1.5' }}>Infos</Title>
+                        <InfoCircleOutlined onClick={toggleTableVisibility} style={{ cursor: 'pointer', fontSize: '20px' }} />
+                    </div>
+
+                    {isTableVisible && (
+                        <table style={{ margin: 'auto', textAlign: 'center', borderCollapse: 'collapse', width: '50%', height: '20%' }}>
+                            <thead style={{ backgroundColor: '#40A9FF', color: 'white' }}>
+                                <tr>
+                                    <th style={{ padding: '10px', border: '1px solid white' }}>Notation</th>
+                                    <th style={{ padding: '10px', border: '1px solid white' }}>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td style={{ padding: '10px', border: '1px solid #40A9FF' }}>1: Non acquis</td>
+                                    <td style={{ padding: '10px', border: '1px solid #40A9FF' }}>N'assimile pas et aucune démarche entreprise pour acquérir la compétence</td>
+                                </tr>
+                                <tr>
+                                    <td style={{ padding: '10px', border: '1px solid #40A9FF' }}>2: En initiation</td>
+                                    <td style={{ padding: '10px', border: '1px solid #40A9FF' }}>Début de compréhension; nécessite une amélioration significative</td>
+                                </tr>
+                                <tr>
+                                    <td style={{ padding: '10px', border: '1px solid #40A9FF' }}>3: En cours d'adaptation</td>
+                                    <td style={{ padding: '10px', border: '1px solid #40A9FF' }}>En application quotidienne avec une marge de progression; nécessite du contrôle</td>
+                                </tr>
+                                <tr>
+                                    <td style={{ padding: '10px', border: '1px solid #40A9FF' }}>4: Maîtrise</td>
+                                    <td style={{ padding: '10px', border: '1px solid #40A9FF' }}>Résultats conformes aux objectifs assignés, performance éprouvée sur la compétence évaluée</td>
+                                </tr>
+                                <tr>
+                                    <td style={{ padding: '10px', border: '1px solid #40A9FF' }}>5: Exceptionnel</td>
+                                    <td style={{ padding: '10px', border: '1px solid #40A9FF' }}>Rendement qui à tous égards a nettement dépassé les exigences et les attentes du poste. Niveau de référence</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    )}
+                    <br />
                     <table style={{ margin: 'auto', textAlign: 'center', borderCollapse: 'collapse', width: '100%' }}>
                         <thead style={{ backgroundColor: '#40A9FF', color: 'white' }}>
                             <tr>
@@ -1803,37 +1895,42 @@ const Cadrenonmanager = () => {
                                         <TextArea
                                             name="libelle"
                                             value={objectif.libelle}
-                                            onChange={(event) => handleInputChange(index, event)}
-                                            placeholder="Libéllé-Objectif"
+                                            onChange={(event) => handleInputChange(index, event, 'libelle')}  // Passes 'libelle'
+                                            placeholder="Libellé-Objectif"
                                             autoSize
                                         />
                                     </td>
+
                                     <td style={{ padding: '10px', border: '1px solid #40A9FF', width: '10%' }}>
-                                        <Tooltip title="Ici, c'est le poids de votre objectif en %">
-                                            <Input
-                                                type='number'
-                                                name="poids"
-                                                value={objectif.poids}
-                                                onChange={(event) => handleInputChange(index, event)}
-                                            />
-                                        </Tooltip>
+                                        <Select
+                                            value={objectif.poids}
+                                            onChange={(value) => handleInputChange(index, value, 'poids')}  // Passes 'poids'
+                                            allowClear
+                                            placeholder="-- Sélectionnez le poids --"
+                                        >
+                                            {[...Array(19)].map((_, i) => {
+                                                const value = (i + 2) * 5; // 10, 15, 20, ... 100
+                                                return <Option key={value} value={value}>{value}</Option>;
+                                            })}
+                                        </Select>
                                     </td>
                                     <td style={{ padding: '10px', border: '1px solid #40A9FF', width: '10%' }}>
-                                        <Tooltip title="Ici, c'est la notation de votre objectif sur 5">
-                                            <Input
-                                                type='number'
-                                                name="notation"
-                                                value={objectif.notation}
-                                                onChange={(event) => handleInputChange(index, event)}
-                                                min={1}  // Optionnel, si tu veux également limiter la valeur minimale
-                                                max={5}  // Ceci n'aura d'effet qu'avec les boutons de flèche dans certains navigateurs
-                                                onInput={(event) => {
-                                                    if (event.target.value > 5) {
-                                                        event.target.value = 5;
-                                                    }
-                                                }}
-                                            />
-                                        </Tooltip>
+                                        <Select
+                                            value={objectif.notation}
+                                            onChange={(value) => handleInputChange(index, value, 'notation')}  // Passes 'notation'
+                                            allowClear
+                                            placeholder="-- Aucune sélection --"
+                                        >
+                                            <Option value={1}>1</Option>
+                                            <Option value={1.5}>1.5</Option>
+                                            <Option value={2}>2</Option>
+                                            <Option value={2.5}>2.5</Option>
+                                            <Option value={3}>3</Option>
+                                            <Option value={3.5}>3.5</Option>
+                                            <Option value={4}>4</Option>
+                                            <Option value={4.5}>4.5</Option>
+                                            <Option value={5}>5</Option>
+                                        </Select>
                                     </td>
                                     <td style={{ padding: '10px', border: '1px solid #40A9FF', width: '10%' }}>
                                         {((parseFloat(objectif.poids) * parseFloat(objectif.notation || 0)) / 5).toFixed(2) || 0}
@@ -1842,13 +1939,17 @@ const Cadrenonmanager = () => {
                                         <TextArea
                                             name="commentaire"
                                             value={objectif.commentaire}
-                                            onChange={(event) => handleInputChange(index, event)}
+                                            onChange={(event) => handleInputChange(index, event, 'commentaire')}  // Passes 'commentaire'
                                             placeholder="Commentaires"
                                             style={{ width: '100%' }}
                                             autoSize
                                         />
                                     </td>
+
+
+                                   
                                 </tr>
+
                             ))}
                         </tbody>
                     </table>
@@ -1860,9 +1961,12 @@ const Cadrenonmanager = () => {
                             Précédent
                         </Button>
 
+
+
                         <Button type="primary" onClick={() => etape3('top')}>
                             Suivant
                         </Button>
+
                     </div>
                 </div>
             )
@@ -1922,6 +2026,49 @@ const Cadrenonmanager = () => {
                     <Title level={2}>APTITUDES PROFESSIONNELLES</Title>
                     <Title level={5}>* Veuillez cocher la case correspondant à votre appréciation. Une seule réponse valable</Title>
 
+                    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                        <Title level={5} style={{ margin: 0, marginRight: '5px', lineHeight: '1.5' }}>Infos</Title>
+                        <InfoCircleOutlined onClick={toggleTableVisibility} style={{ cursor: 'pointer', fontSize: '20px' }} />
+                    </div>
+
+
+
+
+
+                    {isTableVisible && (
+                        <table style={{ margin: 'auto', textAlign: 'center', borderCollapse: 'collapse', width: '50%', height: '20%' }}>
+                            <thead style={{ backgroundColor: '#40A9FF', color: 'white' }}>
+                                <tr>
+                                    <th style={{ padding: '10px', border: '1px solid white' }}>Notation</th>
+                                    <th style={{ padding: '10px', border: '1px solid white' }}>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td style={{ padding: '10px', border: '1px solid #40A9FF' }}>1: Non acquis</td>
+                                    <td style={{ padding: '10px', border: '1px solid #40A9FF' }}>N'assimile pas et aucune démarche entreprise pour acquérir la compétence</td>
+                                </tr>
+                                <tr>
+                                    <td style={{ padding: '10px', border: '1px solid #40A9FF' }}>2: En initiation</td>
+                                    <td style={{ padding: '10px', border: '1px solid #40A9FF' }}>Début de compréhension; nécessite une amélioration significative</td>
+                                </tr>
+                                <tr>
+                                    <td style={{ padding: '10px', border: '1px solid #40A9FF' }}>3: En cours d'adaptation</td>
+                                    <td style={{ padding: '10px', border: '1px solid #40A9FF' }}>En application quotidienne avec une marge de progression; nécessite du contrôle</td>
+                                </tr>
+                                <tr>
+                                    <td style={{ padding: '10px', border: '1px solid #40A9FF' }}>4: Maîtrise</td>
+                                    <td style={{ padding: '10px', border: '1px solid #40A9FF' }}>Résultats conformes aux objectifs assignés, performance éprouvée sur la compétence évaluée</td>
+                                </tr>
+                                <tr>
+                                    <td style={{ padding: '10px', border: '1px solid #40A9FF' }}>5: Exceptionnel</td>
+                                    <td style={{ padding: '10px', border: '1px solid #40A9FF' }}>Rendement qui à tous égards a nettement dépassé les exigences et les attentes du poste. Niveau de référence</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    )}
+                    <br />
+
                     <table style={{ margin: 'auto', textAlign: 'center', borderCollapse: 'collapse', width: '80%' }}>
                         <thead style={{ backgroundColor: '#40A9FF', color: 'white' }}>
                             <tr>
@@ -1975,6 +2122,46 @@ const Cadrenonmanager = () => {
                 <div>
                     <Title level={2}>COMPORTEMENT</Title>
                     <Title level={5}>* Veuillez cocher la case correspondant à votre appréciation. Une seule réponse valable</Title>
+
+                    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                        <Title level={5} style={{ margin: 0, marginRight: '5px', lineHeight: '1.5' }}>Infos</Title>
+                        <InfoCircleOutlined onClick={toggleTableVisibility} style={{ cursor: 'pointer', fontSize: '20px' }} />
+                    </div>
+
+
+                    {isTableVisible && (
+                        <table style={{ margin: 'auto', textAlign: 'center', borderCollapse: 'collapse', width: '50%', height: '20%' }}>
+                            <thead style={{ backgroundColor: '#40A9FF', color: 'white' }}>
+                                <tr>
+                                    <th style={{ padding: '10px', border: '1px solid white' }}>Notation</th>
+                                    <th style={{ padding: '10px', border: '1px solid white' }}>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td style={{ padding: '10px', border: '1px solid #40A9FF' }}>1: Non acquis</td>
+                                    <td style={{ padding: '10px', border: '1px solid #40A9FF' }}>N'assimile pas et aucune démarche entreprise pour acquérir la compétence</td>
+                                </tr>
+                                <tr>
+                                    <td style={{ padding: '10px', border: '1px solid #40A9FF' }}>2: En initiation</td>
+                                    <td style={{ padding: '10px', border: '1px solid #40A9FF' }}>Début de compréhension; nécessite une amélioration significative</td>
+                                </tr>
+                                <tr>
+                                    <td style={{ padding: '10px', border: '1px solid #40A9FF' }}>3: En cours d'adaptation</td>
+                                    <td style={{ padding: '10px', border: '1px solid #40A9FF' }}>En application quotidienne avec une marge de progression; nécessite du contrôle</td>
+                                </tr>
+                                <tr>
+                                    <td style={{ padding: '10px', border: '1px solid #40A9FF' }}>4: Maîtrise</td>
+                                    <td style={{ padding: '10px', border: '1px solid #40A9FF' }}>Résultats conformes aux objectifs assignés, performance éprouvée sur la compétence évaluée</td>
+                                </tr>
+                                <tr>
+                                    <td style={{ padding: '10px', border: '1px solid #40A9FF' }}>5: Exceptionnel</td>
+                                    <td style={{ padding: '10px', border: '1px solid #40A9FF' }}>Rendement qui à tous égards a nettement dépassé les exigences et les attentes du poste. Niveau de référence</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    )}
+                    <br />
 
                     <table style={{ margin: 'auto', textAlign: 'center', borderCollapse: 'collapse', width: '80%' }}>
                         <thead style={{ backgroundColor: '#40A9FF', color: 'white' }}>
@@ -2410,7 +2597,7 @@ const Cadrenonmanager = () => {
                             Précédent
                         </Button>
 
-                        <Button type="primary" onClick={next} >
+                        <Button type="primary" onClick={etape9} >
                             Suivant
                         </Button>
                     </div>
@@ -2459,7 +2646,7 @@ const Cadrenonmanager = () => {
                                             },
                                             {
                                                 value: 'EA',
-                                                 label: "EA (En cours d'acquisition)",
+                                                label: "EA (En cours d'acquisition)",
                                             },
                                             {
                                                 value: 'MA',
@@ -2486,7 +2673,7 @@ const Cadrenonmanager = () => {
                                             },
                                             {
                                                 value: 'EA',
-                                                 label: "EA (En cours d'acquisition)",
+                                                label: "EA (En cours d'acquisition)",
                                             },
                                             {
                                                 value: 'MA',
@@ -2521,7 +2708,7 @@ const Cadrenonmanager = () => {
                                             },
                                             {
                                                 value: 'EA',
-                                                 label: "EA (En cours d'acquisition)",
+                                                label: "EA (En cours d'acquisition)",
                                             },
                                             {
                                                 value: 'MA',
@@ -2548,7 +2735,7 @@ const Cadrenonmanager = () => {
                                             },
                                             {
                                                 value: 'EA',
-                                                 label: "EA (En cours d'acquisition)",
+                                                label: "EA (En cours d'acquisition)",
                                             },
                                             {
                                                 value: 'MA',
@@ -2584,7 +2771,7 @@ const Cadrenonmanager = () => {
                                             },
                                             {
                                                 value: 'EA',
-                                                 label: "EA (En cours d'acquisition)",
+                                                label: "EA (En cours d'acquisition)",
                                             },
                                             {
                                                 value: 'MA',
@@ -2611,7 +2798,7 @@ const Cadrenonmanager = () => {
                                             },
                                             {
                                                 value: 'EA',
-                                                 label: "EA (En cours d'acquisition)",
+                                                label: "EA (En cours d'acquisition)",
                                             },
                                             {
                                                 value: 'MA',
@@ -2647,7 +2834,7 @@ const Cadrenonmanager = () => {
                                             },
                                             {
                                                 value: 'EA',
-                                                 label: "EA (En cours d'acquisition)",
+                                                label: "EA (En cours d'acquisition)",
                                             },
                                             {
                                                 value: 'MA',
@@ -2674,7 +2861,7 @@ const Cadrenonmanager = () => {
                                             },
                                             {
                                                 value: 'EA',
-                                                 label: "EA (En cours d'acquisition)",
+                                                label: "EA (En cours d'acquisition)",
                                             },
                                             {
                                                 value: 'MA',
@@ -2697,7 +2884,7 @@ const Cadrenonmanager = () => {
                             Précédent
                         </Button>
 
-                        <Button type="primary" onClick={next} >
+                        <Button type="primary" onClick={etape10} >
                             Suivant
                         </Button>
                     </div>
@@ -3048,7 +3235,7 @@ const Cadrenonmanager = () => {
                             Précédent
                         </Button>
 
-                        <Button type="primary" onClick={next} >
+                        <Button type="primary" onClick={etape12} >
                             Suivant
                         </Button>
                     </div>
@@ -3059,54 +3246,99 @@ const Cadrenonmanager = () => {
             title: 'Troisième étape',
             content: (
                 <div>
-                    <h2>     OBJECTIFS DE LA PROCHAINE PERIODE</h2>
+                    <h2>OBJECTIFS DE LA PROCHAINE PERIODE</h2>
+                    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                        <Title level={5} style={{ margin: 0, marginRight: '5px', lineHeight: '1.5' }}>Infos</Title>
+                        <InfoCircleOutlined onClick={toggleTableVisibility} style={{ cursor: 'pointer', fontSize: '20px' }} />
+                    </div>
+                    {isTableVisible && (
+                        <table style={{ margin: 'auto', textAlign: 'center', borderCollapse: 'collapse', width: '50%', height: '20%' }}>
+                            <thead style={{ backgroundColor: '#40A9FF', color: 'white' }}>
+                                <tr>
+                                    <th style={{ padding: '10px', border: '1px solid white' }}>Notation</th>
+                                    <th style={{ padding: '10px', border: '1px solid white' }}>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td style={{ padding: '10px', border: '1px solid #40A9FF' }}>1: Non acquis</td>
+                                    <td style={{ padding: '10px', border: '1px solid #40A9FF' }}>N'assimile pas et aucune démarche entreprise pour acquérir la compétence</td>
+                                </tr>
+                                <tr>
+                                    <td style={{ padding: '10px', border: '1px solid #40A9FF' }}>2: En initiation</td>
+                                    <td style={{ padding: '10px', border: '1px solid #40A9FF' }}>Début de compréhension; nécessite une amélioration significative</td>
+                                </tr>
+                                <tr>
+                                    <td style={{ padding: '10px', border: '1px solid #40A9FF' }}>3: En cours d'adaptation</td>
+                                    <td style={{ padding: '10px', border: '1px solid #40A9FF' }}>En application quotidienne avec une marge de progression; nécessite du contrôle</td>
+                                </tr>
+                                <tr>
+                                    <td style={{ padding: '10px', border: '1px solid #40A9FF' }}>4: Maîtrise</td>
+                                    <td style={{ padding: '10px', border: '1px solid #40A9FF' }}>Résultats conformes aux objectifs assignés, performance éprouvée sur la compétence évaluée</td>
+                                </tr>
+                                <tr>
+                                    <td style={{ padding: '10px', border: '1px solid #40A9FF' }}>5: Exceptionnel</td>
+                                    <td style={{ padding: '10px', border: '1px solid #40A9FF' }}>Rendement qui à tous égards a nettement dépassé les exigences et les attentes du poste. Niveau de référence</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    )}
                     <table style={{ margin: 'auto', textAlign: 'center', borderCollapse: 'collapse', width: '100%' }}>
                         <thead style={{ backgroundColor: '#40A9FF', color: 'white' }}>
                             <tr>
                                 <th style={{ padding: '10px', border: '1px solid white' }}>Libéllé-Objectif</th>
                                 <th style={{ padding: '10px', border: '1px solid white' }}>Poids en %</th>
-                                <th style={{ padding: '10px', border: '1px solid white' }}>Notation sur 5</th>
+                                <th style={{ padding: '10px', border: '1px solid white' }}>Notation sur 5 évalué</th>
                                 <th style={{ padding: '10px', border: '1px solid white' }}>Total pondéré</th>
                                 <th style={{ padding: '10px', border: '1px solid white' }}>Commentaires</th>
                             </tr>
                         </thead>
                         <tbody>
+
+
+
+
                             {objectifs1.map((objectif, index) => (
                                 <tr key={index}>
                                     <td style={{ padding: '10px', border: '1px solid #40A9FF', width: '30%' }}>
                                         <TextArea
                                             name="libelle"
                                             value={objectif.libelle}
-                                            onChange={(event) => handleInputChange1(index, event)}
-                                            placeholder="Libéllé-Objectif"
+                                            onChange={(event) => handleInputChange1(index, event, 'libelle')}  // Passes 'libelle'
+                                            placeholder="Libellé-Objectif"
                                             autoSize
                                         />
                                     </td>
                                     <td style={{ padding: '10px', border: '1px solid #40A9FF', width: '10%' }}>
-                                        <Input
-                                            type='number'
-                                            name="poids"
+                                        <Select
                                             value={objectif.poids}
-                                            onChange={(event) => handleInputChange1(index, event)}
-                                        />
+                                            onChange={(value) => handleInputChange1(index, value, 'poids')}  // Passes 'poids'
+                                            allowClear
+                                            placeholder="-- Sélectionnez le poids --"
+                                        >
+                                            {[...Array(19)].map((_, i) => {
+                                                const value = (i + 2) * 5; // 10, 15, 20, ... 100
+                                                return <Option key={value} value={value}>{value}</Option>;
+                                            })}
+                                        </Select>
                                     </td>
                                     <td style={{ padding: '10px', border: '1px solid #40A9FF', width: '10%' }}>
-
-                                        <Tooltip title="Ici, c'est la notation de votre objectif sur 5">
-                                            <Input
-                                                type='number'
-                                                name="notation"
-                                                value={objectif.notation}
-                                                onChange={(event) => handleInputChange1(index, event)}
-                                                min={1}  // Optionnel, si tu veux également limiter la valeur minimale
-                                                max={5}  // Ceci n'aura d'effet qu'avec les boutons de flèche dans certains navigateurs
-                                                onInput={(event) => {
-                                                    if (event.target.value > 5) {
-                                                        event.target.value = 5;
-                                                    }
-                                                }}
-                                            />
-                                        </Tooltip>
+                                        <Select
+                                            value={objectif.notation}
+                                            onChange={(value) => handleInputChange1(index, value, 'notation')}  // Passes 'notation'
+                                            allowClear
+                                            placeholder="-- Aucune sélection --"
+                                        >
+                                            <Option value={1}>1</Option>
+                                            <Option value={1.5}>1.5</Option>
+                                            <Option value={2}>2</Option>
+                                            <Option value={2.5}>2.5</Option>
+                                            <Option value={3}>3</Option>
+                                            <Option value={3.5}>3.5</Option>
+                                            <Option value={4}>4</Option>
+                                            <Option value={4.5}>4.5</Option>
+                                            <Option value={5}>5</Option>
+                                        </Select>
                                     </td>
                                     <td style={{ padding: '10px', border: '1px solid #40A9FF', width: '10%' }}>
                                         {((parseFloat(objectif.poids) * parseFloat(objectif.notation || 0)) / 5).toFixed(2) || 0}
@@ -3115,7 +3347,7 @@ const Cadrenonmanager = () => {
                                         <TextArea
                                             name="commentaire"
                                             value={objectif.commentaire}
-                                            onChange={(event) => handleInputChange1(index, event)}
+                                            onChange={(event) => handleInputChange1(index, event, 'commentaire')}  // Passes 'commentaire'
                                             placeholder="Commentaires"
                                             style={{ width: '100%' }}
                                             autoSize
@@ -3132,9 +3364,12 @@ const Cadrenonmanager = () => {
                             Précédent
                         </Button>
 
+
+
                         <Button type="primary" onClick={() => etape13('top')}>
                             Suivant
                         </Button>
+
                     </div>
                 </div>
             )
