@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Document, Page, Text, View, PDFViewer, Image } from '@react-pdf/renderer';
 import jsPDF from 'jspdf';
 import moment from 'moment';
-import { Button, message, Steps, Checkbox, notification, Tooltip } from 'antd';
+import { Button, message, Steps, Checkbox, notification, Tooltip, Space } from 'antd';
 import { Typography } from 'antd';
 import { Input } from 'antd';
 import 'jspdf-autotable';
@@ -29,11 +29,12 @@ const Cadrenonmanager = () => {
     const [current, setCurrent] = useState(0);
     const [api, contextHolder] = notification.useNotification();
     const ids = sessionStorage.getItem('ids')
+
     const [allmail, setAllmail] = useState([])
     const loggedInUser = sessionStorage.getItem('loginUser');
 
     const [searchValue, setSearchValue] = useState('');
-
+    const [statusbtn, setStatusbtn] = useState(false)
     const { id, type } = useParams();
     const [dateday, setDateday] = useState("")
 
@@ -51,7 +52,33 @@ const Cadrenonmanager = () => {
 
 
 
+    const [prefix, setPrefix] = useState('NPA'); // Par défaut 'NPA'
+    const [digits, setDigits] = useState('');
 
+    const handlePrefixChange = (value) => {
+        setPrefix(value);
+        setMat(`${value}${digits}`);
+    };
+
+
+    const handleDigitsChange = (e) => {
+        const value = e.target.value;
+
+
+        if (/^\d{0,4}$/.test(value)) {
+            setDigits(value);
+            setMat(`${prefix}${value}`);
+        }
+    };
+
+    const splitMatricule = (matricule) => {
+        if (matricule && matricule.length === 7) {
+            const prefixPart = matricule.slice(0, 3); // 3 premiers caractères
+            const digitsPart = matricule.slice(3);    // 4 derniers caractères
+            setPrefix(prefixPart); // Mettre à jour le préfixe
+            setDigits(digitsPart); // Mettre à jour les chiffres
+        }
+    };
 
     const [isTableVisible, setIsTableVisible] = useState(false);
 
@@ -195,7 +222,10 @@ const Cadrenonmanager = () => {
                 setEmail(data[0].maileval);
                 setNom(data[0].nom);
                 setPrenom(data[0].prenom);
-                setMat(data[0].mat);
+                if (data[0].mat) {
+                    setMat(data[0].mat);
+                    splitMatricule(data[0].mat); // Séparer le matricule
+                }
                 setDaty(data[0].dateentree);
                 setDir(data[0].direction);
                 setNomeval(data[0].nomeval);
@@ -468,7 +498,7 @@ const Cadrenonmanager = () => {
     }
 
     useEffect(() => {
-        getEmails()
+         getEmails()
         getAlldataevaluationnonmanager()
     }, [])
 
@@ -629,6 +659,14 @@ const Cadrenonmanager = () => {
             });
             return;
 
+        }
+        else if (mat.length < 7) {
+            notification.info({
+                message: `Notification`,
+                description: "Vérifiez votre matricule.",
+                placement,
+            });
+            return;
         } else {
             enregistrementcadrenom()
             setCurrent(current + 1);
@@ -1576,44 +1614,104 @@ const Cadrenonmanager = () => {
     };
 
     const enregistrementcadrenom = async () => {
-        try {
-            const enrg = await axios.post(`${url}enregistrementevalcadrenonmanager/${id}`, {
-                nom, prenom, mat, daty, dir, nomeval, posteeval, fonc, email, datys, datyss, mission,
-                objectifs, resultat, selectedValue1, selectedValue2, selectedVal1, selectedVal2, selectedVal3, selectedVal4, selectedVal5, selectedVal6, selectedVal7, selectedVal8, selectedVal9, selectedVal10, selectedVal11, selectedVal12, selectedVal13, selectedVal14, selectedVal15,
-                cmt1, cmt2, cmt3, cmt4, cmt5, r1, r2, r3, r4, r5, cdc1, cdc2, cdc3, cdc4, cdc5, nivactus, nouvnivs, concl, ancienneteniv, com, pg, classification, idr,
-                f1, f2, f3, f4, f5, c1, c2, c3, c4, c5, am1, am2, am3, am4, am5, c21, c22, c23, c24, c25,
-                t1, t2, t3, t4, compac1, compac2, compac3, compac4, apav1, apav2, apav3, apav4, apap1, apap2, apap3, apap4, comm1, comm2, comm3, comm4,
-                ccd1, ccd2, ccd3, ccd4, catcomp1, catcomp2, catcomp3, catcomp4, motif1, motif2, motif3, motif4, pa1, pa2, pa3, pa4, dp1, dp2, dp3, dp4,
-                ct1, ct2, ct3, mt1, mt2, mt3, ml1, ml2, ml3, cpr1, cpr2, cpr3, cg1, cg2, cg3, comcollab, objectifs1, resultat1, somme, todayis, alp1, alp2, emailn1, emailn2, emaildr, emailsg, emaildg, emaildrh, ids, loggedInUser
+        const response = await axios.get(`${url}getAlldataevaluationcadrenonmanager/${id}/Evaluation cadre non manager`);
+        if (loggedInUser === response.data[0].emailn2 && response.data[0].statusN2 === true) {
+            setStatusbtn(true)
+
+            notification.error({
+                message: `Notification`,
+                description: "Tous les changements n\'ont pas été pris en compte car cette évaluation est déjà validée.",
+                placement: 'top',
             });
-            console.log(enrg.data);
-            if (enrg.data.success === false) {
-                const placement = 'top';
-                notification.error({
-                    message: `Notification`,
-                    description: "Vous ne pouvez pas changer d'évaluateur.",
-                    placement,
+            return;
+
+        } else if (loggedInUser === response.data[0].emailn1 && response.data[0].statusN1 === true) {
+            notification.error({
+                message: `Notification`,
+                description: "Tous les changements n\'ont pas été pris en compte car cette évaluation est déjà validée.",
+                placement: 'top',
+            });
+            setStatusbtn(true)
+            return;
+
+        } else if (loggedInUser === response.data[0].emaildr && response.data[0].statusDirection === true) {
+            notification.error({
+                message: `Notification`,
+                description: "Tous les changements n\'ont pas été pris en compte car cette évaluation est déjà validée.",
+                placement: 'top',
+            });
+            setStatusbtn(true)
+            return;
+
+        } else if (loggedInUser === response.data[0].emailsg && response.data[0].statusSecretary === true) {
+            notification.error({
+                message: `Notification`,
+                description: "Tous les changements n\'ont pas été pris en compte car cette évaluation est déjà validée.",
+                placement: 'top',
+            });
+            setStatusbtn(true)
+            return;
+
+        }
+        else if (loggedInUser === response.data[0].emaildg && response.data[0].statusGeneralDirection === true) {
+            notification.error({
+                message: `Notification`,
+                description: "Tous les changements n\'ont pas été pris en compte car cette évaluation est déjà validée.",
+                placement: 'top',
+            });
+            setStatusbtn(true)
+            return;
+
+        }
+        else if (loggedInUser === response.data[0].emaildrh && response.data[0].statusHR === true) {
+            notification.error({
+                message: `Notification`,
+                description: "Tous les changements n\'ont pas été pris en compte car cette évaluation est déjà validée.",
+                placement: 'top',
+            });
+            setStatusbtn(true)
+            return;
+        }
+        else {
+            try {
+                const enrg = await axios.post(`${url}enregistrementevalcadrenonmanager/${id}`, {
+                    nom, prenom, mat, daty, dir, nomeval, posteeval, fonc, email, datys, datyss, mission,
+                    objectifs, resultat, selectedValue1, selectedValue2, selectedVal1, selectedVal2, selectedVal3, selectedVal4, selectedVal5, selectedVal6, selectedVal7, selectedVal8, selectedVal9, selectedVal10, selectedVal11, selectedVal12, selectedVal13, selectedVal14, selectedVal15,
+                    cmt1, cmt2, cmt3, cmt4, cmt5, r1, r2, r3, r4, r5, cdc1, cdc2, cdc3, cdc4, cdc5, nivactus, nouvnivs, concl, ancienneteniv, com, pg, classification, idr,
+                    f1, f2, f3, f4, f5, c1, c2, c3, c4, c5, am1, am2, am3, am4, am5, c21, c22, c23, c24, c25,
+                    t1, t2, t3, t4, compac1, compac2, compac3, compac4, apav1, apav2, apav3, apav4, apap1, apap2, apap3, apap4, comm1, comm2, comm3, comm4,
+                    ccd1, ccd2, ccd3, ccd4, catcomp1, catcomp2, catcomp3, catcomp4, motif1, motif2, motif3, motif4, pa1, pa2, pa3, pa4, dp1, dp2, dp3, dp4,
+                    ct1, ct2, ct3, mt1, mt2, mt3, ml1, ml2, ml3, cpr1, cpr2, cpr3, cg1, cg2, cg3, comcollab, objectifs1, resultat1, somme, todayis, alp1, alp2, emailn1, emailn2, emaildr, emailsg, emaildg, emaildrh, ids, loggedInUser
                 });
-                return;
-            } else {
+                console.log(enrg.data);
+                if (enrg.data.success === false) {
+                    const placement = 'top';
+                    notification.error({
+                        message: `Notification`,
+                        description: "Vous ne pouvez pas changer d'évaluateur.",
+                        placement,
+                    });
+                    return;
+                } else {
 
-                next();
-            }
+                    next();
+                }
 
-        } catch (error) {
-            if (error.response) {
-                // La requête a été faite et le serveur a répondu avec un code de statut qui n'est pas dans la plage de 2xx
-                console.error('Error data:', error.response.data);
-                console.error('Error status:', error.response.status);
-                console.error('Error headers:', error.response.headers);
-            } else if (error.request) {
-                // La requête a été faite mais aucune réponse n'a été reçue
-                console.error('Error request:', error.request);
-            } else {
-                // Quelque chose s'est passé en configurant la requête qui a déclenché une erreur
-                console.error('Error message:', error.message);
+            } catch (error) {
+                if (error.response) {
+                    // La requête a été faite et le serveur a répondu avec un code de statut qui n'est pas dans la plage de 2xx
+                    console.error('Error data:', error.response.data);
+                    console.error('Error status:', error.response.status);
+                    console.error('Error headers:', error.response.headers);
+                } else if (error.request) {
+                    // La requête a été faite mais aucune réponse n'a été reçue
+                    console.error('Error request:', error.request);
+                } else {
+                    // Quelque chose s'est passé en configurant la requête qui a déclenché une erreur
+                    console.error('Error message:', error.message);
+                }
+                console.error('Error config:', error.config);
             }
-            console.error('Error config:', error.config);
         }
     };
 
@@ -1648,6 +1746,18 @@ const Cadrenonmanager = () => {
             content: (
                 <div>
                     <Title level={2}>Information personnelle - cadre non manager</Title>
+                    <div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center' }}>
+                        {statusbtn ? (
+                            <Space style={{ margin: '10px', display: 'flex', alignItems: 'center' }}>
+                                <CheckCircleOutlined style={{ color: 'green' }} />
+                                <span style={{ marginLeft: 8 }}>Evaluation déjà validée impossible de modifier</span>
+                            </Space>
+                        ) : (
+                            <Space style={{ margin: '10px', display: 'flex', alignItems: 'center' }}>
+
+                            </Space>
+                        )}
+                    </div>
                     <table style={{ margin: 'auto', textAlign: 'center', width: '95%' }}>
                         <thead>
                             <tr>
@@ -1728,7 +1838,26 @@ const Cadrenonmanager = () => {
 
                             <tr>
                                 <td style={{ padding: '10px', width: '20%' }}>
-                                    <Input value={mat} onChange={(e) => setMat(e.target.value)} placeholder="Matricule" />
+                                    <Input.Group compact style={{ display: 'flex' }}>
+                                        <Select
+                                            value={prefix}
+                                            onChange={handlePrefixChange}
+                                            style={{ width: '30%' }} // Ajustez la largeur du Select
+                                        >
+                                            <Option value="NPA">NPA</Option>
+                                            <Option value="GLM">GLM</Option>
+                                            <Option value="SPD">SPD</Option>
+                                            <Option value="STT">STT</Option>
+                                            <Option value="STD">STD</Option>
+                                        </Select>
+                                        <Input
+                                            value={digits}
+                                            onChange={handleDigitsChange}
+                                            placeholder="Matricule(4 chiffres)"
+                                            maxLength={4}
+                                            style={{ width: '70%' }} // Ajustez la largeur de l'Input
+                                        />
+                                    </Input.Group>
                                 </td>
                                 <td style={{ padding: '10px', width: '20%' }}>
                                     <Select
@@ -1787,9 +1916,19 @@ const Cadrenonmanager = () => {
 
 
                     </table>
-                    <Button type="primary" onClick={() => etape1('top')}>
-                        Suivant
-                    </Button>
+
+                    {
+                        statusbtn ? (
+
+                            <Button type="primary" onClick={() => etape1('top')} disabled >
+                                Suivant
+                            </Button>
+                        ) : (
+                            <Button type="primary" onClick={() => etape1('top')}>
+                                Suivant
+                            </Button>
+                        )
+                    }
 
                 </div>
             ),
@@ -1799,6 +1938,18 @@ const Cadrenonmanager = () => {
             content: (
                 <div>
                     <Title level={2}>Bilan de l'année écoulée</Title>
+                    <div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center' }}>
+                        {statusbtn ? (
+                            <Space style={{ margin: '10px', display: 'flex', alignItems: 'center' }}>
+                                <CheckCircleOutlined style={{ color: 'green' }} />
+                                <span style={{ marginLeft: 8 }}>Evaluation déjà validée impossible de modifier</span>
+                            </Space>
+                        ) : (
+                            <Space style={{ margin: '10px', display: 'flex', alignItems: 'center' }}>
+
+                            </Space>
+                        )}
+                    </div>
                     <table style={{ margin: 'auto', textAlign: 'center' }}>
                         <thead>
                             <tr>
@@ -1823,9 +1974,20 @@ const Cadrenonmanager = () => {
                             Précédent
                         </Button>
 
-                        <Button type="primary" onClick={() => etape2('top')}>
-                            Suivant
-                        </Button>
+
+
+                        {
+                            statusbtn ? (
+
+                                <Button type="primary" onClick={() => etape2('top')} disabled >
+                                    Suivant
+                                </Button>
+                            ) : (
+                                <Button type="primary" onClick={() => etape2('top')}>
+                                    Suivant
+                                </Button>
+                            )
+                        }
                     </div>
 
 
@@ -1947,7 +2109,7 @@ const Cadrenonmanager = () => {
                                     </td>
 
 
-                                   
+
                                 </tr>
 
                             ))}

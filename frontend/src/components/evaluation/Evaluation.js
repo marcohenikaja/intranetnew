@@ -6,7 +6,7 @@ import { Button, message, Steps, Checkbox, notification, Space, Tooltip } from '
 import { Typography } from 'antd';
 import { Input } from 'antd';
 import 'jspdf-autotable';
-import { DatePicker, Select } from 'antd';
+import { DatePicker, Select, Row, Col } from 'antd';
 import photo from '../../assets/images/eva.mp4'
 import logonpa from './LOGO NPA.png'
 import { AutoComplete } from 'antd';
@@ -28,8 +28,8 @@ const url = 'http://localhost:8000/'
 const Evaluation = () => {
     const [current, setCurrent] = useState(0);
     const [api, contextHolder] = notification.useNotification();
-    const ids = sessionStorage.getItem('ids');
-
+     const ids = sessionStorage.getItem('ids');
+  
 
     const [allmail, setAllmail] = useState([])
     const loggedInUser = sessionStorage.getItem('loginUser');
@@ -155,7 +155,10 @@ const Evaluation = () => {
 
                 setNom(data[0].nom);
                 setPrenom(data[0].prenom);
-                setMat(data[0].mat);
+                if (data[0].mat) {
+                    setMat(data[0].mat);
+                    splitMatricule(data[0].mat); // Séparer le matricule
+                }
                 setDaty(data[0].dateentree);
                 setDir(data[0].direction);
                 setNomeval(data[0].nomeval);
@@ -429,7 +432,7 @@ const Evaluation = () => {
 
     useEffect(() => {
         getStatus()
-        getEmails()
+         getEmails()
         getAlldataevaluation()
     }, [])
 
@@ -455,6 +458,35 @@ const Evaluation = () => {
     const [posteeval, setPoste] = useState("");
     const [fonc, setFonc] = useState("");
     const [email, setEmail] = useState('');
+
+
+    const [prefix, setPrefix] = useState('NPA'); // Par défaut 'NPA'
+    const [digits, setDigits] = useState('');
+
+    const handlePrefixChange = (value) => {
+        setPrefix(value);
+        setMat(`${value}${digits}`);
+    };
+
+
+    const handleDigitsChange = (e) => {
+        const value = e.target.value;
+
+
+        if (/^\d{0,4}$/.test(value)) {
+            setDigits(value);
+            setMat(`${prefix}${value}`);
+        }
+    };
+
+    const splitMatricule = (matricule) => {
+        if (matricule && matricule.length === 7) {
+            const prefixPart = matricule.slice(0, 3); // 3 premiers caractères
+            const digitsPart = matricule.slice(3);    // 4 derniers caractères
+            setPrefix(prefixPart); // Mettre à jour le préfixe
+            setDigits(digitsPart); // Mettre à jour les chiffres
+        }
+    };
 
 
     const etapesuiv = () => {
@@ -532,14 +564,14 @@ const Evaluation = () => {
                 placement,
             });
             return;
-        } else if (emailn1 === '') {
-            notification.info({
-                message: `Notification`,
-                description:
-                    'Veuillez remplir le champ évaluateur N+1.',
-                placement,
-            });
-            return;
+            } else if (emailn1 === '') {
+                notification.info({
+                    message: `Notification`,
+                    description:
+                        'Veuillez remplir le champ évaluateur N+1.',
+                    placement,
+                });
+                return;
         } else if (emailn1 === loggedInUser) {
             notification.info({
                 message: `Notification`,
@@ -591,15 +623,15 @@ const Evaluation = () => {
                 placement,
             });
             return;
-        }
+            }
 
-        else if (emailn1 === '') {
-            notification.info({
-                message: `Notification`,
-                description: "Vérifiez l'adresse mail de votre évaluateur.",
-                placement,
-            });
-            return;
+            else if (emailn1 === '') {
+                notification.info({
+                    message: `Notification`,
+                    description: "Vérifiez l'adresse mail de votre évaluateur.",
+                    placement,
+                });
+                return;
         }
 
         else if (emailn1 && !emails.includes(emailn1.toLowerCase())) {
@@ -617,7 +649,14 @@ const Evaluation = () => {
                 placement,
             });
             return;
-
+        }
+        else if (mat.length < 7) {
+            notification.info({
+                message: `Notification`,
+                description: "Vérifiez votre matricule.",
+                placement, 
+            });
+            return;
         } else {
             setCurrent(current + 1);
         }
@@ -1935,7 +1974,32 @@ const Evaluation = () => {
 
                             <tr>
                                 <td style={{ padding: '10px', width: '20%' }}>
-                                    <Input value={mat} onChange={(e) => setMat(e.target.value)} placeholder="Matricule" />
+                                    {/* <Input value={mat} onChange={(e) => setMat(e.target.value)} placeholder="Matricule" /> */}
+
+                                    <Input.Group compact style={{ display: 'flex' }}>
+                                        <Select
+                                            value={prefix}
+                                            onChange={handlePrefixChange}
+                                            style={{ width: '30%' }} // Ajustez la largeur du Select
+                                        >
+                                            <Option value="NPA">NPA</Option>
+                                            <Option value="GLM">GLM</Option>
+                                            <Option value="SPD">SPD</Option>
+                                            <Option value="STT">STT</Option>
+                                            <Option value="STD">STD</Option>
+                                        </Select>
+                                        <Input
+                                            value={digits}
+                                            onChange={handleDigitsChange}
+                                            placeholder="Matricule(4 chiffres)"
+                                            maxLength={4}
+                                            style={{ width: '70%' }} // Ajustez la largeur de l'Input
+                                        />
+                                    </Input.Group>
+
+
+
+
                                 </td>
                                 <td style={{ padding: '10px', width: '20%' }}>
                                     <Select

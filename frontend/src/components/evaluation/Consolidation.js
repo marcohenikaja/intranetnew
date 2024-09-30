@@ -21,11 +21,22 @@ import { MailOutlined } from '@ant-design/icons';
 const Consolidation = () => {
     const url = 'http://localhost:8000/';
     const loggedInUser = sessionStorage.getItem('loginUser');
+   
+
+    const [showDatePicker, setShowDatePicker] = useState(false); // Pour afficher le DatePicker
+    const [dateSelected, setDateSelected] = useState(false);     // Pour afficher le bouton "Valider"
+    const [selectedDate, setSelectedDate] = useState(null);      // Stocke la date sélectionnée
+
+    // Fonction appelée lorsque la date (et l'heure) est changée
+    const handleDateChange = (date, dateString) => {
+        console.log("Date et heure sélectionnées:", dateString);
+        setSelectedDate(dateString); // Stocke la date et l'heure
+        setDateSelected(true);       // Affiche le bouton "Valider"
+    };
 
     const authorizedUsers = [
         "rakotobe.marco@npakadin.mg",
         "razafimbelo.mariska@npakadin.mg",
-        "andriamahonintsoa.rado@npakadin.mg",
         "direndre.sonal@npakadin.mg",
         "andriamandimbisoa.fy@npakadin.mg",
     ];
@@ -1226,6 +1237,7 @@ const Consolidation = () => {
     return (
         <div style={{ padding: '20px', marginTop: '200px', textAlign: 'center' }}>
             <Title level={3}>Consolidation des données</Title>
+
             <Space style={{ marginBottom: 16 }}>
                 <AutoComplete
                     options={evaldata.map((item) => ({ value: item.nom }))}
@@ -1249,19 +1261,30 @@ const Consolidation = () => {
                         { value: 'Evaluation cadre non manager', label: 'Evaluation cadre non manager' },
                     ]}
                 />
+                <br />
+                {!showDatePicker && (
+                    <Button type="primary" onClick={() => setShowDatePicker(true)}>
+                        Créer une date fin d'évaluation
+                    </Button>
+                )}
 
+                {showDatePicker && (
+                    <DatePicker
+                        showTime              // Permet la sélection de l'heure en plus de la date
+                        format="YYYY-MM-DD HH:mm:ss"  // Format avec date et heure
+                        onChange={handleDateChange}   // Fonction appelée lors de la sélection de la date/heure
+                    />
+                )}
+
+                {dateSelected && (
+                    <Button type="primary" danger onClick={()=>alert(selectedDate)}>
+                        Valider
+                    </Button>
+                )}
 
             </Space>
-            {/* <div style={{ overflowX: 'auto' }}>
-                <Table
-                    columns={columns}
-                    dataSource={filteredData}
-                    pagination={pagination}
-                    onChange={handleTableChange}
-                    scroll={{ x: 2000, y: 600 }}
-                    rowKey="mat"
-                />
-            </div> */}
+
+
             <div style={{ overflowX: 'auto' }}>
                 <Table
                     columns={columns}

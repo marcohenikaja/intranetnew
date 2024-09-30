@@ -13,7 +13,8 @@ const Evaluateur = () => {
     const navigate = useNavigate();
     const [dataeva, setDataeva] = useState([]);
     const [api, contextHolder] = notification.useNotification();
-    const loggedInUser = sessionStorage.getItem('loginUser');
+     const loggedInUser = sessionStorage.getItem('loginUser');
+    
 
     const columns = [
         {
@@ -71,7 +72,7 @@ const Evaluateur = () => {
             render: (_, record) => {
                 // Désactiver le bouton si loggedInUser n'est pas égal à record.emailn1
                 const canEdit = loggedInUser === record.emailn1;
-        
+
                 return (
                     <div style={{ display: 'flex', gap: '10px' }}>
                         <Tooltip title="Visualiser">
@@ -82,7 +83,7 @@ const Evaluateur = () => {
                                 style={{ fontSize: '16px', color: '#1890ff' }}
                             />
                         </Tooltip>
-        
+
                         <Tooltip title="Modifier">
                             <Button
                                 type="text"
@@ -96,7 +97,7 @@ const Evaluateur = () => {
                 );
             },
         }
-        
+
     ];
 
     const getgataeva = async () => {

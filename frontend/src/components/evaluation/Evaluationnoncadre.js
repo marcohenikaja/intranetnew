@@ -187,7 +187,10 @@ const Evaluationnoncadre = () => {
                 setEmail(data[0].maileval);
                 setNom(data[0].nom);
                 setPrenom(data[0].prenom);
-                setMat(data[0].mat);
+                if (data[0].mat) {
+                    setMat(data[0].mat);
+                    splitMatricule(data[0].mat); // Séparer le matricule
+                }
                 setDaty(data[0].dateentree);
                 setDir(data[0].direction);
                 setNomeval(data[0].nomeval);
@@ -471,7 +474,7 @@ const Evaluationnoncadre = () => {
     }
 
     useEffect(() => {
-        getEmails()
+         getEmails()
         getStatus()
         getAlldataevaluationnoncadre()
     }, [])
@@ -512,7 +515,33 @@ const Evaluationnoncadre = () => {
 
 
 
+    const [prefix, setPrefix] = useState('NPA'); // Par défaut 'NPA'
+    const [digits, setDigits] = useState('');
 
+    const handlePrefixChange = (value) => {
+        setPrefix(value);
+        setMat(`${value}${digits}`);
+    };
+
+
+    const handleDigitsChange = (e) => {
+        const value = e.target.value;
+
+
+        if (/^\d{0,4}$/.test(value)) {
+            setDigits(value);
+            setMat(`${prefix}${value}`);
+        }
+    };
+
+    const splitMatricule = (matricule) => {
+        if (matricule && matricule.length === 7) {
+            const prefixPart = matricule.slice(0, 3); // 3 premiers caractères
+            const digitsPart = matricule.slice(3);    // 4 derniers caractères
+            setPrefix(prefixPart); // Mettre à jour le préfixe
+            setDigits(digitsPart); // Mettre à jour les chiffres
+        }
+    };
 
 
 
@@ -590,6 +619,14 @@ const Evaluationnoncadre = () => {
                 message: `Notification`,
                 description:
                     "Veuillez remplir le champ e-mail évaluateur N+1.",
+                placement,
+            });
+            return;
+        }
+        else if (mat.length < 7) {
+            notification.info({
+                message: `Notification`,
+                description: "Vérifiez votre matricule.",
                 placement,
             });
             return;
@@ -1897,7 +1934,26 @@ const Evaluationnoncadre = () => {
 
                             <tr>
                                 <td style={{ padding: '10px', width: '20%' }}>
-                                    <Input value={mat} onChange={(e) => setMat(e.target.value)} placeholder="Matricule" />
+                                    <Input.Group compact style={{ display: 'flex' }}>
+                                        <Select
+                                            value={prefix}
+                                            onChange={handlePrefixChange}
+                                            style={{ width: '30%' }} // Ajustez la largeur du Select
+                                        >
+                                            <Option value="NPA">NPA</Option>
+                                            <Option value="GLM">GLM</Option>
+                                            <Option value="SPD">SPD</Option>
+                                            <Option value="STT">STT</Option>
+                                            <Option value="STD">STD</Option>
+                                        </Select>
+                                        <Input
+                                            value={digits}
+                                            onChange={handleDigitsChange}
+                                            placeholder="Matricule(4 chiffres)"
+                                            maxLength={4}
+                                            style={{ width: '70%' }} // Ajustez la largeur de l'Input
+                                        />
+                                    </Input.Group>
                                 </td>
                                 <td style={{ padding: '10px', width: '20%' }}>
                                     <Select

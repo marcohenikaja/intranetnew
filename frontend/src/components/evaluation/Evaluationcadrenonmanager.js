@@ -32,6 +32,7 @@ const Evaluationcadrenonmanager = () => {
     const ids = sessionStorage.getItem('ids')
 
 
+
     const [dateday, setDateday] = useState("")
 
     const [allmail, setAllmail] = useState([])
@@ -160,7 +161,10 @@ const Evaluationcadrenonmanager = () => {
                 setEmail(data[0].maileval);
                 setNom(data[0].nom);
                 setPrenom(data[0].prenom);
-                setMat(data[0].mat);
+                if (data[0].mat) {
+                    setMat(data[0].mat);
+                    splitMatricule(data[0].mat); // Séparer le matricule
+                }
                 setDaty(data[0].dateentree);
                 setDir(data[0].direction);
                 setNomeval(data[0].nomeval);
@@ -475,6 +479,34 @@ const Evaluationcadrenonmanager = () => {
     const isEmaildrEnabled = emailn1 === loggedInUser;
 
 
+    const [prefix, setPrefix] = useState('NPA'); // Par défaut 'NPA'
+    const [digits, setDigits] = useState('');
+
+    const handlePrefixChange = (value) => {
+        setPrefix(value);
+        setMat(`${value}${digits}`);
+    };
+
+
+    const handleDigitsChange = (e) => {
+        const value = e.target.value;
+
+
+        if (/^\d{0,4}$/.test(value)) {
+            setDigits(value);
+            setMat(`${prefix}${value}`);
+        }
+    };
+
+    const splitMatricule = (matricule) => {
+        if (matricule && matricule.length === 7) {
+            const prefixPart = matricule.slice(0, 3); // 3 premiers caractères
+            const digitsPart = matricule.slice(3);    // 4 derniers caractères
+            setPrefix(prefixPart); // Mettre à jour le préfixe
+            setDigits(digitsPart); // Mettre à jour les chiffres
+        }
+    };
+
 
 
     const handleSearch = (searchText) => {
@@ -512,7 +544,7 @@ const Evaluationcadrenonmanager = () => {
     const etape1 = (placement) => {
 
         if (nom == '') {
-            api.info({
+            notification.info({
                 message: `Notification`,
                 description:
                     'Veuillez remplir le champ Nom.',
@@ -520,7 +552,7 @@ const Evaluationcadrenonmanager = () => {
             });
             return;
         } else if (prenom == '') {
-            api.info({
+            notification.info({
                 message: `Notification`,
                 description:
                     'Veuillez remplir le champ Prénom.',
@@ -529,7 +561,7 @@ const Evaluationcadrenonmanager = () => {
             return;
 
         } else if (mat == '') {
-            api.info({
+            notification.info({
                 message: `Notification`,
                 description:
                     'Veuillez remplir le champ Matricule.',
@@ -537,7 +569,7 @@ const Evaluationcadrenonmanager = () => {
             });
             return;
         } else if (daty == '') {
-            api.info({
+            notification.info({
                 message: `Notification`,
                 description:
                     " Veuillez remplir le champ Date d'entrée.",
@@ -546,7 +578,7 @@ const Evaluationcadrenonmanager = () => {
             return;
 
         } else if (dir == '') {
-            api.info({
+            notification.info({
                 message: `Notification`,
                 description:
                     'Veuillez remplir le champ direction.',
@@ -563,7 +595,7 @@ const Evaluationcadrenonmanager = () => {
             return;
 
         } else if (posteeval == '') {
-            api.info({
+            notification.info({
                 message: `Notification`,
                 description:
                     "Veuillez remplir le champ poste.",
@@ -571,10 +603,18 @@ const Evaluationcadrenonmanager = () => {
             });
             return;
 
-        } else if (loggedInUser === email || loggedInUser == email) {
+        } else if (loggedInUser === emailn1 || loggedInUser == emailn1) {
             notification.info({
                 message: `Notification`,
                 description: "Vous ne pouvez pas vous évaluer vous-même.",
+                placement,
+            });
+            return;
+        }
+        else if (mat.length < 7) {
+            notification.info({
+                message: `Notification`,
+                description: "Vérifiez votre matricule.",
                 placement,
             });
             return;
@@ -583,7 +623,7 @@ const Evaluationcadrenonmanager = () => {
             enregistrementcadrenon()
             setCurrent(current + 1);
         }
-      
+
         setCurrent(current + 1)
     }
 
@@ -637,7 +677,7 @@ const Evaluationcadrenonmanager = () => {
 
     const etape2 = (placement) => {
         if (datys == '') {
-            api.info({
+            notification.info({
                 message: `Notification`,
                 description:
                     "Veuillez remplir le champ date de  début.",
@@ -645,7 +685,7 @@ const Evaluationcadrenonmanager = () => {
             });
             return;
         } else if (datyss == '') {
-            api.info({
+            notification.info({
                 message: `Notification`,
                 description:
                     "Veuillez remplir le champ date de  fin.",
@@ -654,7 +694,7 @@ const Evaluationcadrenonmanager = () => {
             return;
         }
         else if (mission == '') {
-            api.info({
+            notification.info({
                 message: `Notification`,
                 description:
                     "Veuillez remplir le champ MISSIONS.",
@@ -743,7 +783,7 @@ const Evaluationcadrenonmanager = () => {
         const allFieldsEmpty = objectifs.every(objectif => !objectif.libelle && !objectif.poids && !objectif.notation);
 
         if (!isValid) {
-            api.info({
+            notification.info({
                 message: "Notification",
                 description:
                     "Veuillez remplir les champs vides dans la ligne du tableau",
@@ -751,7 +791,7 @@ const Evaluationcadrenonmanager = () => {
             });
             return;
         } else if (allFieldsEmpty) {
-            api.info({
+            notification.info({
                 message: "Notification",
                 description:
                     "Veuillez remplir les champs vides",
@@ -1585,13 +1625,18 @@ const Evaluationcadrenonmanager = () => {
                 const placement = 'top';
                 notification.error({
                     message: `Notification`,
-                    description: enrg.data.message,
+                    description: "Evaluation déjà validée ,impossible de modifier",
                     placement,
-                });
+                })
                 return;
             } else if (enrg.data.success === true) {
                 const placement = 'top';
 
+                notification.error({
+                    message: `Notification`,
+                    description: "Evaluation bien enregistrée ",
+                    placement,
+                })
                 next();
             }
 
@@ -1878,7 +1923,26 @@ const Evaluationcadrenonmanager = () => {
 
                             <tr>
                                 <td style={{ padding: '10px', width: '20%' }}>
-                                    <Input value={mat} onChange={(e) => setMat(e.target.value)} placeholder="Matricule" />
+                                    <Input.Group compact style={{ display: 'flex' }}>
+                                        <Select
+                                            value={prefix}
+                                            onChange={handlePrefixChange}
+                                            style={{ width: '30%' }} // Ajustez la largeur du Select
+                                        >
+                                            <Option value="NPA">NPA</Option>
+                                            <Option value="GLM">GLM</Option>
+                                            <Option value="SPD">SPD</Option>
+                                            <Option value="STT">STT</Option>
+                                            <Option value="STD">STD</Option>
+                                        </Select>
+                                        <Input
+                                            value={digits}
+                                            onChange={handleDigitsChange}
+                                            placeholder="Matricule(4 chiffres)"
+                                            maxLength={4}
+                                            style={{ width: '70%' }} // Ajustez la largeur de l'Input
+                                        />
+                                    </Input.Group>
                                 </td>
                                 <td style={{ padding: '10px', width: '20%' }}>
                                     <Select

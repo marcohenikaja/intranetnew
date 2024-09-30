@@ -1908,59 +1908,52 @@ const validerEvaluations = async (req, res) => {
         }
 
 
-        // Créez un objet de mise à jour en fonction de l'email
         let updateFields = {};
 
-        if (mail === evaluator.emailn1) {
-            console.log("Validation N+1");
+        if (mail === evaluator.emailn1 && mail === evaluator.emailn2 && mail === evaluator.emaildr) {
+            console.log("Validation n1 et n2 et dr");
+            updateFields.statusN1 = true;
+            updateFields.statusN2 = true;
+            updateFields.statusDirection = true;
+        }
+        else if (mail === evaluator.emailn1 && mail === evaluator.emailn2) {
+            console.log("Validation n1 et n2");
+            updateFields.statusN1 = true;
+            updateFields.statusN2 = true;
+        }
+        else if (mail === evaluator.emailn1 && mail === evaluator.emaildr) {
+            console.log("Validation n1 et dr");
+            updateFields.statusDirection = true;
             updateFields.statusN1 = true;
         }
-        else if (mail === evaluator.emaildr && mail === evaluator.emailn2) {
+        else if (mail === evaluator.emailn2 && mail === evaluator.emaildr) {
             console.log("Validation dr et n2");
-
             updateFields.statusDirection = true;
             updateFields.statusN2 = true;
-
+        }
+        else if (mail === evaluator.emailn1) {
+            console.log("Validation N+1");
+            updateFields.statusN1 = true;
         }
         else if (mail === evaluator.emailn2) {
             console.log("Validation N+2");
             updateFields.statusN2 = true;
-
         }
-
         else if (mail === evaluator.emaildr) {
             console.log("Validation Directeur de Rattachement");
-
             updateFields.statusDirection = true;
-
         }
-
-
         else if (mail === evaluator.emailsg) {
             console.log("Validation SG");
             updateFields.statusSecretary = true;
-
-
         }
-
         else if (mail === evaluator.emaildg) {
             console.log("Validation DG");
-            // Assurez-vous que les statuts précédents sont validés
-            if (evaluation.statusN1 && evaluation.statusN2 && evaluation.statusDirection && evaluation.statusSecretary) {
-                updateFields.statusGeneralDirection = true;
-            } else {
-                return res.status(400).json({ message: 'Tous les statuts précédents doivent être validés avant DG.' });
-            }
+            updateFields.statusGeneralDirection = true;
         }
-
         else if (mail === evaluator.emaildrh) {
             console.log("Validation DRH");
-            // Assurez-vous que les statuts précédents sont validés
-            if (evaluation.statusN1 && evaluation.statusN2 && evaluation.statusDirection && evaluation.statusSecretary && evaluation.statusGeneralDirection) {
-                updateFields.statusHR = true;
-            } else {
-                return res.status(400).json({ message: 'Tous les statuts précédents doivent être validés avant DRH.' });
-            }
+            updateFields.statusHR = true;
         }
 
         if (Object.keys(updateFields).length === 0) {

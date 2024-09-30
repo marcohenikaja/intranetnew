@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Document, Page, Text, View, PDFViewer, Image } from '@react-pdf/renderer';
 import jsPDF from 'jspdf';
 import moment from 'moment';
-import { Button, message, Steps, Checkbox, notification, AutoComplete, Tooltip } from 'antd';
+import { Button, message, Steps, Checkbox, notification, AutoComplete, Tooltip, Space } from 'antd';
 import { Typography } from 'antd';
 import { Input } from 'antd';
 import 'jspdf-autotable';
@@ -17,7 +17,7 @@ const { Title } = Typography;
 const { Step } = Steps;
 import { CheckCircleOutlined, CloseCircleOutlined, HourglassOutlined, InfoCircleOutlined } from '@ant-design/icons';
 const { RangePicker } = DatePicker;
-
+import { useNavigate, Link } from 'react-router-dom';
 
 const CheckboxGroup = Checkbox.Group;
 
@@ -26,11 +26,20 @@ const url = 'http://localhost:8000/'
 const Cadre = () => {
     const [current, setCurrent] = useState(0);
     const [api, contextHolder] = notification.useNotification();
-    const ids = sessionStorage.getItem('ids');
-    const loggedInUser = sessionStorage.getItem('loginUser');
+     const ids = sessionStorage.getItem('ids');
+    
+     const loggedInUser = sessionStorage.getItem('loginUser');
+
+
+    const [statusbtn, setStatusbtn] = useState(false)
+
+
+
+
+    
     const { id, type } = useParams();
-
-
+    const navigate = useNavigate();
+    const [dateday, setDateday] = useState("")
     const [emails, setEmails] = useState([]);
     const [emailn1, setEmailn1] = useState("");
     const [emailn2, setEmailn2] = useState("");
@@ -103,7 +112,33 @@ const Cadre = () => {
         handleSearchn2(value); // Optionnel : met à jour les options lors de la modification
     };
 
+    const [prefix, setPrefix] = useState('NPA'); // Par défaut 'NPA'
+    const [digits, setDigits] = useState('');
 
+    const handlePrefixChange = (value) => {
+        setPrefix(value);
+        setMat(`${value}${digits}`);
+    };
+
+
+    const handleDigitsChange = (e) => {
+        const value = e.target.value;
+
+
+        if (/^\d{0,4}$/.test(value)) {
+            setDigits(value);
+            setMat(`${prefix}${value}`);
+        }
+    };
+
+    const splitMatricule = (matricule) => {
+        if (matricule && matricule.length === 7) {
+            const prefixPart = matricule.slice(0, 3); // 3 premiers caractères
+            const digitsPart = matricule.slice(3);    // 4 derniers caractères
+            setPrefix(prefixPart); // Mettre à jour le préfixe
+            setDigits(digitsPart); // Mettre à jour les chiffres
+        }
+    };
 
 
     const handleSearchN2 = (value) => {
@@ -248,9 +283,14 @@ const Cadre = () => {
                 setEmaildg(data[0].emaildg)
                 setEmaildrh(data[0].emaildrh)
 
+                setDateday((data[0].datetoday))
+
                 setNom(data[0].nom);
                 setPrenom(data[0].prenom);
-                setMat(data[0].mat);
+                if (data[0].mat) {
+                    setMat(data[0].mat);
+                    splitMatricule(data[0].mat); // Séparer le matricule
+                }
                 setDaty(data[0].dateentree);
                 setDir(data[0].direction);
                 setNomeval(data[0].nomeval);
@@ -525,7 +565,7 @@ const Cadre = () => {
 
     useEffect(() => {
         getAlldataevaluation()
-        getEmails()
+         getEmails()
     }, [])
 
     const confirm = (e) => {
@@ -589,7 +629,7 @@ const Cadre = () => {
     const etape1 = (placement) => {
 
         if (nom == '') {
-            api.info({
+            notification.info({
                 message: `Notification`,
                 description:
                     'Veuillez remplir le champ Nom.',
@@ -597,23 +637,23 @@ const Cadre = () => {
             });
             return;
         } else if (emailn1 === '') {
-            api.info({
+            notification.info({
                 message: `Notification`,
                 description:
                     'Veuillez remplir le champ évaluateur N+1.',
                 placement,
             });
             return;
-        } else if (emailn2 === '' || emaildr === '') {
-            api.info({
-                message: `Notification`,
-                description:
-                    'E-mail N+2 ou e-mail directeur de rattachement est vide',
-                placement,
-            });
-            return;
+            } else if (emailn2 === '' || emaildr === '') {
+                notification.info({
+                    message: `Notification`,
+                    description:
+                        'E-mail N+2 ou e-mail directeur de rattachement est vide',
+                    placement,
+                });
+                return;
         } else if (prenom == '') {
-            api.info({
+            notification.info({
                 message: `Notification`,
                 description:
                     'Veuillez remplir le champ Prénom.',
@@ -622,7 +662,7 @@ const Cadre = () => {
             return;
 
         } else if (mat == '') {
-            api.info({
+            notification.info({
                 message: `Notification`,
                 description:
                     'Veuillez remplir le champ Matricule.',
@@ -630,7 +670,7 @@ const Cadre = () => {
             });
             return;
         } else if (daty == '') {
-            api.info({
+            notification.info({
                 message: `Notification`,
                 description:
                     " Veuillez remplir le champ Date d'entrée.",
@@ -639,7 +679,7 @@ const Cadre = () => {
             return;
 
         } else if (dir == '') {
-            api.info({
+            notification.info({
                 message: `Notification`,
                 description:
                     'Veuillez remplir le champ direction.',
@@ -648,28 +688,36 @@ const Cadre = () => {
             return;
 
         } else if (posteeval == '') {
-            api.info({
+            notification.info({
                 message: `Notification`,
                 description:
                     "Veuillez remplir le champ poste.",
                 placement,
             });
             return;
-        }
+            }
 
-        else if (emailn1 === '') {
+            else if (emailn1 === '') {
+                notification.info({
+                    message: `Notification`,
+                    description: "Vérifiez l'adresse mail de votre évaluateur.",
+                    placement,
+                });
+                return;
+            }
+
+            else if (emailn1 && !emails.includes(emailn1.toLowerCase())) {
+                notification.info({
+                    message: 'Notification',
+                    description: "Vérifiez l'adresse mail de votre évaluateur.",
+                    placement,
+                });
+                return;
+        }
+        else if (mat.length < 7) {
             notification.info({
                 message: `Notification`,
-                description: "Vérifiez l'adresse mail de votre évaluateur.",
-                placement,
-            });
-            return;
-        }
-
-        else if (emailn1 && !emails.includes(emailn1.toLowerCase())) {
-            notification.info({
-                message: 'Notification',
-                description: "Vérifiez l'adresse mail de votre évaluateur.",
+                description: "Vérifiez votre matricule.",
                 placement,
             });
             return;
@@ -730,7 +778,7 @@ const Cadre = () => {
 
     const etape2 = (placement) => {
         if (datys == '') {
-            api.info({
+            notification.info({
                 message: `Notification`,
                 description:
                     "Veuillez remplir le champ date de  début.",
@@ -738,7 +786,7 @@ const Cadre = () => {
             });
             return;
         } else if (datyss == '') {
-            api.info({
+            notification.info({
                 message: `Notification`,
                 description:
                     "Veuillez remplir le champ date de  fin.",
@@ -747,7 +795,7 @@ const Cadre = () => {
             return;
         }
         else if (mission == '') {
-            api.info({
+            notification.info({
                 message: `Notification`,
                 description:
                     "Veuillez remplir le champ MISSIONS.",
@@ -836,7 +884,7 @@ const Cadre = () => {
         const allFieldsEmpty = objectifs.every(objectif => !objectif.libelle && !objectif.poids && !objectif.notation);
 
         if (!isValid) {
-            api.info({
+            notification.info({
                 message: "Notification",
                 description:
                     "Veuillez remplir les champs vides dans la ligne du tableau",
@@ -844,7 +892,7 @@ const Cadre = () => {
             });
             return;
         } else if (allFieldsEmpty) {
-            api.info({
+            notification.info({
                 message: "Notification",
                 description:
                     "Veuillez remplir les champs vides",
@@ -890,7 +938,7 @@ const Cadre = () => {
             });
 
             if (!isChecked) {
-                api.info({
+                notification.info({
                     message: "Notification",
                     description: `Veuillez cocher la ligne ${index + 1}`,
                     placement,
@@ -1031,7 +1079,7 @@ const Cadre = () => {
         });
 
         if (!allChecked) {
-            api.info({
+            notification.info({
                 message: "Notification",
                 description: "Veuillez cocher au moins une case dans chaque ligne",
                 placement,
@@ -1527,7 +1575,7 @@ const Cadre = () => {
         setObjectifs1(newObjectifs1);
     };
 
-    
+
     const etape13 = (placement) => {
 
         const isValid = objectifs1.every(objectif => {
@@ -1650,69 +1698,131 @@ const Cadre = () => {
 
 
     const enregistrementvalide1 = async () => {
-        try {
-            const enrg = await axios.post(`${url}ajouteval/${id}`, {
-                nom, prenom, mat, daty, dir, nomeval, posteeval, fonc, email, datys, datyss, mission,
-                objectifs, resultat, selectedValue1, selectedValue2, selectedVal1, selectedVal2, selectedVal3, selectedVal4, selectedVal5, selectedVal6, selectedVal7, selectedVal8, selectedVal9, selectedVal10, selectedVal11, selectedVal12, selectedVal13, selectedVal14, selectedVal15,
-                cmt1, cmt2, cmt3, cmt4, cmt5, r1, r2, r3, r4, r5, cdc1, cdc2, cdc3, cdc4, cdc5, nivactus, nouvnivs, concl, ancienneteniv, com, pg, classification, idr,
-                f1, f2, f3, f4, f5, c1, c2, c3, c4, c5, am1, am2, am3, am4, am5, c21, c22, c23, c24, c25,
-                t1, t2, t3, t4, compac1, compac2, compac3, compac4, apav1, apav2, apav3, apav4, apap1, apap2, apap3, apap4, comm1, comm2, comm3, comm4,
-                ccd1, ccd2, ccd3, ccd4, catcomp1, catcomp2, catcomp3, catcomp4, motif1, motif2, motif3, motif4, pa1, pa2, pa3, pa4, dp1, dp2, dp3, dp4,
-                ct1, ct2, ct3, mt1, mt2, mt3, ml1, ml2, ml3, cpr1, cpr2, cpr3, cg1, cg2, cg3, comcollab, objectifs1, resultat1, somme, todayis, alp1, alp2, emailn1, emailn2, emaildr, emailsg, emaildg, emaildrh, loggedInUser, ids
-            });
-            console.log(enrg.data);
-            if (enrg.data.success === false) {
-                const placement = 'top';
-                notification.error({
-                    message: `Notification`,
-                    description: "Vous ne pouvez pas changer d'évaluateur.",
-                    placement,
-                });
-                return;
-            } else {
-                next();
-            }
-        } catch (error) {
-            if (error.response) {
-                // La requête a été faite et le serveur a répondu avec un code de statut
-                // qui tombe hors de la plage de 2xx
-                console.error(error.response.data);
-                console.error(error.response.status);
-                console.error(error.response.headers);
 
-                if (error.response.status === 400) {
+        const response = await axios.get(`${url}getAlldataevaluations/${id}/Evaluation cadre`);
+        if (loggedInUser === response.data[0].emailn2 && response.data[0].statusN2 === true) {
+            setStatusbtn(true)
+
+            notification.error({
+                message: `Notification`,
+                description: "Tous les changements n\'ont pas été pris en compte car cette évaluation est déjà validée.",
+                placement: 'top',
+            });
+            return;
+
+        } else if (loggedInUser === response.data[0].emailn1 && response.data[0].statusN1 === true) {
+            notification.error({
+                message: `Notification`,
+                description: "Tous les changements n\'ont pas été pris en compte car cette évaluation est déjà validée.",
+                placement: 'top',
+            });
+            setStatusbtn(true)
+            return;
+
+        } else if (loggedInUser === response.data[0].emaildr && response.data[0].statusDirection === true) {
+            notification.error({
+                message: `Notification`,
+                description: "Tous les changements n\'ont pas été pris en compte car cette évaluation est déjà validée.",
+                placement: 'top',
+            });
+            setStatusbtn(true)
+            return;
+
+        } else if (loggedInUser === response.data[0].emailsg && response.data[0].statusSecretary === true) {
+            notification.error({
+                message: `Notification`,
+                description: "Tous les changements n\'ont pas été pris en compte car cette évaluation est déjà validée.",
+                placement: 'top',
+            });
+            setStatusbtn(true)
+            return;
+
+        }
+        else if (loggedInUser === response.data[0].emaildg && response.data[0].statusGeneralDirection === true) {
+            notification.error({
+                message: `Notification`,
+                description: "Tous les changements n\'ont pas été pris en compte car cette évaluation est déjà validée.",
+                placement: 'top',
+            });
+            setStatusbtn(true)
+            return;
+
+        }
+        else if (loggedInUser === response.data[0].emaildrh && response.data[0].statusHR === true) {
+            notification.error({
+                message: `Notification`,
+                description: "Tous les changements n\'ont pas été pris en compte car cette évaluation est déjà validée.",
+                placement: 'top',
+            });
+            setStatusbtn(true)
+            return;
+        }
+        else {
+            try {
+                const enrg = await axios.post(`${url}ajouteval/${id}`, {
+                    nom, prenom, mat, daty, dir, nomeval, posteeval, fonc, email, datys, datyss, mission,
+                    objectifs, resultat, selectedValue1, selectedValue2, selectedVal1, selectedVal2, selectedVal3, selectedVal4, selectedVal5, selectedVal6, selectedVal7, selectedVal8, selectedVal9, selectedVal10, selectedVal11, selectedVal12, selectedVal13, selectedVal14, selectedVal15,
+                    cmt1, cmt2, cmt3, cmt4, cmt5, r1, r2, r3, r4, r5, cdc1, cdc2, cdc3, cdc4, cdc5, nivactus, nouvnivs, concl, ancienneteniv, com, pg, classification, idr,
+                    f1, f2, f3, f4, f5, c1, c2, c3, c4, c5, am1, am2, am3, am4, am5, c21, c22, c23, c24, c25,
+                    t1, t2, t3, t4, compac1, compac2, compac3, compac4, apav1, apav2, apav3, apav4, apap1, apap2, apap3, apap4, comm1, comm2, comm3, comm4,
+                    ccd1, ccd2, ccd3, ccd4, catcomp1, catcomp2, catcomp3, catcomp4, motif1, motif2, motif3, motif4, pa1, pa2, pa3, pa4, dp1, dp2, dp3, dp4,
+                    ct1, ct2, ct3, mt1, mt2, mt3, ml1, ml2, ml3, cpr1, cpr2, cpr3, cg1, cg2, cg3, comcollab, objectifs1, resultat1, somme, todayis, alp1, alp2, emailn1, emailn2, emaildr, emailsg, emaildg, emaildrh, loggedInUser, ids
+                });
+                console.log(enrg.data);
+                if (enrg.data.success === false) {
                     const placement = 'top';
                     notification.error({
                         message: `Notification`,
-                        description: error.response.data.message || "Erreur de mise à jour",
+                        description: "Vous ne pouvez pas changer d'évaluateur.",
                         placement,
                     });
+                    return;
                 } else {
-                    // Gérer les autres statuts d'erreur si nécessaire
+                    next();
+                }
+            } catch (error) {
+                if (error.response) {
+
+                    console.error(error.response.data);
+                    console.error(error.response.status);
+                    console.error(error.response.headers);
+
+                    if (error.response.status === 400) {
+                        const placement = 'top';
+                        notification.error({
+                            message: `Notification`,
+                            description: error.response.data.message || "Erreur de mise à jour",
+                            placement,
+                        });
+                    } else {
+
+                        notification.error({
+                            message: `Notification`,
+                            description: `Erreur: ${error.response.status}`,
+                            placement,
+                        });
+                    }
+                } else if (error.request) {
+
+                    console.error(error.request);
                     notification.error({
                         message: `Notification`,
-                        description: `Erreur: ${error.response.status}`,
-                        placement,
+                        description: "Aucune réponse du serveur",
+                        placement: 'top',
+                    });
+                } else {
+
+                    console.error('Erreur', error.message);
+                    notification.error({
+                        message: `Notification`,
+                        description: `Erreur: ${error.message}`,
+                        placement: 'top',
                     });
                 }
-            } else if (error.request) {
-                // La requête a été faite mais aucune réponse n'a été reçue
-                console.error(error.request);
-                notification.error({
-                    message: `Notification`,
-                    description: "Aucune réponse du serveur",
-                    placement: 'top',
-                });
-            } else {
-                // Quelque chose s'est passé lors de la configuration de la requête qui a déclenché une erreur
-                console.error('Erreur', error.message);
-                notification.error({
-                    message: `Notification`,
-                    description: `Erreur: ${error.message}`,
-                    placement: 'top',
-                });
             }
         }
+
+
     };
 
 
@@ -1747,6 +1857,20 @@ const Cadre = () => {
             content: (
                 <div>
                     <Title level={2}>Information personnelle - cadre </Title>
+                    <div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center' }}>
+                        {statusbtn ? (
+                            <Space style={{ margin: '10px', display: 'flex', alignItems: 'center' }}>
+                                <CheckCircleOutlined style={{ color: 'green' }} />
+                                <span style={{ marginLeft: 8 }}>Evaluation déjà validée impossible de modifier</span>
+                            </Space>
+                        ) : (
+                            <Space style={{ margin: '10px', display: 'flex', alignItems: 'center' }}>
+                                
+                            </Space>
+                        )}
+                    </div>
+
+
 
                     <table style={{ margin: 'auto', textAlign: 'center', width: '95%' }}>
                         <thead>
@@ -1828,7 +1952,26 @@ const Cadre = () => {
 
                             <tr>
                                 <td style={{ padding: '10px', width: '20%' }}>
-                                    <Input value={mat} onChange={(e) => setMat(e.target.value)} placeholder="Matricule" />
+                                    <Input.Group compact style={{ display: 'flex' }}>
+                                        <Select
+                                            value={prefix}
+                                            onChange={handlePrefixChange}
+                                            style={{ width: '30%' }} // Ajustez la largeur du Select
+                                        >
+                                            <Option value="NPA">NPA</Option>
+                                            <Option value="GLM">GLM</Option>
+                                            <Option value="SPD">SPD</Option>
+                                            <Option value="STT">STT</Option>
+                                            <Option value="STD">STD</Option>
+                                        </Select>
+                                        <Input
+                                            value={digits}
+                                            onChange={handleDigitsChange}
+                                            placeholder="Matricule(4 chiffres)"
+                                            maxLength={4}
+                                            style={{ width: '70%' }} // Ajustez la largeur de l'Input
+                                        />
+                                    </Input.Group>
                                 </td>
                                 <td style={{ padding: '10px', width: '20%' }}>
                                     <Select
@@ -1887,7 +2030,7 @@ const Cadre = () => {
 
 
                     </table>
-                    <Button type="primary" onClick={() => etape1('top')}>
+                    <Button type="primary" onClick={() => etape1('top')} disabled={statusbtn}>
                         Suivant
                     </Button>
 
@@ -1899,6 +2042,18 @@ const Cadre = () => {
             content: (
                 <div>
                     <Title level={2}>Bilan de l'année écoulée</Title>
+                    <div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center' }}>
+                        {statusbtn ? (
+                            <Space style={{ margin: '10px', display: 'flex', alignItems: 'center' }}>
+                                <CheckCircleOutlined style={{ color: 'green' }} />
+                                <span style={{ marginLeft: 8 }}>Evaluation déjà validée impossible de modifier</span>
+                            </Space>
+                        ) : (
+                            <Space style={{ margin: '10px', display: 'flex', alignItems: 'center' }}>
+                             
+                            </Space>
+                        )}
+                    </div>
                     <table style={{ margin: 'auto', textAlign: 'center' }}>
                         <thead>
                             <tr>
@@ -1923,9 +2078,20 @@ const Cadre = () => {
                             Précédent
                         </Button>
 
-                        <Button type="primary" onClick={() => etape2('top')}>
-                            Suivant
-                        </Button>
+
+
+                        {
+                            statusbtn ? (
+                                
+                                <Button type="primary" onClick={() => etape2('top')} disabled >
+                                    Suivant
+                                </Button>
+                            ) : (
+                                <Button type="primary" onClick={() => etape2('top')}>
+                                    Suivant
+                                </Button>
+                            )
+                        }
                     </div>
 
 
@@ -3408,11 +3574,22 @@ const Cadre = () => {
                         </Button>
 
 
-                      
+
+
+
+                        {
+                            statusbtn ? (
+                                <Button type="primary" onClick={() => etape13('top')} disabled>
+                                    Suivant
+                                </Button>
+                            ) : (
                                 <Button type="primary" onClick={() => etape13('top')}>
                                     Suivant
                                 </Button>
-                           
+                            )
+                        }
+
+
                     </div>
                 </div>
             )
@@ -3496,6 +3673,11 @@ const Cadre = () => {
                 <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column' }}>
                     <Title level={2}>Evaluation validée</Title>
 
+                    <Button type="primary" danger>
+                        <Link to="/chooseeval"> <Title level={5} style={{ color: 'white' }}>Retour</Title></Link>
+                    </Button>
+                    <br />
+
                     <PDFViewer style={{ width: '90%', height: '100vh' }}>
                         <Document>
                             <Page size="A4" style={{ padding: 20 }}>
@@ -3520,13 +3702,15 @@ const Cadre = () => {
                                     <View style={{ flexDirection: 'row', backgroundColor: 'white', padding: 1 }}>
                                         <Text style={{ flex: 1, color: '#333', fontWeight: 'bold', fontSize: 8 }}>Prénom(s): {prenom}</Text>
                                         <Text style={{ flex: 1, color: '#333', fontWeight: 'bold', fontSize: 8 }}>Poste: {posteeval}</Text>
-                                        <Text style={{ flex: 1, color: '#333', fontWeight: 'bold', fontSize: 8 }}>Fonction: {fonc}</Text>
+                                        <Text style={{ flex: 1, color: '#333', fontWeight: 'bold', fontSize: 8 }}></Text>
                                     </View>
 
                                     <View style={{ flexDirection: 'row', backgroundColor: 'white', padding: 1 }}>
                                         <Text style={{ flex: 1, color: '#333', fontWeight: 'bold', fontSize: 8 }}>Matricule: {mat}</Text>
                                         <Text style={{ flex: 1, color: '#333', fontWeight: 'bold', fontSize: 8 }}>Direction: {dir}</Text>
-                                        <Text style={{ flex: 1, color: '#333', fontWeight: 'bold', fontSize: 8 }}>Date d'évaluation:</Text>
+                                        <Text style={{ flex: 1, color: '#333', fontWeight: 'bold', fontSize: 8 }}>
+                                            Date d'évaluation: {new Date(dateday).toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' })}
+                                        </Text>
                                     </View>
                                 </View>
 
@@ -4383,9 +4567,9 @@ const Cadre = () => {
                                 <Button type="primary" onClick={prev} style={{ marginRight: '10px' }}>
                                     Précédent
                                 </Button>
-                                <Button type="primary" danger>
+                                {/* <Button type="primary" danger>
                                     Valider
-                                </Button>
+                                </Button> */}
                             </div>
                         </Popconfirm>
                     </div>
