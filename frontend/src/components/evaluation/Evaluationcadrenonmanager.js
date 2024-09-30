@@ -623,7 +623,11 @@ const Evaluationcadrenonmanager = () => {
             enregistrementcadrenon()
             setCurrent(current + 1);
         }
+<<<<<<< HEAD
 
+=======
+      
+>>>>>>> 5afa900a2c42a54009cfadab5fb5ff28ef8b1841
         setCurrent(current + 1)
     }
 
@@ -1625,18 +1629,27 @@ const Evaluationcadrenonmanager = () => {
                 const placement = 'top';
                 notification.error({
                     message: `Notification`,
+<<<<<<< HEAD
                     description: "Evaluation déjà validée ,impossible de modifier",
                     placement,
                 })
+=======
+                    description: enrg.data.message,
+                    placement,
+                });
+>>>>>>> 5afa900a2c42a54009cfadab5fb5ff28ef8b1841
                 return;
             } else if (enrg.data.success === true) {
                 const placement = 'top';
 
+<<<<<<< HEAD
                 notification.error({
                     message: `Notification`,
                     description: "Evaluation bien enregistrée ",
                     placement,
                 })
+=======
+>>>>>>> 5afa900a2c42a54009cfadab5fb5ff28ef8b1841
                 next();
             }
 

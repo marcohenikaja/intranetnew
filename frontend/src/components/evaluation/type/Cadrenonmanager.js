@@ -52,6 +52,7 @@ const Cadrenonmanager = () => {
 
 
 
+<<<<<<< HEAD
     const [prefix, setPrefix] = useState('NPA'); // Par défaut 'NPA'
     const [digits, setDigits] = useState('');
 
@@ -79,6 +80,9 @@ const Cadrenonmanager = () => {
             setDigits(digitsPart); // Mettre à jour les chiffres
         }
     };
+=======
+
+>>>>>>> 5afa900a2c42a54009cfadab5fb5ff28ef8b1841
 
     const [isTableVisible, setIsTableVisible] = useState(false);
 
@@ -1574,6 +1578,51 @@ const Cadrenonmanager = () => {
     const enregistrement = async () => {
         try {
             const enrg = await axios.post(`${url}enregistrementevalcadrenonmanager/${id}`, {
+<<<<<<< HEAD
+=======
+                nom, prenom, mat, daty, dir, nomeval, posteeval, fonc, email, datys, datyss, mission,
+                objectifs, resultat, selectedValue1, selectedValue2, selectedVal1, selectedVal2, selectedVal3, selectedVal4, selectedVal5, selectedVal6, selectedVal7, selectedVal8, selectedVal9, selectedVal10, selectedVal11, selectedVal12, selectedVal13, selectedVal14, selectedVal15,
+                cmt1, cmt2, cmt3, cmt4, cmt5, r1, r2, r3, r4, r5, cdc1, cdc2, cdc3, cdc4, cdc5, nivactus, nouvnivs, concl, ancienneteniv, com, pg, classification, idr,
+                f1, f2, f3, f4, f5, c1, c2, c3, c4, c5, am1, am2, am3, am4, am5, c21, c22, c23, c24, c25,
+                t1, t2, t3, t4, compac1, compac2, compac3, compac4, apav1, apav2, apav3, apav4, apap1, apap2, apap3, apap4, comm1, comm2, comm3, comm4,
+                ccd1, ccd2, ccd3, ccd4, catcomp1, catcomp2, catcomp3, catcomp4, motif1, motif2, motif3, motif4, pa1, pa2, pa3, pa4, dp1, dp2, dp3, dp4,
+                ct1, ct2, ct3, mt1, mt2, mt3, ml1, ml2, ml3, cpr1, cpr2, cpr3, cg1, cg2, cg3, comcollab, objectifs1, resultat1, somme, todayis, alp1, alp2, emailn1, emailn2, emaildr, emailsg, emaildg, emaildrh, ids, loggedInUser
+            });
+            console.log(enrg.data);
+            if (enrg.data.success === false) {
+                const placement = 'top';
+                notification.error({
+                    message: `Notification`,
+                    description: "Vous ne pouvez pas changer d'évaluateur.",
+                    placement,
+                });
+                return;
+            } else {
+
+                next();
+            }
+
+        } catch (error) {
+            if (error.response) {
+                // La requête a été faite et le serveur a répondu avec un code de statut qui n'est pas dans la plage de 2xx
+                console.error('Error data:', error.response.data);
+                console.error('Error status:', error.response.status);
+                console.error('Error headers:', error.response.headers);
+            } else if (error.request) {
+                // La requête a été faite mais aucune réponse n'a été reçue
+                console.error('Error request:', error.request);
+            } else {
+                // Quelque chose s'est passé en configurant la requête qui a déclenché une erreur
+                console.error('Error message:', error.message);
+            }
+            console.error('Error config:', error.config);
+        }
+    };
+
+    const enregistrementcadrenom = async () => {
+        try {
+            const enrg = await axios.post(`${url}enregistrementevalcadrenonmanager/${id}`, {
+>>>>>>> 5afa900a2c42a54009cfadab5fb5ff28ef8b1841
                 nom, prenom, mat, daty, dir, nomeval, posteeval, fonc, email, datys, datyss, mission,
                 objectifs, resultat, selectedValue1, selectedValue2, selectedVal1, selectedVal2, selectedVal3, selectedVal4, selectedVal5, selectedVal6, selectedVal7, selectedVal8, selectedVal9, selectedVal10, selectedVal11, selectedVal12, selectedVal13, selectedVal14, selectedVal15,
                 cmt1, cmt2, cmt3, cmt4, cmt5, r1, r2, r3, r4, r5, cdc1, cdc2, cdc3, cdc4, cdc5, nivactus, nouvnivs, concl, ancienneteniv, com, pg, classification, idr,
@@ -2109,7 +2158,11 @@ const Cadrenonmanager = () => {
                                     </td>
 
 
+<<<<<<< HEAD
 
+=======
+                                   
+>>>>>>> 5afa900a2c42a54009cfadab5fb5ff28ef8b1841
                                 </tr>
 
                             ))}

@@ -460,6 +460,7 @@ const Evaluation = () => {
     const [email, setEmail] = useState('');
 
 
+<<<<<<< HEAD
     const [prefix, setPrefix] = useState('NPA'); // Par défaut 'NPA'
     const [digits, setDigits] = useState('');
 
@@ -489,6 +490,8 @@ const Evaluation = () => {
     };
 
 
+=======
+>>>>>>> 5afa900a2c42a54009cfadab5fb5ff28ef8b1841
     const etapesuiv = () => {
         notification.error({
             message: 'Erreur',
@@ -564,6 +567,7 @@ const Evaluation = () => {
                 placement,
             });
             return;
+<<<<<<< HEAD
             } else if (emailn1 === '') {
                 notification.info({
                     message: `Notification`,
@@ -572,6 +576,16 @@ const Evaluation = () => {
                     placement,
                 });
                 return;
+=======
+        } else if (emailn1 === '') {
+            notification.info({
+                message: `Notification`,
+                description:
+                    'Veuillez remplir le champ évaluateur N+1.',
+                placement,
+            });
+            return;
+>>>>>>> 5afa900a2c42a54009cfadab5fb5ff28ef8b1841
         } else if (emailn1 === loggedInUser) {
             notification.info({
                 message: `Notification`,

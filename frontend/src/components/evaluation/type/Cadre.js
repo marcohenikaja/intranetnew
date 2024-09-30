@@ -1575,7 +1575,11 @@ const Cadre = () => {
         setObjectifs1(newObjectifs1);
     };
 
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 5afa900a2c42a54009cfadab5fb5ff28ef8b1841
     const etape13 = (placement) => {
 
         const isValid = objectifs1.every(objectif => {
@@ -1698,6 +1702,7 @@ const Cadre = () => {
 
 
     const enregistrementvalide1 = async () => {
+<<<<<<< HEAD
 
         const response = await axios.get(`${url}getAlldataevaluations/${id}/Evaluation cadre`);
         if (loggedInUser === response.data[0].emailn2 && response.data[0].statusN2 === true) {
@@ -1823,6 +1828,71 @@ const Cadre = () => {
         }
 
 
+=======
+        try {
+            const enrg = await axios.post(`${url}ajouteval/${id}`, {
+                nom, prenom, mat, daty, dir, nomeval, posteeval, fonc, email, datys, datyss, mission,
+                objectifs, resultat, selectedValue1, selectedValue2, selectedVal1, selectedVal2, selectedVal3, selectedVal4, selectedVal5, selectedVal6, selectedVal7, selectedVal8, selectedVal9, selectedVal10, selectedVal11, selectedVal12, selectedVal13, selectedVal14, selectedVal15,
+                cmt1, cmt2, cmt3, cmt4, cmt5, r1, r2, r3, r4, r5, cdc1, cdc2, cdc3, cdc4, cdc5, nivactus, nouvnivs, concl, ancienneteniv, com, pg, classification, idr,
+                f1, f2, f3, f4, f5, c1, c2, c3, c4, c5, am1, am2, am3, am4, am5, c21, c22, c23, c24, c25,
+                t1, t2, t3, t4, compac1, compac2, compac3, compac4, apav1, apav2, apav3, apav4, apap1, apap2, apap3, apap4, comm1, comm2, comm3, comm4,
+                ccd1, ccd2, ccd3, ccd4, catcomp1, catcomp2, catcomp3, catcomp4, motif1, motif2, motif3, motif4, pa1, pa2, pa3, pa4, dp1, dp2, dp3, dp4,
+                ct1, ct2, ct3, mt1, mt2, mt3, ml1, ml2, ml3, cpr1, cpr2, cpr3, cg1, cg2, cg3, comcollab, objectifs1, resultat1, somme, todayis, alp1, alp2, emailn1, emailn2, emaildr, emailsg, emaildg, emaildrh, loggedInUser, ids
+            });
+            console.log(enrg.data);
+            if (enrg.data.success === false) {
+                const placement = 'top';
+                notification.error({
+                    message: `Notification`,
+                    description: "Vous ne pouvez pas changer d'évaluateur.",
+                    placement,
+                });
+                return;
+            } else {
+                next();
+            }
+        } catch (error) {
+            if (error.response) {
+                // La requête a été faite et le serveur a répondu avec un code de statut
+                // qui tombe hors de la plage de 2xx
+                console.error(error.response.data);
+                console.error(error.response.status);
+                console.error(error.response.headers);
+
+                if (error.response.status === 400) {
+                    const placement = 'top';
+                    notification.error({
+                        message: `Notification`,
+                        description: error.response.data.message || "Erreur de mise à jour",
+                        placement,
+                    });
+                } else {
+                    // Gérer les autres statuts d'erreur si nécessaire
+                    notification.error({
+                        message: `Notification`,
+                        description: `Erreur: ${error.response.status}`,
+                        placement,
+                    });
+                }
+            } else if (error.request) {
+                // La requête a été faite mais aucune réponse n'a été reçue
+                console.error(error.request);
+                notification.error({
+                    message: `Notification`,
+                    description: "Aucune réponse du serveur",
+                    placement: 'top',
+                });
+            } else {
+                // Quelque chose s'est passé lors de la configuration de la requête qui a déclenché une erreur
+                console.error('Erreur', error.message);
+                notification.error({
+                    message: `Notification`,
+                    description: `Erreur: ${error.message}`,
+                    placement: 'top',
+                });
+            }
+        }
+>>>>>>> 5afa900a2c42a54009cfadab5fb5ff28ef8b1841
     };
 
 
@@ -1857,6 +1927,7 @@ const Cadre = () => {
             content: (
                 <div>
                     <Title level={2}>Information personnelle - cadre </Title>
+<<<<<<< HEAD
                     <div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center' }}>
                         {statusbtn ? (
                             <Space style={{ margin: '10px', display: 'flex', alignItems: 'center' }}>
@@ -1871,6 +1942,8 @@ const Cadre = () => {
                     </div>
 
 
+=======
+>>>>>>> 5afa900a2c42a54009cfadab5fb5ff28ef8b1841
 
                     <table style={{ margin: 'auto', textAlign: 'center', width: '95%' }}>
                         <thead>
@@ -3574,6 +3647,7 @@ const Cadre = () => {
                         </Button>
 
 
+<<<<<<< HEAD
 
 
 
@@ -3590,6 +3664,13 @@ const Cadre = () => {
                         }
 
 
+=======
+                      
+                                <Button type="primary" onClick={() => etape13('top')}>
+                                    Suivant
+                                </Button>
+                           
+>>>>>>> 5afa900a2c42a54009cfadab5fb5ff28ef8b1841
                     </div>
                 </div>
             )

@@ -67,6 +67,7 @@ const Noncadre = () => {
         setIsTableVisible(!isTableVisible); // Inverse l'état actuel
     };
 
+<<<<<<< HEAD
     const [prefix, setPrefix] = useState('NPA'); // Par défaut 'NPA'
     const [digits, setDigits] = useState('');
 
@@ -94,6 +95,9 @@ const Noncadre = () => {
             setDigits(digitsPart); // Mettre à jour les chiffres
         }
     };
+=======
+
+>>>>>>> 5afa900a2c42a54009cfadab5fb5ff28ef8b1841
 
 
     const handleSearch = (searchText) => {
@@ -646,6 +650,7 @@ const Noncadre = () => {
             });
             return;
 
+<<<<<<< HEAD
         }
         else if (mat.length < 7) {
             notification.info({
@@ -659,6 +664,13 @@ const Noncadre = () => {
             setCurrent(current + 1);
         }
         enregistrement1()
+=======
+        } else {
+            enregistrement()
+            setCurrent(current + 1);
+        }
+        enregistrement()
+>>>>>>> 5afa900a2c42a54009cfadab5fb5ff28ef8b1841
         setCurrent(current + 1)
     }
 
@@ -736,7 +748,11 @@ const Noncadre = () => {
             return;
         }
         else {
+<<<<<<< HEAD
             enregistrement1()
+=======
+            enregistrement()
+>>>>>>> 5afa900a2c42a54009cfadab5fb5ff28ef8b1841
             next();
         }
 
@@ -834,7 +850,11 @@ const Noncadre = () => {
             });
             return;
         } else {
+<<<<<<< HEAD
             enregistrement1()
+=======
+            enregistrement()
+>>>>>>> 5afa900a2c42a54009cfadab5fb5ff28ef8b1841
             next()
         }
     };
@@ -883,7 +903,11 @@ const Noncadre = () => {
         });
 
         if (allChecked) {
+<<<<<<< HEAD
             enregistrement1();
+=======
+            enregistrement();
+>>>>>>> 5afa900a2c42a54009cfadab5fb5ff28ef8b1841
             next();
         }
 
@@ -1144,7 +1168,11 @@ const Noncadre = () => {
             } else {
                 setNouvnivs("invalide"); // Pour traiter les valeurs hors des plages définies
             }
+<<<<<<< HEAD
             enregistrement1()
+=======
+            enregistrement()
+>>>>>>> 5afa900a2c42a54009cfadab5fb5ff28ef8b1841
             next();
         }
 
@@ -1224,7 +1252,11 @@ const Noncadre = () => {
             });
             return;
         } else {
+<<<<<<< HEAD
             enregistrement1()
+=======
+            enregistrement()
+>>>>>>> 5afa900a2c42a54009cfadab5fb5ff28ef8b1841
             next()
         }
     }
@@ -1234,7 +1266,11 @@ const Noncadre = () => {
     //etape8
     const [idr, setIdr] = useState(null)
     const etape8 = () => {
+<<<<<<< HEAD
         enregistrement1()
+=======
+        enregistrement()
+>>>>>>> 5afa900a2c42a54009cfadab5fb5ff28ef8b1841
         next()
     }
 
@@ -1264,7 +1300,11 @@ const Noncadre = () => {
     const [c25, setC25] = useState(null)
 
     const etape9 = () => {
+<<<<<<< HEAD
         enregistrement1()
+=======
+        enregistrement()
+>>>>>>> 5afa900a2c42a54009cfadab5fb5ff28ef8b1841
         next()
     }
 
@@ -1300,7 +1340,11 @@ const Noncadre = () => {
 
 
     const etape10 = () => {
+<<<<<<< HEAD
         enregistrement1();
+=======
+        enregistrement();
+>>>>>>> 5afa900a2c42a54009cfadab5fb5ff28ef8b1841
         next();
     }
 
@@ -1399,7 +1443,11 @@ const Noncadre = () => {
         const allCcdsEmpty = fields.every(({ ccd }) => !ccd);
 
 
+<<<<<<< HEAD
         enregistrement1()
+=======
+        enregistrement()
+>>>>>>> 5afa900a2c42a54009cfadab5fb5ff28ef8b1841
         next();
     };
 
@@ -1442,7 +1490,11 @@ const Noncadre = () => {
                 placement: 'top',
             });
         } else {
+<<<<<<< HEAD
             enregistrement1()
+=======
+            enregistrement()
+>>>>>>> 5afa900a2c42a54009cfadab5fb5ff28ef8b1841
             next();
         }
     };
@@ -1538,10 +1590,17 @@ const Noncadre = () => {
             });
             return;
         } else {
+<<<<<<< HEAD
             enregistrement1()
             next()
         }
         enregistrement1()
+=======
+            enregistrement()
+            next()
+        }
+        enregistrement()
+>>>>>>> 5afa900a2c42a54009cfadab5fb5ff28ef8b1841
         next()
     };
 
@@ -1895,6 +1954,7 @@ const Noncadre = () => {
 
                     </table>
 
+<<<<<<< HEAD
 
                     {
                         statusbtn ? (
@@ -1908,6 +1968,12 @@ const Noncadre = () => {
                             </Button>
                         )
                     }
+=======
+                    <Button type="primary" onClick={() => etape1('top')}>
+                        Suivant
+                    </Button>
+>>>>>>> 5afa900a2c42a54009cfadab5fb5ff28ef8b1841
+
 
                 </div>
             ),
